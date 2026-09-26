@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An interactive dot-lattice proof of the sum of a finite arithmetic progression.">
+  <title>Visual Proof of Sum of Arithmetic Progression</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307121f'/%3E%3Cpath d='M44 14H19l14 18-14 18h25' fill='none' stroke='%236ee7f2' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f6f4ec;
+      --muted: #9aa8b8;
+      --muted-2: #68788a;
+      --night: #06101c;
+      --night-2: #091827;
+      --panel: rgba(12, 29, 45, 0.84);
+      --panel-solid: #0c1d2d;
+      --line: rgba(164, 190, 212, 0.15);
+      --line-strong: rgba(164, 190, 212, 0.3);
+      --cyan: #6ee7f2;
+      --cyan-soft: rgba(110, 231, 242, 0.12);
+      --amber: #f4b860;
+      --amber-soft: rgba(244, 184, 96, 0.13);
+      --green: #8ee3a8;
+      --danger: #ff8b8b;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.34);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% -8%, rgba(46, 126, 148, 0.25), transparent 34rem),
+        radial-gradient(circle at 95% 18%, rgba(183, 112, 42, 0.14), transparent 30rem),
+        linear-gradient(145deg, #050d17 0%, var(--night) 54%, #071420 100%);
+      font: 400 1rem/1.58 "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    button { color: inherit; }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(110, 231, 242, 0.46);
+      outline-offset: 3px;
+    }
+
+    .page {
+      width: min(1480px, 100%);
+      margin: 0 auto;
+      padding: 24px clamp(16px, 3vw, 44px) 44px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 2px 2px 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(110, 231, 242, 0.28);
+      border-radius: 13px;
+      color: var(--cyan);
+      background: linear-gradient(145deg, rgba(110, 231, 242, 0.13), rgba(110, 231, 242, 0.03));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+      font: 500 1.35rem/1 "DM Mono", monospace;
+    }
+
+    .brand-name {
+      margin: 0;
+      font-size: clamp(1.02rem, 1.8vw, 1.26rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-meta,
+    .eyebrow {
+      margin: 0 0 3px;
+      color: var(--cyan);
+      font: 500 0.72rem/1.4 "DM Mono", monospace;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .top-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font: 500 0.76rem/1.3 "DM Mono", monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-light {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 16px rgba(142, 227, 168, 0.65);
+    }
+
+    .lab-frame {
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(145deg, rgba(10, 25, 39, 0.96), rgba(6, 17, 29, 0.94));
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    }
+
+    .lab-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: clamp(22px, 3vw, 36px) clamp(20px, 3.2vw, 42px) 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .lab-title {
+      max-width: 760px;
+    }
+
+    .lab-title h1 {
+      margin: 5px 0 10px;
+      font-size: clamp(1.8rem, 4vw, 3.3rem);
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+      font-weight: 600;
+    }
+
+    .lab-title p:last-child {
+      max-width: 680px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.96rem, 1.4vw, 1.05rem);
+    }
+
+    .formula-seal {
+      align-self: center;
+      min-width: 220px;
+      padding: 18px 22px;
+      border: 1px solid rgba(244, 184, 96, 0.24);
+      border-radius: var(--radius-lg);
+      background: var(--amber-soft);
+      text-align: center;
+      color: var(--amber);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .formula-seal span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font: 500 0.69rem/1.3 "DM Mono", monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .formula-seal strong {
+      font: 500 1.16rem/1.5 "DM Mono", monospace;
+    }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      padding: 0;
+      background: var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .step-button {
+      position: relative;
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 13px clamp(10px, 1.8vw, 20px);
+      border: 0;
+      background: var(--night-2);
+      color: var(--muted);
+      text-align: left;
+      cursor: pointer;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .step-button:hover { background: rgba(16, 39, 58, 0.96); color: var(--ink); }
+
+    .step-button[aria-current="step"] {
+      color: var(--ink);
+      background: linear-gradient(180deg, rgba(110, 231, 242, 0.11), rgba(10, 26, 41, 0.96));
+    }
+
+    .step-button[aria-current="step"]::after {
+      content: "";
+      position: absolute;
+      left: 13%;
+      right: 13%;
+      bottom: 0;
+      height: 2px;
+      background: var(--cyan);
+      box-shadow: 0 0 12px rgba(110, 231, 242, 0.42);
+    }
+
+    .step-number {
+      flex: 0 0 auto;
+      width: 29px;
+      height: 29px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      color: inherit;
+      font: 500 0.75rem/1 "DM Mono", monospace;
+    }
+
+    .step-button[aria-current="step"] .step-number {
+      border-color: var(--cyan);
+      color: var(--night);
+      background: var(--cyan);
+    }
+
+    .step-copy {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .step-copy strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .step-copy span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted-2);
+      font: 400 0.67rem/1.35 "DM Mono", monospace;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(250px, 310px) minmax(0, 1fr);
+      min-height: 610px;
+    }
+
+    .control-panel {
+      padding: 26px 24px;
+      border-right: 1px solid var(--line);
+      background: rgba(8, 22, 35, 0.72);
+    }
+
+    .section-heading {
+      margin: 3px 0 6px;
+      font-size: 1.12rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    .section-copy {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .slider-group {
+      display: grid;
+      gap: 21px;
+    }
+
+    .slider-row {
+      display: grid;
+      gap: 9px;
+    }
+
+    .slider-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .slider-head label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .slider-value {
+      color: var(--cyan);
+      font: 500 1rem/1 "DM Mono", monospace;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 24px;
+      margin: 0;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+
+    .readout {
+      display: grid;
+      gap: 0;
+      margin-top: 26px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .readout-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .readout-row:last-child { border-bottom: 0; }
+
+    .readout-row span {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .readout-row strong {
+      color: var(--ink);
+      font: 500 0.88rem/1.45 "DM Mono", monospace;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .legend {
+      display: grid;
+      gap: 10px;
+      margin: 22px 0;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.cyan { background: var(--cyan); box-shadow: 0 0 10px rgba(110, 231, 242, 0.42); }
+    .legend-dot.amber { background: var(--amber); box-shadow: 0 0 10px rgba(244, 184, 96, 0.38); }
+
+    .micro-note {
+      margin: 0;
+      color: var(--muted-2);
+      font-size: 0.74rem;
+    }
+
+    .stage-panel {
+      min-width: 0;
+      padding: 26px clamp(16px, 2.5vw, 34px) 24px;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(26, 70, 88, 0.14), transparent 50%),
+        linear-gradient(rgba(113, 153, 179, 0.033) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(113, 153, 179, 0.033) 1px, transparent 1px);
+      background-size: auto, 28px 28px, 28px 28px;
+    }
+
+    .stage-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 58px;
+      margin-bottom: 12px;
+    }
+
+    .stage-head h2 {
+      margin: 2px 0 0;
+      font-size: clamp(1.18rem, 2.5vw, 1.58rem);
+      line-height: 1.25;
+      font-weight: 600;
+      letter-spacing: -0.035em;
+    }
+
+    .stage-index {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font: 500 0.75rem/1.4 "DM Mono", monospace;
+      letter-spacing: 0.08em;
+    }
+
+    .canvas-shell {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(4, 14, 24, 0.68);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), inset 0 0 60px rgba(0,0,0,0.12);
+    }
+
+    #lattice {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 5 / 3;
+      min-height: 360px;
+    }
+
+    .svg-label {
+      fill: var(--muted);
+      font: 500 15px "DM Mono", monospace;
+      letter-spacing: 0.05em;
+    }
+
+    .svg-label-strong {
+      fill: var(--ink);
+      font: 500 17px "DM Mono", monospace;
+    }
+
+    .svg-label-cyan { fill: var(--cyan); }
+    .svg-label-amber { fill: var(--amber); }
+
+    .dot-original {
+      fill: var(--cyan);
+      filter: drop-shadow(0 0 5px rgba(110, 231, 242, 0.36));
+    }
+
+    .dot-reversed {
+      fill: var(--amber);
+      filter: drop-shadow(0 0 5px rgba(244, 184, 96, 0.3));
+    }
+
+    .row-hit { fill: transparent; cursor: pointer; }
+
+    .row-guide {
+      fill: rgba(110, 231, 242, 0.055);
+      stroke: rgba(110, 231, 242, 0.34);
+      stroke-width: 1.5;
+    }
+
+    .dimension-line {
+      stroke: var(--muted);
+      stroke-width: 1.5;
+      fill: none;
+    }
+
+    .partition-line {
+      stroke: rgba(246, 244, 236, 0.4);
+      stroke-width: 1.4;
+      stroke-dasharray: 5 6;
+      fill: none;
+    }
+
+    .formula-zone {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      border-top: 1px solid var(--line);
+      background: rgba(7, 19, 31, 0.88);
+    }
+
+    .explanation {
+      padding: clamp(22px, 3vw, 34px) clamp(20px, 3.2vw, 42px);
+      border-right: 1px solid var(--line);
+    }
+
+    .explanation h3 {
+      margin: 3px 0 8px;
+      font-size: 1.12rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    .explanation p:last-child {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .equation-panel {
+      display: grid;
+      align-content: center;
+      gap: 16px;
+      min-width: 0;
+      padding: clamp(22px, 3vw, 34px) clamp(20px, 3vw, 34px);
+    }
+
+    .equation-label {
+      color: var(--muted-2);
+      font: 500 0.69rem/1.3 "DM Mono", monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .equation {
+      min-height: 66px;
+      color: var(--ink);
+      font: 500 clamp(1rem, 2vw, 1.28rem)/1.75 "DM Mono", monospace;
+      overflow-wrap: anywhere;
+    }
+
+    .equation .accent-cyan { color: var(--cyan); }
+    .equation .accent-amber { color: var(--amber); }
+    .equation .accent-green { color: var(--green); }
+
+    .frac {
+      display: inline-grid;
+      grid-template-rows: auto auto;
+      align-items: center;
+      justify-items: center;
+      vertical-align: -0.45em;
+      margin: 0 0.1em;
+      line-height: 1.05;
+    }
+
+    .frac > span:first-child {
+      min-width: 1.2em;
+      padding: 0 0.12em 0.08em;
+      border-bottom: 1px solid currentColor;
+      text-align: center;
+    }
+
+    .frac > span:last-child { padding-top: 0.08em; }
+
+    .underbrace {
+      display: inline-grid;
+      grid-template-rows: auto auto;
+      justify-items: center;
+      max-width: 100%;
+      vertical-align: middle;
+    }
+
+    .underbrace .terms {
+      padding: 0 0.3em 0.15em;
+      border-bottom: 1px solid var(--amber);
+    }
+
+    .underbrace .times {
+      color: var(--amber);
+      font-size: 0.72em;
+    }
+
+    .transport {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px clamp(20px, 3.2vw, 42px);
+      border-top: 1px solid var(--line);
+      background: rgba(5, 15, 25, 0.96);
+    }
+
+    .progress-copy {
+      color: var(--muted);
+      font: 500 0.73rem/1.4 "DM Mono", monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .button-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: rgba(17, 38, 56, 0.78);
+      color: var(--ink);
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      border-color: rgba(110, 231, 242, 0.42);
+      background: rgba(24, 49, 69, 0.9);
+    }
+
+    .button:disabled { opacity: 0.42; cursor: not-allowed; }
+
+    .button.primary {
+      border-color: var(--cyan);
+      color: #041118;
+      background: var(--cyan);
+      box-shadow: 0 8px 24px rgba(110, 231, 242, 0.16);
+    }
+
+    .button.primary:hover:not(:disabled) { background: #8bedf5; }
+
+    .button[aria-pressed="true"] {
+      border-color: var(--amber);
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+
+    .row-inspector {
+      display: grid;
+      grid-template-columns: auto minmax(120px, 220px) auto;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+      min-height: 48px;
+      padding: 4px 14px 12px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .row-inspector[hidden] { display: none; }
+
+    .row-inspector output {
+      min-width: 28px;
+      color: var(--cyan);
+      font: 500 0.86rem/1 "DM Mono", monospace;
+    }
+
+    .proof-note {
+      display: flex;
+      gap: 12px;
+      margin: 18px 0 0;
+      padding: 15px 17px;
+      border: 1px solid rgba(244, 184, 96, 0.2);
+      border-radius: var(--radius-md);
+      background: rgba(244, 184, 96, 0.07);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .proof-note strong { color: var(--amber); }
+
+    sub { font-size: 0.68em; vertical-align: -0.23em; }
+
+    @media (max-width: 980px) {
+      .lab-heading { align-items: flex-start; }
+      .formula-seal { min-width: 190px; }
+      .workspace { grid-template-columns: 240px minmax(0, 1fr); }
+      .control-panel { padding: 22px 18px; }
+      .step-copy span { display: none; }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding-top: 14px; }
+      .topbar { padding-bottom: 14px; }
+      .top-status { display: none; }
+      .lab-heading { display: grid; }
+      .formula-seal { width: 100%; min-width: 0; text-align: left; }
+      .step-button { min-height: 58px; justify-content: center; padding: 10px 5px; }
+      .step-copy { display: none; }
+      .workspace { grid-template-columns: 1fr; }
+      .control-panel {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .slider-group { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+      .readout { grid-template-columns: repeat(3, 1fr); }
+      .readout-row {
+        display: grid;
+        justify-items: start;
+        padding: 10px;
+        border-right: 1px solid var(--line);
+        border-bottom: 0;
+      }
+      .readout-row:last-child { border-right: 0; }
+      .readout-row strong { text-align: left; }
+      .legend { display: flex; flex-wrap: wrap; }
+      .formula-zone { grid-template-columns: 1fr; }
+      .explanation { border-right: 0; border-bottom: 1px solid var(--line); }
+      .transport { align-items: flex-start; }
+    }
+
+    @media (max-width: 520px) {
+      .brand-meta { display: none; }
+      .lab-title h1 { font-size: 1.72rem; }
+      .slider-group { grid-template-columns: 1fr; }
+      .readout { grid-template-columns: 1fr; }
+      .readout-row {
+        display: flex;
+        justify-items: initial;
+        padding: 10px 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .readout-row:last-child { border-bottom: 0; }
+      .stage-panel { padding-inline: 10px; }
+      #lattice { min-height: 310px; }
+      .transport { display: grid; }
+      .button-row { justify-content: stretch; }
+      .button { flex: 1 1 auto; }
+      .row-inspector { grid-template-columns: auto minmax(90px, 1fr) auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      chtml: { scale: 1 }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+
+  <style id="case-template-overrides">
+    :root {
+      color-scheme: light;
+      --ink: #1e293b;
+      --muted: #64748b;
+      --muted-2: #94a3b8;
+      --night: #f8fafc;
+      --night-2: #ffffff;
+      --panel: #ffffff;
+      --panel-solid: #ffffff;
+      --line: #e2e8f0;
+      --line-strong: #cbd5e1;
+      --cyan: #4f46e5;
+      --cyan-soft: #eef2ff;
+      --amber: #b45309;
+      --amber-soft: #fffbeb;
+      --green: #15803d;
+      --danger: #dc2626;
+      --shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
+    }
+
+    body {
+      color: var(--ink);
+      background-color: #e2e8f0;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 20px 20px;
+      font-family: Inter, Manrope, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .page { width: min(1280px, 100%); padding-top: 24px; }
+
+    .topbar {
+      margin: 0;
+      padding: 20px 26px;
+      color: #f8fafc;
+      background: #1e293b;
+      border: 1px solid #0f172a;
+      border-bottom: 0;
+      border-radius: 14px 14px 0 0;
+      box-shadow: 0 8px 20px rgba(15,23,42,.08);
+    }
+
+    .brand-mark {
+      color: #c7d2fe;
+      background: rgba(99,102,241,.16);
+      border-color: rgba(199,210,254,.32);
+    }
+
+    .brand-meta { color: #a5b4fc; }
+    .brand-name { color: #f8fafc; }
+    .top-status { color: #cbd5e1; }
+
+    .lab-frame {
+      border: 1px solid #cbd5e1;
+      border-top: 0;
+      border-radius: 0 0 14px 14px;
+      background: #fdfbf7;
+      box-shadow: var(--shadow);
+    }
+
+    .lab-heading {
+      background: #ffffff;
+      border-bottom-color: #e2e8f0;
+    }
+
+    .formula-seal {
+      border-color: #c7d2fe;
+      background: #eef2ff;
+      color: #3730a3;
+      box-shadow: none;
+    }
+    .formula-seal span { color: #6366f1; }
+    .formula-seal strong { font-family: Inter, sans-serif; font-size: 1.05rem; }
+
+    .stepper { background: #e2e8f0; border-bottom-color: #cbd5e1; }
+    .step-button { background: #ffffff; color: #64748b; }
+    .step-button:hover { background: #f8fafc; color: #1e293b; }
+    .step-button[aria-current="step"] {
+      color: #312e81;
+      background: #eef2ff;
+    }
+    .step-button[aria-current="step"]::after { background: #4f46e5; box-shadow: none; }
+    .step-button[aria-current="step"] .step-number {
+      border-color: #4f46e5;
+      color: #ffffff;
+      background: #4f46e5;
+    }
+
+    .control-panel {
+      background: #f8fafc;
+      border-right-color: #e2e8f0;
+    }
+
+    .stage-panel {
+      background-color: #ffffff;
+      background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .canvas-shell {
+      border-color: #cbd5e1;
+      background: rgba(255,255,255,.96);
+      box-shadow: inset 0 2px 8px rgba(15,23,42,.04);
+    }
+
+    .formula-zone { background: #f8fafc; border-top-color: #e2e8f0; }
+    .explanation { background: #ffffff; border-right-color: #e2e8f0; }
+    .equation-panel { background: #f8fafc; }
+    .equation { font-family: Inter, sans-serif; color: #1e293b; }
+    .equation mjx-container { margin: .35rem 0 !important; overflow-x: auto; overflow-y: hidden; max-width: 100%; }
+
+    .proof-note {
+      border-color: #fed7aa;
+      background: #fff7ed;
+      color: #7c2d12;
+    }
+    .proof-note strong { color: #b45309; }
+
+    .transport {
+      background: #e2e8f0;
+      border-top-color: #cbd5e1;
+    }
+    .button {
+      border-color: #cbd5e1;
+      background: #ffffff;
+      color: #334155;
+    }
+    .button:hover:not(:disabled) { border-color: #818cf8; background: #f8fafc; }
+    .button.primary {
+      border-color: #4f46e5;
+      color: #ffffff;
+      background: #4f46e5;
+      box-shadow: 0 5px 12px rgba(79,70,229,.16);
+    }
+    .button.primary:hover:not(:disabled) { background: #4338ca; }
+    .button[aria-pressed="true"] { border-color: #b45309; color: #92400e; background: #fffbeb; }
+
+    .readout { border-color: #e2e8f0; }
+    .readout-row { border-bottom-color: #e2e8f0; }
+    .slider-value { color: #4f46e5; }
+    input[type="range"] { accent-color: #4f46e5; }
+
+    .svg-label { fill: #64748b; }
+    .svg-label-strong { fill: #1e293b; }
+    .svg-label-cyan { fill: #4f46e5; }
+    .svg-label-amber { fill: #b45309; }
+    .dot-original { fill: #6366f1; filter: none; }
+    .dot-reversed { fill: #f59e0b; filter: none; }
+    .row-guide { fill: rgba(99,102,241,.07); stroke: rgba(79,70,229,.42); }
+    .dimension-line { stroke: #64748b; }
+    .partition-line { stroke: rgba(51,65,85,.55); }
+    .legend-dot.cyan { background: #6366f1; box-shadow: none; }
+    .legend-dot.amber { background: #f59e0b; box-shadow: none; }
+    .equation .accent-cyan { color: #4338ca; }
+    .equation .accent-amber { color: #b45309; }
+    .equation .accent-green { color: #15803d; }
+
+    /* Keep all copy and mathematics inside the case-file frame. */
+    .lab-heading > *,
+    .workspace > *,
+    .formula-zone > *,
+    .stage-head > *,
+    .transport > * { min-width: 0; }
+
+    .lab-title,
+    .lab-title h1,
+    .lab-title p,
+    .formula-seal,
+    .formula-seal strong,
+    .section-copy,
+    .readout-row strong,
+    .stage-head h2,
+    .explanation,
+    .explanation p,
+    .proof-note,
+    .equation-panel,
+    .equation,
+    .progress-copy {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+
+    .formula-seal { min-width: 0; }
+    .formula-seal mjx-container {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    /* Explicit horizontal viewer for long stage equations (especially Rectangle Count). */
+    .equation {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-behavior: smooth;
+    }
+    .equation::-webkit-scrollbar { display: none; }
+    .equation mjx-container {
+      max-width: none !important;
+      overflow: visible !important;
+      width: max-content;
+      min-width: 100%;
+    }
+    .equation-scroll-wrap {
+      display: grid;
+      grid-template-columns: auto minmax(110px, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      margin-top: 2px;
+      color: #64748b;
+      font: 600 .72rem/1.3 Inter, sans-serif;
+    }
+    .equation-scroll-wrap[hidden] { display: none; }
+    .equation-scroll-wrap input[type="range"] {
+      width: 100%;
+      min-width: 0;
+      accent-color: #4f46e5;
+      cursor: ew-resize;
+    }
+
+    .canvas-shell { max-width: 100%; }
+    #lattice { max-width: 100%; overflow: visible; }
+
+    @media (max-width: 900px) {
+      .lab-heading {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .formula-seal {
+        width: 100%;
+        text-align: left;
+      }
+      .workspace { grid-template-columns: 1fr; }
+      .control-panel {
+        border-right: 0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .formula-zone { grid-template-columns: 1fr; }
+      .explanation {
+        border-right: 0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar { border-radius: 10px 10px 0 0; }
+      .lab-frame { border-radius: 0 0 10px 10px; }
+      .control-panel { border-right: 0; border-bottom-color: #e2e8f0; }
+      .explanation { border-right: 0; border-bottom-color: #e2e8f0; }
+      .lab-heading { padding-inline: 18px; }
+      .stage-panel { padding-inline: 12px; }
+      .formula-zone,
+      .transport { min-width: 0; }
+      .transport {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .button-row { justify-content: stretch; }
+      .button { flex: 1 1 130px; }
+    }
+
+    @media (max-width: 520px) {
+      .page { padding-inline: 8px; }
+      .topbar { padding-inline: 16px; }
+      .lab-title h1 {
+        font-size: clamp(1.55rem, 8vw, 2rem);
+        line-height: 1.12;
+        letter-spacing: -0.035em;
+      }
+      .stepper { grid-template-columns: repeat(5, minmax(44px, 1fr)); }
+      .step-button { min-width: 0; }
+      .formula-seal { padding: 14px 16px; }
+      .equation { font-size: .98rem; }
+      .proof-note { padding: 12px 13px; }
+    }
+  </style>
+
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">Σ</div>
+        <div>
+          <p class="brand-meta">Math Detective · Visual Evidence</p>
+          <p class="brand-name">Arithmetic Progression Case Lab</p>
+        </div>
+      </div>
+      <div class="top-status"><span class="status-light" aria-hidden="true"></span>Interactive evidence ready</div>
+    </header>
+
+    <main class="lab-frame">
+      <section class="lab-heading" aria-labelledby="page-title">
+        <div class="lab-title">
+          <p class="eyebrow">Case investigation · finite series</p>
+          <h1 id="page-title">Visual Proof of Sum of Arithmetic Progression</h1>
+          <p>Build one sum, reverse a second copy, and watch the two staircases lock into a rectangle. Every change in the algebra is matched by a visible move.</p>
+        </div>
+        <div class="formula-seal" aria-label="Formula under investigation">
+          <span>Result under investigation</span>
+          <strong>\(S_n=\dfrac{n}{2}(a+l)\)</strong>
+        </div>
+      </section>
+
+      <nav class="stepper" aria-label="Proof stages">
+        <button class="step-button" type="button" data-step="0" aria-current="step" aria-label="Step 1: Build the sum">
+          <span class="step-number">01</span><span class="step-copy"><strong>Build the sum</strong><span>One lattice</span></span>
+        </button>
+        <button class="step-button" type="button" data-step="1" aria-label="Step 2: Reverse a copy">
+          <span class="step-number">02</span><span class="step-copy"><strong>Reverse a copy</strong><span>Same finite sum</span></span>
+        </button>
+        <button class="step-button" type="button" data-step="2" aria-label="Step 3: Pair the rows">
+          <span class="step-number">03</span><span class="step-copy"><strong>Pair the rows</strong><span>Constant width</span></span>
+        </button>
+        <button class="step-button" type="button" data-step="3" aria-label="Step 4: Count the rectangle">
+          <span class="step-number">04</span><span class="step-copy"><strong>Count rectangle</strong><span>n equal rows</span></span>
+        </button>
+        <button class="step-button" type="button" data-step="4" aria-label="Step 5: Take one half">
+          <span class="step-number">05</span><span class="step-copy"><strong>Take one half</strong><span>Recover S n</span></span>
+        </button>
+      </nav>
+
+      <div class="workspace">
+        <aside class="control-panel" aria-labelledby="setup-heading">
+          <p class="eyebrow">Experiment controls</p>
+          <h2 class="section-heading" id="setup-heading">Choose a progression</h2>
+          <p class="section-copy">Use positive integers so every term can be drawn as a row of dots.</p>
+
+          <div class="slider-group">
+            <div class="slider-row">
+              <div class="slider-head">
+                <label for="first-term">First term, a</label>
+                <output class="slider-value" id="first-value" for="first-term">2</output>
+              </div>
+              <input id="first-term" type="range" min="1" max="6" value="2" step="1">
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-head">
+                <label for="difference">Common difference, d</label>
+                <output class="slider-value" id="difference-value" for="difference">2</output>
+              </div>
+              <input id="difference" type="range" min="1" max="4" value="2" step="1">
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-head">
+                <label for="term-count">Number of terms, n</label>
+                <output class="slider-value" id="count-value" for="term-count">7</output>
+              </div>
+              <input id="term-count" type="range" min="3" max="9" value="7" step="1">
+            </div>
+          </div>
+
+          <div class="readout" aria-live="polite">
+            <div class="readout-row"><span>Progression</span><strong id="sequence-readout">2, 4, 6, …, 14</strong></div>
+            <div class="readout-row"><span>Last term, l</span><strong id="last-readout">14</strong></div>
+            <div class="readout-row"><span>Sum, S<sub>n</sub></span><strong id="sum-readout">56</strong></div>
+          </div>
+
+          <div class="legend" aria-label="Lattice color key">
+            <div class="legend-item"><span class="legend-dot cyan" aria-hidden="true"></span>Original sum, S<sub>n</sub></div>
+            <div class="legend-item"><span class="legend-dot amber" aria-hidden="true"></span>Reversed copy, S<sub>n</sub></div>
+          </div>
+
+          <p class="micro-note">The dots model positive integer terms. The pairing argument itself is algebraic, so the formula applies to any finite arithmetic progression.</p>
+        </aside>
+
+        <section class="stage-panel" aria-labelledby="stage-title">
+          <div class="stage-head">
+            <div>
+              <p class="eyebrow" id="stage-kicker">Observe the rows</p>
+              <h2 id="stage-title">Each row is one term</h2>
+            </div>
+            <div class="stage-index" id="stage-index">01 / 05</div>
+          </div>
+
+          <div class="canvas-shell">
+            <svg id="lattice" viewBox="0 0 1000 600" role="img" aria-labelledby="lattice-title lattice-desc">
+              <title id="lattice-title">Dot lattice for an arithmetic progression</title>
+              <desc id="lattice-desc">Seven rows containing 2, 4, 6, 8, 10, 12, and 14 dots.</desc>
+              <defs>
+                <marker id="arrow-start" markerWidth="8" markerHeight="8" refX="2" refY="4" orient="auto">
+                  <path d="M8 0 L0 4 L8 8" fill="none" stroke="#9aa8b8" stroke-width="1.4"></path>
+                </marker>
+                <marker id="arrow-end" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                  <path d="M0 0 L8 4 L0 8" fill="none" stroke="#9aa8b8" stroke-width="1.4"></path>
+                </marker>
+              </defs>
+              <g id="lattice-content"></g>
+            </svg>
+
+            <div class="row-inspector" id="row-inspector" hidden>
+              <label for="focus-row">Inspect paired row</label>
+              <input id="focus-row" type="range" min="1" max="7" value="1" step="1">
+              <output id="focus-value" for="focus-row">1</output>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="formula-zone">
+        <div class="explanation" aria-live="polite">
+          <p class="eyebrow">What the picture proves</p>
+          <h3 id="explanation-title">The lattice is the sum</h3>
+          <p id="explanation-copy">Row 1 has a dots, row 2 has a + d dots, and each later row adds d more. Counting every dot is exactly the same as adding the first n terms.</p>
+          <div class="proof-note" id="proof-note"><span aria-hidden="true">◇</span><span><strong>Visual checkpoint:</strong> the row lengths are the terms of the progression.</span></div>
+        </div>
+
+        <div class="equation-panel" aria-live="polite">
+          <div class="equation-label" id="equation-label">The finite sum</div>
+          <div class="equation" id="equation"></div>
+          <div class="equation-scroll-wrap" id="equation-scroll-wrap" hidden>
+            <span>←</span>
+            <input id="equation-scroll" type="range" min="0" max="100" value="0" step="1" aria-label="Slide horizontally to view the full equation">
+            <span>→</span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="transport">
+        <div class="progress-copy" id="progress-copy">Stage 1 of 5 · Build the sum</div>
+        <div class="button-row">
+          <button class="button" type="button" id="previous" disabled>← Previous</button>
+          <button class="button" type="button" id="autoplay" aria-pressed="false">▶ Play proof</button>
+          <button class="button primary" type="button" id="next">Next stage →</button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const NS = 'http://www.w3.org/2000/svg';
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const controls = {
+        a: document.getElementById('first-term'),
+        d: document.getElementById('difference'),
+        n: document.getElementById('term-count'),
+        row: document.getElementById('focus-row')
+      };
+
+      const ui = {
+        aValue: document.getElementById('first-value'),
+        dValue: document.getElementById('difference-value'),
+        nValue: document.getElementById('count-value'),
+        sequence: document.getElementById('sequence-readout'),
+        last: document.getElementById('last-readout'),
+        sum: document.getElementById('sum-readout'),
+        stageKicker: document.getElementById('stage-kicker'),
+        stageTitle: document.getElementById('stage-title'),
+        stageIndex: document.getElementById('stage-index'),
+        explanationTitle: document.getElementById('explanation-title'),
+        explanationCopy: document.getElementById('explanation-copy'),
+        proofNote: document.getElementById('proof-note'),
+        equationLabel: document.getElementById('equation-label'),
+        equation: document.getElementById('equation'),
+        equationScrollWrap: document.getElementById('equation-scroll-wrap'),
+        equationScroll: document.getElementById('equation-scroll'),
+        progress: document.getElementById('progress-copy'),
+        previous: document.getElementById('previous'),
+        next: document.getElementById('next'),
+        autoplay: document.getElementById('autoplay'),
+        inspector: document.getElementById('row-inspector'),
+        focusValue: document.getElementById('focus-value'),
+        svg: document.getElementById('lattice'),
+        content: document.getElementById('lattice-content'),
+        desc: document.getElementById('lattice-desc'),
+        stepButtons: [...document.querySelectorAll('.step-button')]
+      };
+
+      const stages = [
+        {
+          kicker: 'Observe the rows',
+          title: 'Each row is one term',
+          explanationTitle: 'The lattice is the sum',
+          explanation: 'Row 1 has a dots, row 2 has a + d dots, and each later row adds d more. Counting every dot is exactly the same as adding the first n terms.',
+          note: '<strong>Visual checkpoint:</strong> the row lengths are the terms of the progression.',
+          equationLabel: 'The finite sum',
+          progress: 'Build the sum'
+        },
+        {
+          kicker: 'Duplicate without changing',
+          title: 'Write the same finite sum backwards',
+          explanationTitle: 'Reversal preserves the total',
+          explanation: 'There are exactly n terms, so this is a finite sum. We may reorder finitely many addends without changing their total. The amber lattice contains the same rows as the cyan lattice, only in reverse order.',
+          note: '<strong>Why “finite” matters:</strong> every term is accounted for—none is added, lost, or left waiting at infinity.',
+          equationLabel: 'Same terms · opposite order',
+          progress: 'Reverse a copy'
+        },
+        {
+          kicker: 'Test every pair',
+          title: 'The two staircases make equal rows',
+          explanationTitle: 'Growth cancels decline',
+          explanation: 'Pair the ith cyan row with the ith amber row. The first has grown by (i − 1)d while the second has shrunk by exactly (i − 1)d, so every combined row has a + l dots.',
+          note: '<strong>Try it:</strong> move the row inspector or click a row. Every pair gives the same total.',
+          equationLabel: 'Selected row pair',
+          progress: 'Pair the rows'
+        },
+        {
+          kicker: 'Count the completed shape',
+          title: 'Two sums form one rectangle',
+          explanationTitle: 'Equal rows are easy to count',
+          explanation: 'The joined lattice has n rows, and every row contains a + l dots. It represents two copies of the original sum, so its total is both 2Sₙ and n(a + l).',
+          note: '<strong>The key count:</strong> n identical copies of (a + l) produce the rectangle.',
+          equationLabel: 'The rectangle count',
+          progress: 'Count the rectangle'
+        },
+        {
+          kicker: 'Recover one copy',
+          title: 'Take half of the rectangle',
+          explanationTitle: 'The formula is forced',
+          explanation: 'The rectangle contains two equal copies of Sₙ. Dividing its n(a + l) dots by 2 gives one copy. Replacing l with a + (n − 1)d produces the standard common-difference form.',
+          note: '<strong>Odd n is no exception:</strong> the middle row pairs with its matching row in the second copy, so nothing is left over.',
+          equationLabel: 'Case closed',
+          progress: 'Take one half'
+        }
+      ];
+
+      let currentStage = 0;
+      let previousStage = 0;
+      let autoplayTimer = null;
+
+      function values() {
+        const a = Number(controls.a.value);
+        const d = Number(controls.d.value);
+        const n = Number(controls.n.value);
+        const l = a + (n - 1) * d;
+        const sum = n * (a + l) / 2;
+        return { a, d, n, l, sum };
+      }
+
+      function sequenceTerms(a, d, n) {
+        return Array.from({ length: n }, (_, i) => a + i * d);
+      }
+
+      function sequenceDisplay(terms) {
+        if (terms.length <= 6) return terms.join(', ');
+        return `${terms.slice(0, 3).join(', ')}, …, ${terms.at(-1)}`;
+      }
+
+      function svgEl(name, attrs = {}, text = '') {
+        const el = document.createElementNS(NS, name);
+        Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+        if (text) el.textContent = text;
+        return el;
+      }
+
+      function addText(parent, x, y, text, className = 'svg-label', anchor = 'start') {
+        const el = svgEl('text', { x, y, class: className, 'text-anchor': anchor }, text);
+        parent.appendChild(el);
+        return el;
+      }
+
+      function animateFrom(circle, startX, startY, targetX, targetY, delay = 0) {
+        if (reducedMotion) return;
+        const anim = svgEl('animateTransform', {
+          attributeName: 'transform',
+          type: 'translate',
+          from: `${startX - targetX} ${startY - targetY}`,
+          to: '0 0',
+          dur: '0.72s',
+          begin: `${delay}s`,
+          calcMode: 'spline',
+          keySplines: '0.22 1 0.36 1',
+          fill: 'freeze'
+        });
+        circle.appendChild(anim);
+      }
+
+      function layout(v, mode) {
+        const maxWidth = v.a + v.l;
+        if (mode === 'split') {
+          const sx = Math.min(19, 700 / Math.max(v.l - 1, 1));
+          const sy = Math.min(27, 175 / Math.max(v.n - 1, 1));
+          return { sx, sy, x: 190, topY: 112, bottomY: 375, maxWidth };
+        }
+        const sx = Math.min(22, 720 / Math.max(maxWidth - 1, 1));
+        const sy = Math.min(46, 330 / Math.max(v.n - 1, 1));
+        const latticeWidth = (maxWidth - 1) * sx;
+        return { sx, sy, x: 500 - latticeWidth / 2, topY: 148, bottomY: 0, maxWidth };
+      }
+
+      function drawDots(stage, v) {
+        const terms = sequenceTerms(v.a, v.d, v.n);
+        const reversed = [...terms].reverse();
+        const split = layout(v, 'split');
+        const merged = layout(v, 'merged');
+        const selected = Math.min(Number(controls.row.value), v.n) - 1;
+        const radius = Math.max(5.4, Math.min(8.6, merged.sx * 0.32));
+        const group = ui.content;
+
+        if (stage === 0) {
+          const maxTermWidth = (v.l - 1) * merged.sx;
+          const x0 = 500 - maxTermWidth / 2;
+          addText(group, x0, 94, 'Sₙ — ORIGINAL LATTICE', 'svg-label svg-label-cyan');
+          terms.forEach((term, row) => {
+            const y = merged.topY + row * merged.sy;
+            addText(group, x0 - 28, y + 5, String(term), 'svg-label', 'end');
+            for (let col = 0; col < term; col++) {
+              const x = x0 + col * merged.sx;
+              const circle = svgEl('circle', { cx: x, cy: y, r: radius, class: 'dot-original' });
+              group.appendChild(circle);
+              if (!reducedMotion) {
+                circle.animate(
+                  [{ opacity: 0, transform: 'scale(0.3)' }, { opacity: 1, transform: 'scale(1)' }],
+                  { duration: 300, delay: Math.min(450, row * 45 + col * 5), easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' }
+                );
+              }
+            }
+          });
+          addText(group, x0 + maxTermWidth + 26, merged.topY + (v.n - 1) * merged.sy + 5, `l = ${v.l}`, 'svg-label svg-label-cyan');
+          return;
+        }
+
+        if (stage === 1) {
+          addText(group, split.x, 72, 'FORWARD — Sₙ', 'svg-label svg-label-cyan');
+          addText(group, split.x, 335, 'REVERSED — STILL Sₙ', 'svg-label svg-label-amber');
+          terms.forEach((term, row) => {
+            const yTop = split.topY + row * split.sy;
+            const yBottom = split.bottomY + row * split.sy;
+            addText(group, split.x - 28, yTop + 5, String(term), 'svg-label', 'end');
+            addText(group, split.x - 28, yBottom + 5, String(reversed[row]), 'svg-label', 'end');
+            for (let col = 0; col < term; col++) {
+              group.appendChild(svgEl('circle', {
+                cx: split.x + col * split.sx,
+                cy: yTop,
+                r: Math.max(4.4, Math.min(7.2, split.sx * 0.32)),
+                class: 'dot-original'
+              }));
+            }
+            for (let col = 0; col < reversed[row]; col++) {
+              const circle = svgEl('circle', {
+                cx: split.x + col * split.sx,
+                cy: yBottom,
+                r: Math.max(4.4, Math.min(7.2, split.sx * 0.32)),
+                class: 'dot-reversed'
+              });
+              group.appendChild(circle);
+              if (previousStage < stage && !reducedMotion) {
+                circle.animate([{ opacity: 0 }, { opacity: 1 }], {
+                  duration: 430,
+                  delay: row * 38 + col * 3,
+                  easing: 'ease-out',
+                  fill: 'both'
+                });
+              }
+            }
+          });
+          addText(group, 820, 237, 'same n terms', 'svg-label', 'end');
+          const arrow = svgEl('path', {
+            d: 'M790 220 C850 250 850 305 790 332',
+            class: 'dimension-line',
+            'marker-end': 'url(#arrow-end)'
+          });
+          group.appendChild(arrow);
+          return;
+        }
+
+        const width = v.a + v.l;
+        const finalX = merged.x + (width - 1) * merged.sx;
+        const firstY = merged.topY;
+        const lastY = merged.topY + (v.n - 1) * merged.sy;
+
+        if (stage === 2) {
+          const rowY = merged.topY + selected * merged.sy;
+          group.appendChild(svgEl('rect', {
+            x: merged.x - 18,
+            y: rowY - merged.sy * 0.44,
+            width: finalX - merged.x + 36,
+            height: merged.sy * 0.88,
+            rx: 11,
+            class: 'row-guide'
+          }));
+        }
+
+        terms.forEach((term, row) => {
+          const y = merged.topY + row * merged.sy;
+          const opacity = stage === 2 && row !== selected ? 0.24 : 1;
+
+          for (let col = 0; col < term; col++) {
+            const targetX = merged.x + col * merged.sx;
+            const circle = svgEl('circle', {
+              cx: targetX,
+              cy: y,
+              r: radius,
+              class: 'dot-original',
+              opacity
+            });
+            group.appendChild(circle);
+            if (previousStage === 1 && stage === 2) {
+              animateFrom(circle, split.x + col * split.sx, split.topY + row * split.sy, targetX, y, row * 0.025);
+            }
+          }
+
+          for (let col = 0; col < reversed[row]; col++) {
+            const targetX = merged.x + (term + col) * merged.sx;
+            const circle = svgEl('circle', {
+              cx: targetX,
+              cy: y,
+              r: radius,
+              class: 'dot-reversed',
+              opacity: stage === 4 ? 0.35 : opacity
+            });
+            group.appendChild(circle);
+            if (previousStage === 1 && stage === 2) {
+              animateFrom(circle, split.x + col * split.sx, split.bottomY + row * split.sy, targetX, y, row * 0.025 + 0.08);
+            }
+          }
+
+          const hit = svgEl('rect', {
+            x: merged.x - 20,
+            y: y - merged.sy * 0.46,
+            width: finalX - merged.x + 40,
+            height: merged.sy * 0.92,
+            class: 'row-hit',
+            'data-row': row + 1,
+            'aria-label': `Inspect row ${row + 1}`
+          });
+          hit.addEventListener('click', () => {
+            controls.row.value = String(row + 1);
+            update(false);
+          });
+          group.appendChild(hit);
+        });
+
+        if (stage === 2) {
+          const term = terms[selected];
+          const reverseTerm = reversed[selected];
+          const rowY = merged.topY + selected * merged.sy;
+          const splitX = merged.x + (term - 0.5) * merged.sx;
+          group.appendChild(svgEl('line', {
+            x1: splitX,
+            y1: rowY - merged.sy * 0.4,
+            x2: splitX,
+            y2: rowY + merged.sy * 0.4,
+            class: 'partition-line'
+          }));
+          addText(group, merged.x, 92, `row ${selected + 1}:  ${term} dots`, 'svg-label svg-label-cyan');
+          addText(group, finalX, 92, `paired row:  ${reverseTerm} dots`, 'svg-label svg-label-amber', 'end');
+          addText(group, 500, lastY + 66, `${term} + ${reverseTerm} = ${v.a} + ${v.l} = ${width}`, 'svg-label-strong', 'middle');
+        }
+
+        if (stage >= 3) {
+          const topArrowY = firstY - 48;
+          group.appendChild(svgEl('line', {
+            x1: merged.x,
+            y1: topArrowY,
+            x2: finalX,
+            y2: topArrowY,
+            class: 'dimension-line',
+            'marker-start': 'url(#arrow-start)',
+            'marker-end': 'url(#arrow-end)'
+          }));
+          addText(group, 500, topArrowY - 14, `a + l = ${width} dots per row`, 'svg-label-strong', 'middle');
+
+          const sideX = merged.x - 58;
+          group.appendChild(svgEl('line', {
+            x1: sideX,
+            y1: firstY,
+            x2: sideX,
+            y2: lastY,
+            class: 'dimension-line',
+            'marker-start': 'url(#arrow-start)',
+            'marker-end': 'url(#arrow-end)'
+          }));
+          addText(group, sideX - 17, (firstY + lastY) / 2 + 5, `n = ${v.n} rows`, 'svg-label-strong', 'end');
+
+          if (stage === 3) {
+            addText(group, 500, lastY + 70, `${v.n} × ${width} = ${2 * v.sum} dots = 2Sₙ`, 'svg-label-strong', 'middle');
+          }
+        }
+
+        if (stage === 4) {
+          const points = terms.map((term, row) => {
+            const x = merged.x + (term - 0.5) * merged.sx;
+            const y = merged.topY + row * merged.sy;
+            return `${x},${y}`;
+          }).join(' ');
+          group.appendChild(svgEl('polyline', { points, class: 'partition-line' }));
+          addText(group, merged.x, lastY + 68, `one copy = Sₙ = ${v.sum}`, 'svg-label-strong svg-label-cyan');
+          addText(group, finalX, lastY + 68, 'second copy', 'svg-label svg-label-amber', 'end');
+        }
+      }
+
+      function equationFor(stage, v) {
+        const terms = sequenceTerms(v.a, v.d, v.n);
+        const forward = terms.join(' + ');
+        const reverse = [...terms].reverse().join(' + ');
+        const row = Math.min(Number(controls.row.value), v.n);
+        const left = terms[row - 1];
+        const right = terms[v.n - row];
+
+        if (stage === 0) {
+          return `\\[ S_n = ${forward} = ${v.sum} \\]`;
+        }
+        if (stage === 1) {
+          return `\\[ \\begin{aligned} S_n &= ${forward} \\\\ S_n &= ${reverse} \\end{aligned} \\]`;
+        }
+        if (stage === 2) {
+          return `\\[ \\begin{aligned} [a+(${row}-1)d] + [l-(${row}-1)d] &= ${left}+${right} \\\\ &= a+l = ${v.a + v.l} \\end{aligned} \\]`;
+        }
+        if (stage === 3) {
+          return `\\[ 2S_n = \\underbrace{(a+l)+(a+l)+\\cdots+(a+l)}_{n\\text{ times}} = n(a+l) = ${v.n}(${v.a + v.l}) = ${2 * v.sum} \\]`;
+        }
+        return `\\[ \\boxed{S_n=\\frac{n}{2}(a+l)} = \\frac{${v.n}}{2}(${v.a}+${v.l}) = ${v.sum} \\] \\[ \\boxed{S_n=\\frac{n}{2}\\left[2a+(n-1)d\\right]} \\]`;
+      }
+
+      function updateEquationSlider() {
+        // The explicit slider is most useful on Stage 4 (Rectangle Count).
+        const maxScroll = Math.max(0, ui.equation.scrollWidth - ui.equation.clientWidth);
+        const shouldShow = currentStage === 3 && maxScroll > 2;
+        ui.equationScrollWrap.hidden = !shouldShow;
+        if (!shouldShow) {
+          ui.equation.scrollLeft = 0;
+          ui.equationScroll.value = '0';
+          return;
+        }
+        const percent = maxScroll ? Math.round((ui.equation.scrollLeft / maxScroll) * 100) : 0;
+        ui.equationScroll.value = String(percent);
+      }
+
+      function safeTypeset(target, attempt = 0) {
+        if (window.MathJax && MathJax.typesetPromise) {
+          if (MathJax.typesetClear) MathJax.typesetClear([target]);
+          MathJax.typesetPromise([target]).then(() => {
+            window.requestAnimationFrame(updateEquationSlider);
+          }).catch(() => {});
+        } else if (attempt < 25) {
+          window.setTimeout(() => safeTypeset(target, attempt + 1), 120);
+        }
+      }
+
+      function updateReadouts(v) {
+        const terms = sequenceTerms(v.a, v.d, v.n);
+        ui.aValue.textContent = v.a;
+        ui.dValue.textContent = v.d;
+        ui.nValue.textContent = v.n;
+        ui.sequence.textContent = sequenceDisplay(terms);
+        ui.last.textContent = v.l;
+        ui.sum.textContent = v.sum;
+        controls.row.max = String(v.n);
+        if (Number(controls.row.value) > v.n) controls.row.value = String(v.n);
+        ui.focusValue.textContent = controls.row.value;
+      }
+
+      function updateStageText(v) {
+        const stage = stages[currentStage];
+        ui.stageKicker.textContent = stage.kicker;
+        ui.stageTitle.textContent = stage.title;
+        ui.stageIndex.textContent = `${String(currentStage + 1).padStart(2, '0')} / 05`;
+        ui.explanationTitle.textContent = stage.explanationTitle;
+        ui.explanationCopy.textContent = stage.explanation;
+        ui.proofNote.innerHTML = `<span aria-hidden="true">◇</span><span>${stage.note}</span>`;
+        ui.equationLabel.textContent = stage.equationLabel;
+        ui.equation.innerHTML = equationFor(currentStage, v);
+        safeTypeset(ui.equation);
+        ui.progress.textContent = `Stage ${currentStage + 1} of 5 · ${stage.progress}`;
+        ui.inspector.hidden = currentStage !== 2;
+        ui.previous.disabled = currentStage === 0;
+        ui.next.disabled = currentStage === stages.length - 1;
+        ui.next.textContent = currentStage === stages.length - 2 ? 'Reveal formula →' : 'Next stage →';
+
+        ui.stepButtons.forEach((button, index) => {
+          if (index === currentStage) button.setAttribute('aria-current', 'step');
+          else button.removeAttribute('aria-current');
+        });
+      }
+
+      function updateDescription(v) {
+        const terms = sequenceTerms(v.a, v.d, v.n);
+        if (currentStage === 0) {
+          ui.desc.textContent = `${v.n} rows containing ${terms.join(', ')} dots, representing the arithmetic progression.`;
+        } else if (currentStage === 1) {
+          ui.desc.textContent = `Two dot lattices show the same ${v.n} terms in forward and reverse order.`;
+        } else if (currentStage === 2) {
+          ui.desc.textContent = `The two lattices merge. Each paired row contains ${v.a + v.l} dots.`;
+        } else {
+          ui.desc.textContent = `A rectangle with ${v.n} rows and ${v.a + v.l} dots in each row contains ${2 * v.sum} dots, equal to twice the progression sum.`;
+        }
+      }
+
+      function renderLattice(v) {
+        while (ui.content.firstChild) ui.content.removeChild(ui.content.firstChild);
+        drawDots(currentStage, v);
+        updateDescription(v);
+      }
+
+      function update(trackPrevious = true) {
+        const v = values();
+        updateReadouts(v);
+        updateStageText(v);
+        renderLattice(v);
+        if (trackPrevious) previousStage = currentStage;
+      }
+
+      function goToStage(nextStage) {
+        const bounded = Math.max(0, Math.min(stages.length - 1, nextStage));
+        if (bounded === currentStage) return;
+        previousStage = currentStage;
+        currentStage = bounded;
+        update(false);
+        previousStage = currentStage;
+      }
+
+      function stopAutoplay() {
+        if (autoplayTimer) window.clearInterval(autoplayTimer);
+        autoplayTimer = null;
+        ui.autoplay.setAttribute('aria-pressed', 'false');
+        ui.autoplay.textContent = '▶ Play proof';
+      }
+
+      function startAutoplay() {
+        if (currentStage === stages.length - 1) goToStage(0);
+        ui.autoplay.setAttribute('aria-pressed', 'true');
+        ui.autoplay.textContent = 'Ⅱ Pause';
+        autoplayTimer = window.setInterval(() => {
+          if (currentStage === stages.length - 1) {
+            stopAutoplay();
+          } else {
+            goToStage(currentStage + 1);
+          }
+        }, reducedMotion ? 900 : 1800);
+      }
+
+      [controls.a, controls.d, controls.n].forEach(control => {
+        control.addEventListener('input', () => {
+          stopAutoplay();
+          update(false);
+        });
+      });
+
+      controls.row.addEventListener('input', () => update(false));
+
+      ui.stepButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          stopAutoplay();
+          goToStage(Number(button.dataset.step));
+        });
+      });
+
+      ui.previous.addEventListener('click', () => {
+        stopAutoplay();
+        goToStage(currentStage - 1);
+      });
+
+      ui.next.addEventListener('click', () => {
+        stopAutoplay();
+        goToStage(currentStage + 1);
+      });
+
+      ui.autoplay.addEventListener('click', () => {
+        if (autoplayTimer) stopAutoplay();
+        else startAutoplay();
+      });
+
+      ui.equationScroll.addEventListener('input', () => {
+        const maxScroll = Math.max(0, ui.equation.scrollWidth - ui.equation.clientWidth);
+        ui.equation.scrollLeft = maxScroll * (Number(ui.equationScroll.value) / 100);
+      });
+
+      ui.equation.addEventListener('scroll', () => {
+        if (!ui.equationScrollWrap.hidden) updateEquationSlider();
+      });
+
+      window.addEventListener('resize', () => window.requestAnimationFrame(updateEquationSlider));
+
+      update(false);
+    })();
+  </script>
+</body>
+</html>

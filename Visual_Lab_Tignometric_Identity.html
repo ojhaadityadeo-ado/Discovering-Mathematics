@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One circle. Three squares. One identity.</title>
+<meta name="description" content="An interactive geometric proof of sin²(x) + cos²(x) = 1 using the unit circle and Pythagoras.">
+<style>
+:root{color-scheme:light;--ink:#142238;--muted:#52647b;--line:#dce4ee;--green:#087849;--red:#c52f46;--blue:#245ccc;--paper:#fff;--bg:#f1f5fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1320px;margin:auto;padding:32px 24px 48px}h1,h2,h3,p{margin:0}h1{font-size:clamp(1.7rem,3.8vw,2.7rem);line-height:1.15;letter-spacing:-.04em;margin:8px 0 12px}h2{font-size:1.2rem;line-height:1.3}h3{font-size:1rem}.eyebrow{font-size:.8rem;font-weight:750;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}.sub{color:var(--muted);max-width:760px}.workspace{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,1fr);gap:22px;margin:24px 0}.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;min-width:0;overflow-wrap:break-word}.figure-head{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:20px 22px 0}.tag{font-size:.8rem;color:var(--muted);background:var(--bg);padding:4px 9px;border-radius:30px}.diagram{display:block;width:100%;height:auto;touch-action:none;user-select:none}.figure-foot{padding:0 22px 20px;color:var(--muted);font-size:.9rem}.coords{display:flex;gap:8px 20px;flex-wrap:wrap;margin-bottom:8px;font-variant-numeric:tabular-nums}.controls{padding:22px;display:flex;flex-direction:column;gap:20px}.angle-row{display:flex;justify-content:space-between;gap:10px;align-items:center}.angle{font-size:2.1rem;font-weight:750;font-variant-numeric:tabular-nums;line-height:1.2}.rad{font-size:.86rem;color:var(--muted);text-align:right}input[type=range]{width:100%;accent-color:var(--blue);margin:16px 0 0;cursor:pointer;min-height:30px}.ends{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted)}button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);padding:8px 12px;min-height:42px}button:hover{background:#edf3ff}button:focus-visible,input:focus-visible{outline:3px solid #dfa000;outline-offset:4px}.buttons{display:flex;flex-wrap:wrap;gap:8px}.primary{background:var(--blue);border-color:var(--blue);color:white}.primary:hover{background:#19489f}.preset{font-size:.87rem;padding:6px 10px}.areas{display:grid;gap:10px}.area{padding:11px 14px;border:1px solid;border-left:5px solid;border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:12px}.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}.area.green{background:#effbf5;border-color:#9eddbb}.area.red{background:#fff2f3;border-color:#f0a6b1}.area.blue{background:#eff5ff;border-color:#a6c1f0}.area small{display:block;color:var(--muted);font-size:.8rem}.area strong{font-size:1.2rem;font-variant-numeric:tabular-nums}.equation{text-align:center;font-weight:750;font-size:clamp(1rem,2vw,1.35rem);padding:16px 8px;background:#f6f8fc;border-radius:12px}.sum{display:flex;border-radius:8px;overflow:hidden;height:20px;margin:12px 0 8px;background:#e5ebf4}.sum .r{background:#e44a61}.sum .g{background:#1bab70}.note{font-size:.88rem;color:var(--muted)}.toggle{display:flex;gap:8px;align-items:center;font-size:.9rem}input[type=checkbox]{accent-color:var(--blue);width:18px;height:18px}.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:15px;align-items:center;margin:22px 0}.flow-step{padding:16px;border-top:3px solid var(--blue);background:white;border-radius:0 0 10px 10px;min-width:0}.flow-step span{display:block;font-size:.8rem;color:var(--muted);margin-bottom:3px}.arrow{font-size:1.6rem;color:#8b9cb3}.panels{display:grid;grid-template-columns:1fr 1fr;gap:22px}.panel{padding:24px}.panel h2{margin-bottom:16px}.pyth{display:flex;align-items:center;gap:20px}.pyth svg{width:150px;flex-shrink:0}.math{font-family:Georgia,serif;font-size:1.2rem}.transform{display:grid;gap:10px;margin:12px 0 18px}.transform div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:9px;border-bottom:1px solid var(--line)}.synthesis{padding:26px;margin-top:22px;background:#142238;color:white;border:0}.synthesis h2{color:#b7c8e0;font-size:1rem}.final-equation{font-size:clamp(1.4rem,3vw,2.2rem);font-weight:750;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 16px;align-items:center;margin:20px 0}.final-equation small{display:block;font-size:.8rem;font-weight:500;opacity:.9;text-align:center}.final-equation .red{color:#ff9aa8}.final-equation .green{color:#70e2aa}.final-equation .blue{color:#97bdff}.synthesis p{color:#c8d4e6;max-width:850px;margin:auto}.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:850px){.workspace{grid-template-columns:1fr}.panels{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:1fr 1fr;align-items:start}.controls>div:last-child{grid-column:1/-1}.figure-head{padding:16px 16px 0}.figure-foot{padding:0 16px 16px}}
+@media(max-width:540px){main{padding:22px 12px 32px}.controls{display:flex;padding:18px}.figure-head{align-items:flex-start}.tag{display:none}.flow{grid-template-columns:1fr;gap:7px}.arrow{transform:rotate(90deg);text-align:center;line-height:1}.pyth{flex-direction:column;align-items:flex-start;gap:12px}.panel{padding:20px}.synthesis{padding:20px}.coords{font-size:.85rem}.diagram text{font-family:Arial,sans-serif}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="eyebrow">Trigonometry · Visual proof</div><h1>One circle. Three squares. One identity.</h1><p class="sub">Move the point around the unit circle. The red and green squares change size, but their combined area always equals the blue square.</p></header>
+<div class="workspace">
+<section class="card" aria-labelledby="diagram-heading">
+<div class="figure-head"><h2 id="diagram-heading">The unit circle</h2><span class="tag">Drag P or use the slider</span></div>
+<svg id="diagram" class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 640" role="img" aria-labelledby="svg-title svg-desc"><title id="svg-title">Squares on the sides of a unit-circle triangle</title><desc id="svg-desc">The green square is on OQ, the red square is on QP, and the blue square is on OP. Use the angle slider to explore the geometry.</desc><g id="drawing"></g></svg>
+<div class="figure-foot"><div class="coords"><span><b>O</b> = (0, 0)</span><span id="point-coords"></span><span id="foot-coords"></span></div><p id="quadrant-note"></p></div>
+</section>
+<aside class="card controls" aria-label="Angle controls and square areas">
+<div><div class="angle-row"><label for="angle"><b>Angle x</b></label><div><output id="angle-value" class="angle" for="angle">45°</output><div class="rad" id="radians"></div></div></div><input id="angle" type="range" min="0" max="360" step="0.1" value="45" aria-label="Angle x in degrees"><div class="ends"><span>0°</span><span>180°</span><span>360°</span></div><div class="buttons" style="margin-top:14px"><button class="primary" id="play" aria-pressed="false">Play rotation</button><button id="reset">Reset</button></div><div class="buttons" style="margin-top:10px" aria-label="Example angles"><button class="preset" data-angle="30">30°</button><button class="preset" data-angle="45">45°</button><button class="preset" data-angle="60">60°</button><button class="preset" data-angle="135">135°</button><button class="preset" data-angle="225">225°</button><button class="preset" data-angle="315">315°</button></div></div>
+<div class="areas" aria-label="Live square areas"><div class="area red"><div><b>Area = sin²(x)</b><small>Red square · vertical leg</small></div><strong id="red-value"></strong></div><div class="area green"><div><b>Area = cos²(x)</b><small>Green square · horizontal leg</small></div><strong id="green-value"></strong></div><div class="area blue"><div><b>Area = 1² = 1</b><small>Blue square · hypotenuse</small></div><strong>1.0000</strong></div></div>
+<div><div class="equation"><span class="red" id="red-equation"></span> + <span class="green" id="green-equation"></span> = <span class="blue">1.0000</span></div><div class="sum" role="img" aria-label="Red area plus green area fills one unit of area"><div id="red-bar" class="r"></div><div id="green-bar" class="g"></div></div><p class="note">The bar compares areas; the exact equality follows from Pythagoras. Displayed values are rounded.</p><label class="toggle" style="margin-top:15px"><input id="squares" type="checkbox" checked> Show the three squares</label><p class="note" style="margin-top:9px">Small squares keep their area labels in the readouts above so text stays legible.</p></div>
+</aside>
+</div>
+<div class="flow" aria-label="Proof sequence"><div class="flow-step"><span>01 · Unit circle</span><b>OP = 1</b></div><span class="arrow" aria-hidden="true">→</span><div class="flow-step"><span>02 · Right triangle</span><b>OQ² + QP² = OP²</b></div><span class="arrow" aria-hidden="true">→</span><div class="flow-step"><span>03 · Substitute</span><b>cos²(x) + sin²(x) = 1</b></div></div>
+<div class="panels">
+<section class="card panel"><h2>The Pythagorean Viewpoint</h2><div class="pyth"><svg viewBox="0 0 180 150" role="img" aria-label="Reference right triangle with horizontal side a, vertical side b, and hypotenuse c"><path d="M25 110 H145 V25 Z" fill="#eff5ff" stroke="#52647b" stroke-width="2"/><path d="M131 110 V96 H145" fill="none" stroke="#52647b" stroke-width="2"/><g font-family="Georgia,serif" font-size="21" text-anchor="middle"><text x="85" y="137" fill="#087849">a</text><text x="165" y="74" fill="#c52f46">b</text><text x="75" y="57" fill="#245ccc">c</text></g></svg><div><p class="math"><b>a² + b² = c²</b></p><p style="margin-top:10px">In a first-quadrant unit-circle right triangle, <span class="green">a = cos(x)</span>, <span class="red">b = sin(x)</span>, and <span class="blue">c = 1</span>.</p></div></div><p class="note" style="margin-top:16px">In every quadrant, the side lengths are a = |cos(x)| and b = |sin(x)|. Squaring removes the signs.</p></section>
+<section class="card panel"><h2>Squaring the Visual</h2><p>A square built on a side of length s has area s × s = s².</p><div class="transform"><div><span class="green">|cos(x)| × |cos(x)|</span><b class="green">→ cos²(x)</b></div><div><span class="red">|sin(x)| × |sin(x)|</span><b class="red">→ sin²(x)</b></div><div><span class="blue">1 × 1</span><b class="blue">→ 1</b></div></div><p class="note">Each colored region is an actual square built outward from its triangle side. Its area changes with the side length.</p></section>
+</div>
+<section class="card synthesis"><h2>Synthesis · The identity</h2><div class="final-equation"><span class="red">sin²(x)<small>Red area</small></span><span>+</span><span class="green">cos²(x)<small>Green area</small></span><span>=</span><span class="blue">1<small>Blue area</small></span></div><p>Pythagoras equates the sum of the squares on the two legs with the square on the hypotenuse. The hypotenuse is always the unit radius, so sin²(x) + cos²(x) = 1 for every real angle x. At the axes, one leg has length zero and the other has length one; the identity still holds.</p></section>
+<noscript><p>Please enable JavaScript to use the interactive diagram.</p></noscript>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const R=136, origin={x:365,y:320};
+let degrees=45, playing=false, lastTime=null, frame=null, dragging=false;
+const colors={green:'#087849',red:'#c52f46',blue:'#245ccc'};
+const screen=p=>({x:origin.x+p.x*R,y:origin.y-p.y*R});
+const clean=n=>Math.abs(n)<1e-10?0:n;
+const fixed=n=>clean(n).toFixed(4);
+function square(a,b,inside){
+ const dx=b.x-a.x,dy=b.y-a.y;
+ let n={x:-dy,y:dx};
+ if(n.x*(inside.x-a.x)+n.y*(inside.y-a.y)>0){n.x=-n.x;n.y=-n.y;}
+ return [a,b,{x:b.x+n.x,y:b.y+n.y},{x:a.x+n.x,y:a.y+n.y}];
+}
+function text(x,y,s,size=18,fill='#142238',extra=''){
+ return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${size}" font-weight="600" fill="${fill}" stroke="white" stroke-width="4" paint-order="stroke" stroke-linejoin="round" ${extra}>${s}</text>`;
+}
+function line(a,b,color,width=2,extra=''){return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${color}" stroke-width="${width}" ${extra}/>`;}
+function shape(points,color){return `<polygon points="${points.map(p=>{p=screen(p);return p.x+','+p.y}).join(' ')}" fill="${color}" fill-opacity=".16" stroke="${color}" stroke-width="2"/>`;}
+function squareLabel(points,area,title,color){
+ if(area<.4)return '';
+ const p=screen({x:points.reduce((s,p)=>s+p.x,0)/4,y:points.reduce((s,p)=>s+p.y,0)/4});
+ // Two short centered lines fit inside even the smaller labelled squares.
+ if(color===colors.red) p.x+=Math.sign(points[2].x-points[1].x)*12;
+ if(color===colors.green && points[2].y>points[1].y) p.y-=16;
+ if(color===colors.blue) return text(p.x,p.y-10,'Area = 1²',18,color)+text(p.x,p.y+14,'= 1',18,color);
+ return text(p.x,p.y-3,'Area',15,color)+text(p.x,p.y+19,title,16,color);
+}
+function sideLabel(a,b,sq,label,color){
+ const A=screen(a),B=screen(b),length=Math.hypot(B.x-A.x,B.y-A.y);
+ if(length<65)return '';
+ const mid={x:(A.x+B.x)/2,y:(A.y+B.y)/2},C=screen({x:sq.reduce((s,p)=>s+p.x,0)/4,y:sq.reduce((s,p)=>s+p.y,0)/4});
+ const d=Math.hypot(C.x-mid.x,C.y-mid.y)||1;
+ const p={x:mid.x+17*(C.x-mid.x)/d,y:mid.y+17*(C.y-mid.y)/d};
+ let angle=Math.atan2(B.y-A.y,B.x-A.x)*180/Math.PI;
+ if(angle>90)angle-=180;if(angle< -90)angle+=180;
+ return text(p.x,p.y,label,17,color,`transform="rotate(${angle} ${p.x} ${p.y})"`);
+}
+function render(){
+ const t=degrees*Math.PI/180,c=clean(Math.cos(t)),s=clean(Math.sin(t));
+ const O={x:0,y:0},Q={x:c,y:0},P={x:c,y:s};
+ const os=screen(O),qs=screen(Q),ps=screen(P);
+ const green=square(O,Q,P),red=square(Q,P,O),blue=square(P,O,Q);
+ const g=c*c,r=s*s,show=$('squares').checked;
+ let out='';
+ // The fixed coordinate frame reserves generous margins for every angle.
+ if(show){out+=shape(blue,colors.blue)+shape(green,colors.green)+shape(red,colors.red);}
+ out+=`<circle cx="${os.x}" cy="${os.y}" r="${R}" fill="none" stroke="#7e8da4" stroke-width="1.8" stroke-dasharray="5 5"/>`;
+ out+=line({x:70,y:os.y},{x:690,y:os.y},'#adb9ca')+line({x:os.x,y:50},{x:os.x,y:590},'#adb9ca');
+ out+=text(704,os.y,'u',17,'#52647b')+text(os.x,34,'v',17,'#52647b');
+ for(const n of [-1,1]){out+=line({x:os.x+n*R,y:os.y-4},{x:os.x+n*R,y:os.y+4},'#7e8da4');out+=text(os.x+n*R,os.y+18,String(n),14,'#52647b');}
+ out+=`<polygon points="${os.x},${os.y} ${qs.x},${qs.y} ${ps.x},${ps.y}" fill="#142238" fill-opacity=".06"/>`;
+ out+=line(os,qs,colors.green,4)+line(qs,ps,colors.red,4,'stroke-dasharray="7 4"')+line(os,ps,colors.blue,4);
+ if(Math.abs(c)>.12&&Math.abs(s)>.12){
+ const k=12,dx=-Math.sign(c)*k,dy=-Math.sign(s)*k;
+ out+=`<path d="M${qs.x+dx} ${qs.y} v${dy} h${-dx}" fill="none" stroke="#142238" stroke-width="1.6"/>`;
+ }
+ // Draw a full revolution as two arcs at 360 degrees.
+ const ar=35,ex=os.x+ar*Math.cos(t),ey=os.y-ar*Math.sin(t);
+ if(degrees>=359.99){out+=`<circle cx="${os.x}" cy="${os.y}" r="${ar}" fill="none" stroke="#7743b5" stroke-width="2"/>`;}
+ else if(degrees>0){out+=`<path d="M${os.x+ar} ${os.y} A${ar} ${ar} 0 ${degrees>180?1:0} 0 ${ex} ${ey}" fill="none" stroke="#7743b5" stroke-width="2"/>`;}
+ const at=Math.min(t/2,Math.PI/9);out+=text(os.x+51*Math.cos(at),os.y-51*Math.sin(at),'x',20,'#7743b5');
+ if(show){out+=squareLabel(blue,1,'Area = 1',colors.blue)+squareLabel(green,g,'cos²(x)',colors.green)+squareLabel(red,r,'sin²(x)',colors.red);}
+ // Avoid crowded side labels when the triangle is nearly degenerate.
+ if(Math.min(Math.abs(c),Math.abs(s))>.27){out+=sideLabel(O,Q,green,c<0?'|cos x|':'cos x',colors.green)+sideLabel(Q,P,red,s<0?'|sin x|':'sin x',colors.red);}
+ out+=sideLabel(P,O,blue,'1',colors.blue);
+ out+=`<circle cx="${os.x}" cy="${os.y}" r="4" fill="#142238"/>`+text(os.x-(Math.sign(c)||1)*18,os.y+(Math.sign(s)||1)*22,'O',17);
+ if(Math.abs(c)>.12&&Math.abs(s)>.12){out+=`<circle cx="${qs.x}" cy="${qs.y}" r="4" fill="#142238"/>`+text(qs.x+Math.sign(c)*17,qs.y+Math.sign(s)*19,'Q',17);}
+ out+=`<circle cx="${ps.x}" cy="${ps.y}" r="18" fill="transparent"/><circle cx="${ps.x}" cy="${ps.y}" r="7" fill="#142238" stroke="white" stroke-width="3"/>`;
+ out+=text(ps.x+22*c,ps.y-22*s,'P',19);
+ $('drawing').innerHTML=out;
+ $('angle').value=degrees;$('angle-value').textContent=Number(degrees.toFixed(1))+'°';$('radians').textContent=(degrees/180).toFixed(3)+'π radians';
+ $('point-coords').textContent=`P = (${fixed(c)}, ${fixed(s)})`;$('foot-coords').textContent=`Q = (${fixed(c)}, 0)`;
+ $('quadrant-note').textContent=Math.abs(c*s)<1e-9?'On an axis: the triangle collapses and one square has zero area.':'Side lengths: OQ = |cos(x)| = '+fixed(Math.abs(c))+'; QP = |sin(x)| = '+fixed(Math.abs(s))+'; OP = 1.';
+ $('red-value').textContent=fixed(r);$('green-value').textContent=fixed(g);$('red-equation').textContent=fixed(r);$('green-equation').textContent=fixed(g);
+ $('red-bar').style.width=(r*100)+'%';$('green-bar').style.width=(g*100)+'%';
+ $('svg-desc').textContent=`Angle ${degrees.toFixed(1)} degrees. Red area ${fixed(r)} plus green area ${fixed(g)} equals blue area 1. Use the angle slider to change the angle.`;
+}
+function stop(){playing=false;lastTime=null;cancelAnimationFrame(frame);$('play').textContent='Play rotation';$('play').setAttribute('aria-pressed','false');}
+function animate(time){if(!playing)return;if(lastTime!==null)degrees=(degrees+Math.min(time-lastTime,80)*.018)%360;lastTime=time;render();frame=requestAnimationFrame(animate);}
+$('play').addEventListener('click',()=>{if(playing){stop();return;}playing=true;lastTime=null;$('play').textContent='Pause rotation';$('play').setAttribute('aria-pressed','true');frame=requestAnimationFrame(animate);});
+$('angle').addEventListener('input',event=>{stop();degrees=Number(event.target.value);render();});
+$('reset').addEventListener('click',()=>{stop();degrees=45;$('squares').checked=true;render();});
+$('squares').addEventListener('change',render);
+document.querySelectorAll('[data-angle]').forEach(button=>button.addEventListener('click',()=>{stop();degrees=Number(button.dataset.angle);render();}));
+function drag(event){const point=$('diagram').createSVGPoint();point.x=event.clientX;point.y=event.clientY;const p=point.matrixTransform($('diagram').getScreenCTM().inverse());if(Math.hypot(p.x-origin.x,p.y-origin.y)<10)return;degrees=(Math.atan2(origin.y-p.y,p.x-origin.x)*180/Math.PI+360)%360;render();}
+$('diagram').addEventListener('pointerdown',event=>{stop();dragging=true;$('diagram').setPointerCapture(event.pointerId);drag(event);});
+$('diagram').addEventListener('pointermove',event=>{if(dragging)drag(event);});
+['pointerup','pointercancel','lostpointercapture'].forEach(type=>$('diagram').addEventListener(type,()=>{dragging=false;}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+render();
+</script>
+</body>
+</html>

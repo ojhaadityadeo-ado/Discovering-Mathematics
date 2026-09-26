@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Demonstration: Inclusion-Exclusion for Three Sets</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background:#f8fafc; color:#1e293b; }
+    .container-custom { max-width:1280px; margin:0 auto; background:#fff; padding:24px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,.05); }
+    .svg-container { background:#fff; background-image:radial-gradient(#f1f5f9 1px, transparent 1px); background-size:24px 24px; border-radius:8px; border:2px solid #cbd5e1; position:relative; overflow:hidden; box-shadow:inset 0 2px 6px rgba(0,0,0,.06); }
+    .mode-tab { padding:10px 18px; font-weight:600; cursor:pointer; color:#64748b; border-bottom:3px solid transparent; transition:.2s; }
+    .mode-tab.active { color:#4f46e5; border-bottom-color:#4f46e5; }
+    .btn-action { padding:8px 16px; border-radius:8px; font-weight:600; font-size:.9rem; border:none; cursor:pointer; display:inline-flex; gap:6px; align-items:center; justify-content:center; }
+    .btn-play { background:#4f46e5; color:#fff; }
+    .btn-secondary { background:#e2e8f0; color:#334155; }
+    .btn-action:disabled { opacity:.5; cursor:not-allowed; }
+    .ledger-step { border-left:4px solid transparent; opacity:.5; transition:.25s; }
+    .ledger-step.active { background:#eff6ff; border-left-color:#3b82f6; opacity:1; }
+    .dot { transition: fill .35s ease, stroke .35s ease, transform .35s ease, opacity .35s ease; transform-box:fill-box; transform-origin:center; }
+    .dot.counted { stroke:#111827; stroke-width:3; transform:scale(1.08); }
+    .count-badge { font-size:16px; font-weight:700; fill:#0f172a; opacity:0; transition:opacity .3s ease; }
+    .count-badge.show { opacity:1; }
+    .formula-chip { border:1px solid #cbd5e1; background:#fff; border-radius:8px; padding:8px 12px; font-weight:700; }
+    .math-font { font-family:'Times New Roman', serif; font-style:italic; }
+  </style>
+</head>
+<body class="p-4 md:p-6">
+  <div class="container-custom">
+    <h1 class="text-3xl font-bold text-center text-slate-800 mb-2 flex items-center justify-center gap-3">
+      <i class="fa-solid fa-circle-nodes text-indigo-600 text-2xl"></i> Inclusion-Exclusion for Three Sets
+    </h1>
+    <p class="text-center text-slate-500 text-sm mb-6 max-w-3xl mx-auto">
+      See why we first add the three set counts, then subtract the three pairwise overlaps, and finally add the triple overlap back once.
+    </p>
+
+    <div class="text-center text-lg md:text-xl font-bold p-4 bg-indigo-50 text-indigo-950 rounded-lg mb-6 border border-indigo-200 overflow-x-auto">
+      $$ n(A\cup B\cup C)=n(A)+n(B)+n(C)-n(A\cap B)-n(B\cap C)-n(C\cap A)+n(A\cap B\cap C) $$
+    </div>
+
+    <div class="flex justify-center mb-6 border-b border-slate-200 overflow-x-auto">
+      <div class="flex flex-wrap justify-center gap-2 md:gap-5 min-w-max px-2">
+        <div class="mode-tab active" id="tab-1">1. Add $n(A),n(B),n(C)$</div>
+        <div class="mode-tab" id="tab-2">2. Pairwise Overlaps</div>
+        <div class="mode-tab" id="tab-3">3. Triple Overlap</div>
+        <div class="mode-tab" id="tab-4">4. Final Count</div>
+      </div>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg mb-6 flex flex-col xl:flex-row items-center justify-between gap-4">
+      <div class="bg-white px-4 py-3 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 min-w-[280px] text-center" id="mode-desc">
+        First add the counts of $A$, $B$, and $C$.
+      </div>
+      <div class="flex items-center gap-3 flex-wrap justify-center">
+        <span class="font-semibold text-slate-700 text-sm">Step:</span>
+        <span id="stepIndicator" class="text-indigo-700 font-bold bg-indigo-100 px-3 py-1 rounded-md border border-indigo-200">0 / 5</span>
+        <button id="playPauseBtn" class="btn-action btn-play"><i class="fa-solid fa-play"></i> Auto-Play</button>
+        <button id="nextBtn" class="btn-action btn-secondary">Next →</button>
+        <button id="resetBtn" class="btn-action btn-secondary" title="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div class="lg:col-span-3 svg-container min-h-[560px] flex items-center justify-center">
+        <svg id="scene" viewBox="0 0 860 560" class="w-full h-full max-h-[620px]" aria-label="Three-set Venn diagram with counted elements">
+          <rect x="45" y="45" width="770" height="460" fill="#f8fafc" stroke="#64748b" stroke-width="3" rx="8"></rect>
+          <text x="60" y="78" class="math-font" font-size="26" font-weight="700" fill="#475569">U</text>
+
+          <!-- Set circles -->
+          <circle cx="325" cy="250" r="150" fill="#bfdbfe" fill-opacity="0.30" stroke="#334155" stroke-width="3"></circle>
+          <circle cx="535" cy="250" r="150" fill="#fecaca" fill-opacity="0.30" stroke="#334155" stroke-width="3"></circle>
+          <circle cx="430" cy="340" r="140" fill="#bbf7d0" fill-opacity="0.30" stroke="#334155" stroke-width="3"></circle>
+
+          <text x="185" y="135" class="math-font" font-size="34" font-weight="700">A</text>
+          <text x="640" y="135" class="math-font" font-size="34" font-weight="700">B</text>
+          <text x="425" y="500" text-anchor="middle" class="math-font" font-size="34" font-weight="700">C</text>
+
+          <!-- A only -->
+          <g class="elem" data-region="a"><circle class="dot" cx="245" cy="215" r="13" fill="#93c5fd"></circle><text x="239" y="220" font-size="12" font-weight="700">1</text><text class="count-badge" x="228" y="195">×0</text></g>
+          <g class="elem" data-region="a"><circle class="dot" cx="275" cy="320" r="13" fill="#93c5fd"></circle><text x="269" y="325" font-size="12" font-weight="700">2</text><text class="count-badge" x="258" y="300">×0</text></g>
+
+          <!-- B only -->
+          <g class="elem" data-region="b"><circle class="dot" cx="615" cy="220" r="13" fill="#fca5a5"></circle><text x="609" y="225" font-size="12" font-weight="700">3</text><text class="count-badge" x="598" y="200">×0</text></g>
+          <g class="elem" data-region="b"><circle class="dot" cx="585" cy="320" r="13" fill="#fca5a5"></circle><text x="579" y="325" font-size="12" font-weight="700">4</text><text class="count-badge" x="568" y="300">×0</text></g>
+
+          <!-- C only -->
+          <g class="elem" data-region="c"><circle class="dot" cx="365" cy="430" r="13" fill="#86efac"></circle><text x="359" y="435" font-size="12" font-weight="700">5</text><text class="count-badge" x="348" y="410">×0</text></g>
+          <g class="elem" data-region="c"><circle class="dot" cx="495" cy="430" r="13" fill="#86efac"></circle><text x="489" y="435" font-size="12" font-weight="700">6</text><text class="count-badge" x="478" y="410">×0</text></g>
+
+          <!-- A∩B only -->
+          <g class="elem" data-region="ab"><circle class="dot" cx="430" cy="185" r="13" fill="#c4b5fd"></circle><text x="424" y="190" font-size="12" font-weight="700">7</text><text class="count-badge" x="412" y="165">×0</text></g>
+
+          <!-- A∩C only -->
+          <g class="elem" data-region="ac"><circle class="dot" cx="340" cy="335" r="13" fill="#67e8f9"></circle><text x="334" y="340" font-size="12" font-weight="700">8</text><text class="count-badge" x="322" y="315">×0</text></g>
+
+          <!-- B∩C only -->
+          <g class="elem" data-region="bc"><circle class="dot" cx="520" cy="335" r="13" fill="#f9a8d4"></circle><text x="514" y="340" font-size="12" font-weight="700">9</text><text class="count-badge" x="502" y="315">×0</text></g>
+
+          <!-- triple -->
+          <g class="elem" data-region="abc"><circle class="dot" cx="430" cy="285" r="15" fill="#fcd34d"></circle><text x="421" y="290" font-size="12" font-weight="700">10</text><text class="count-badge" x="410" y="262">×0</text></g>
+
+          <g id="pairwise-ring" opacity="0">
+            <ellipse cx="430" cy="285" rx="160" ry="135" fill="none" stroke="#7c3aed" stroke-width="5" stroke-dasharray="10 8"></ellipse>
+          </g>
+
+          <g id="triple-ring" opacity="0">
+            <circle cx="430" cy="285" r="42" fill="none" stroke="#d97706" stroke-width="6" stroke-dasharray="8 7"></circle>
+          </g>
+        </svg>
+      </div>
+
+      <div class="lg:col-span-2 flex flex-col gap-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <h2 class="font-semibold text-lg border-b pb-2 mb-3">Counting Ledger</h2>
+          <div id="ledger" class="space-y-2.5 text-sm"></div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="grid grid-cols-2 gap-3 text-center">
+            <div class="formula-chip">$n(A)=5$</div>
+            <div class="formula-chip">$n(B)=5$</div>
+            <div class="formula-chip">$n(C)=5$</div>
+            <div class="formula-chip">$n(A\cup B\cup C)=10$</div>
+          </div>
+          <div class="grid grid-cols-3 gap-3 text-center mt-3">
+            <div class="formula-chip">$n(A\cap B)=2$</div>
+            <div class="formula-chip">$n(B\cap C)=2$</div>
+            <div class="formula-chip">$n(C\cap A)=2$</div>
+          </div>
+          <div class="mt-3 text-center">
+            <div class="formula-chip inline-block">$n(A\cap B\cap C)=1$</div>
+          </div>
+        </div>
+
+        <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 min-h-[120px] flex items-center justify-center">
+          <p id="statusText" class="text-sm text-indigo-950 leading-relaxed font-medium text-center" aria-live="polite">
+            Press <strong>Next</strong> to begin counting.
+          </p>
+        </div>
+
+        <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 text-sm text-amber-950">
+          <strong>Key idea:</strong> adding $n(A)+n(B)+n(C)$ overcounts elements in overlaps. Subtracting all three pairwise intersections fixes the double counts, but it removes the triple-overlap element too much, so $n(A\cap B\cap C)$ must be added back once.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const steps = [
+      {
+        title:'1. Add the three set counts',
+        text:'First count all elements in $A$, then all in $B$, then all in $C$. The total is $n(A)+n(B)+n(C)=5+5+5=15$.',
+        desc:'First add the counts of $A$, $B$, and $C$.',
+        tab:0
+      },
+      {
+        title:'2. What has been overcounted?',
+        text:'An element lying in exactly two sets has been counted twice. The element in $A\\cap B\\cap C$ has been counted three times.',
+        desc:'Now look at the overlap regions.',
+        tab:1
+      },
+      {
+        title:'3. Subtract the three pairwise intersections',
+        text:'Subtract $n(A\\cap B)$, $n(B\\cap C)$, and $n(C\\cap A)$. This removes one extra count from every pairwise-overlap element.',
+        desc:'Subtract each pairwise overlap once.',
+        tab:1
+      },
+      {
+        title:'4. What happened to the triple overlap?',
+        text:'The triple-overlap element started with count 3. It was then subtracted once in each of the three pairwise intersections, so its count became $3-3=0$. But it should be counted once.',
+        desc:'The triple-overlap element has now been removed too much.',
+        tab:2
+      },
+      {
+        title:'5. Add the triple intersection back once',
+        text:'Add $n(A\\cap B\\cap C)$ once. This changes the triple-overlap count from 0 to 1.',
+        desc:'Add the triple overlap back once.',
+        tab:2
+      },
+      {
+        title:'6. Final count',
+        text:'Now every element of $A\\cup B\\cup C$ is counted exactly once. Therefore $15-2-2-2+1=10$.',
+        desc:'Every union element is now counted once.',
+        tab:3
+      }
+    ];
+
+    let step = -1;
+    let playing = false;
+    let timer = null;
+
+    const tabs = [1,2,3,4].map(i => document.getElementById('tab-'+i));
+    const nextBtn = document.getElementById('nextBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const playBtn = document.getElementById('playPauseBtn');
+    const status = document.getElementById('statusText');
+    const ledger = document.getElementById('ledger');
+    const stepIndicator = document.getElementById('stepIndicator');
+    const modeDesc = document.getElementById('mode-desc');
+    const pairwiseRing = document.getElementById('pairwise-ring');
+    const tripleRing = document.getElementById('triple-ring');
+    const elems = [...document.querySelectorAll('.elem')];
+
+    function safeTypeset() {
+      if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise().catch(()=>{});
+    }
+
+    function renderLedger() {
+      ledger.innerHTML = steps.map((s,i) => `
+        <div class="ledger-step p-3 rounded-lg border border-slate-200 ${i===step?'active':''}">
+          <span class="font-bold text-slate-800 block mb-1">${s.title}</span>
+          <span class="text-xs text-slate-600 leading-relaxed">${s.text}</span>
+        </div>`).join('');
+    }
+
+    function setBadge(region, text, show=true) {
+      elems.filter(e=>e.dataset.region===region).forEach(g=>{
+        const badge = g.querySelector('.count-badge');
+        badge.textContent = text;
+        badge.classList.toggle('show', show);
+      });
+    }
+
+    function highlight(region, on=true) {
+      elems.filter(e=>e.dataset.region===region).forEach(g=>g.querySelector('.dot').classList.toggle('counted', on));
+    }
+
+    function clearVisuals() {
+      elems.forEach(g=>{
+        g.querySelector('.dot').classList.remove('counted');
+        g.querySelector('.count-badge').classList.remove('show');
+      });
+      pairwiseRing.setAttribute('opacity','0');
+      tripleRing.setAttribute('opacity','0');
+    }
+
+    function applyStep() {
+      clearVisuals();
+      if (step < 0) return;
+
+      // After adding A, B, C:
+      if (step >= 0) {
+        highlight('a'); highlight('b'); highlight('c');
+        highlight('ab'); highlight('ac'); highlight('bc'); highlight('abc');
+        setBadge('a','×1'); setBadge('b','×1'); setBadge('c','×1');
+        setBadge('ab','×2'); setBadge('ac','×2'); setBadge('bc','×2');
+        setBadge('abc','×3');
+      }
+
+      // Emphasize overcounted overlap regions
+      if (step >= 1) {
+        pairwiseRing.setAttribute('opacity','1');
+      }
+
+      // After subtracting pairwise intersections
+      if (step >= 2) {
+        setBadge('ab','×1'); setBadge('ac','×1'); setBadge('bc','×1');
+        setBadge('abc','×0');
+      }
+
+      // Emphasize triple-overlap problem
+      if (step >= 3) {
+        pairwiseRing.setAttribute('opacity','0');
+        tripleRing.setAttribute('opacity','1');
+      }
+
+      // Add triple back once
+      if (step >= 4) {
+        setBadge('abc','×1');
+      }
+
+      if (step >= 5) {
+        tripleRing.setAttribute('opacity','0');
+      }
+    }
+
+    function setStep(newStep) {
+      step = Math.max(-1, Math.min(newStep, steps.length-1));
+      stepIndicator.textContent = `${Math.max(step+1,0)} / ${steps.length}`;
+      if (step >= 0) {
+        status.innerHTML = steps[step].text;
+        modeDesc.innerHTML = steps[step].desc;
+        tabs.forEach((t,i)=>t.classList.toggle('active', i===steps[step].tab));
+      } else {
+        status.innerHTML = 'Press <strong>Next</strong> to begin counting.';
+        modeDesc.innerHTML = 'First add the counts of $A$, $B$, and $C$.';
+        tabs.forEach((t,i)=>t.classList.toggle('active', i===0));
+      }
+      applyStep();
+      renderLedger();
+      nextBtn.disabled = step >= steps.length-1;
+      safeTypeset();
+    }
+
+    function next() {
+      if (step < steps.length-1) setStep(step+1);
+      else pause();
+    }
+
+    function togglePlay() {
+      if (playing) { pause(); return; }
+      if (step >= steps.length-1) setStep(-1);
+      playing = true;
+      playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+      playBtn.classList.remove('btn-play');
+      playBtn.classList.add('btn-secondary');
+      next();
+      timer = setInterval(()=>{
+        if (step >= steps.length-1) pause(); else next();
+      },2800);
+    }
+
+    function pause() {
+      playing = false;
+      clearInterval(timer);
+      playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Auto-Play';
+      playBtn.classList.remove('btn-secondary');
+      playBtn.classList.add('btn-play');
+    }
+
+    nextBtn.addEventListener('click', next);
+    resetBtn.addEventListener('click', ()=>{ pause(); setStep(-1); });
+    playBtn.addEventListener('click', togglePlay);
+
+    tabs.forEach((t,i)=>t.addEventListener('click',()=>{
+      pause();
+      const map=[0,1,3,5];
+      setStep(map[i]);
+    }));
+
+    renderLedger();
+    setStep(-1);
+  </script>
+</body>
+</html>
