@@ -1,0 +1,242 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Math Detective: Case File 13 — Conversion Formulae</title><style>
+0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+body{
+  margin:0;
+  background:#e2e8f0;
+  color:#1e293b;
+  font-family:'Inter',sans-serif;
+  background-image:radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size:20px 20px;
+}
+.case-file{
+  font-family:'Courier Prime',monospace;
+  line-height:1.75;
+  font-size:1.03rem;
+  background:#fdfbf7;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+.stamp{
+  position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;
+  font-size:1.15rem;font-weight:bold;padding:.25rem .7rem;transform:rotate(-12deg);
+  opacity:.2;pointer-events:none;
+}
+.case-badge{
+  font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:#4338ca;background:#eef2ff;border:1px solid #c7d2fe;
+  border-radius:9999px;padding:.22rem .6rem;display:inline-block;margin-bottom:.6rem;
+}
+.stage-nav{
+  display:flex;flex-wrap:wrap;gap:.4rem;padding:1rem 1.5rem;border-bottom:1px solid #cbd5e1;
+  background:#f8fafc;font-family:'Inter',sans-serif;
+}
+.stage-nav button{
+  border:1px solid #cbd5e1;background:white;color:#64748b;border-radius:.4rem;
+  padding:.45rem .75rem;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s;
+}
+.stage-nav button:hover{border-color:#6366f1;color:#4338ca}
+.stage-nav button[aria-current="step"]{background:#4338ca;color:white;border-color:#4338ca}
+.evidence{
+  background:#eef2ff;border-left:4px solid #6366f1;padding:.9rem 1rem;
+  margin:1rem 0;font-family:'Inter',sans-serif;font-size:.96rem;
+}
+.concept-card{
+  background:#f8fafc;border:1px solid #cbd5e1;border-left:4px solid #475569;
+  padding:1rem;margin:1rem 0;font-family:'Inter',sans-serif;
+}
+.logic-card{
+  background:#f0fdf4;border:1px solid #bbf7d0;border-left:4px solid #22c55e;
+  padding:1rem;margin:1rem 0;font-family:'Inter',sans-serif;
+}
+.warning-card{
+  background:#fff7ed;border:1px solid #fed7aa;border-left:4px solid #f97316;
+  padding:1rem;margin:1rem 0;font-family:'Inter',sans-serif;
+}
+.question-card{
+  background:#fff;border:1px solid #e2e8f0;padding:1rem;margin:1rem 0;border-radius:.4rem;
+}
+.field-notes{
+  width:100%;min-height:105px;font-family:'Courier Prime',monospace;
+  background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;
+  padding:.75rem;margin:.5rem 0;border-radius:.25rem;resize:vertical;
+  font-size:.95rem;color:#3f3f46;
+}
+.field-notes::placeholder{color:#a1a1aa;font-style:italic}
+.input-field{
+  width:100%;min-height:44px;border:2px dashed #94a3b8;border-radius:.35rem;background:#f8fafc;
+  padding:.65rem .75rem;font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:.2s;
+}
+.input-field:focus{border-color:#4f46e5;border-style:solid;background:white}
+.input-field.good{border-color:#16a34a;border-style:solid;background:#f0fdf4}
+.input-field.retry{border-color:#dc2626;border-style:solid;background:#fef2f2}
+.feedback{font-family:'Inter',sans-serif;font-size:.84rem;color:#64748b;min-height:1.25rem;margin-top:.35rem}
+.feedback.good{color:#15803d}.feedback.retry{color:#b91c1c}
+.detective-hint{
+  background:#fffbeb;border-left:4px solid #f59e0b;padding:.75rem 1rem;margin:.8rem 0;
+  font-family:'Inter',sans-serif;font-size:.9rem;color:#92400e;
+}
+.formula-box{
+  background:#fff;border:2px solid #cbd5e1;border-radius:.45rem;padding:1rem;
+  margin:1rem 0;overflow-x:auto;font-family:'Inter',sans-serif;
+}
+.diagram-card{
+  background:#fff;border:1px solid #cbd5e1;border-radius:.6rem;padding:1rem;
+  box-shadow:inset 0 1px 4px rgba(15,23,42,.04);
+}
+.diagram-title{
+  font-family:'Inter',sans-serif;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;
+  font-weight:700;color:#64748b;margin-bottom:.4rem;
+}
+.diagram-note{
+  font-family:'Inter',sans-serif;font-size:.88rem;color:#475569;border-top:1px solid #e2e8f0;
+  margin-top:.6rem;padding-top:.7rem;text-align:center;
+}
+.diagram-card > svg text{font-family:'Inter',sans-serif;fill:#1e293b}
+.stage-section[hidden]{display:none!important}
+.details-card{border-top:1px solid #e2e8f0;padding-top:.8rem;margin-top:.8rem}
+details summary{cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;color:#4338ca}
+details[open] summary{margin-bottom:.55rem}
+.action-btn{
+  background:#1e293b;color:#fff;border:2px solid #0f172a;border-radius:.25rem;
+  padding:.7rem 1rem;font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;
+}
+.action-btn:hover{background:#4338ca;border-color:#3730a3}
+.action-btn.secondary{background:#e2e8f0;color:#334155;border-color:#cbd5e1}
+.action-btn.secondary:hover{background:#cbd5e1}
+.action-btn:disabled{opacity:.45;cursor:not-allowed}
+.ratio-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.status-bar{font-family:'Inter',sans-serif;color:#64748b;font-size:.85rem;font-weight:600}
+.small{font-family:'Inter',sans-serif;font-size:.85rem;color:#64748b}
+.solution-step{margin:1rem 0;padding:.9rem;background:#fff;border:1px solid #e2e8f0;border-radius:.4rem}
+.mini-table{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:.9rem;margin:.6rem 0}
+.mini-table th,.mini-table td{border:1px solid #cbd5e1;padding:.55rem;text-align:left}
+.mini-table th{background:#f1f5f9}
+@media(max-width:900px){
+  .two-col{grid-template-columns:1fr!important}.sticky-board{position:static!important}.ratio-grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .stage-nav{padding:.75rem}.stamp{font-size:.9rem;right:10px;top:12px}.case-file{font-size:.98rem}
+}
+
+/* Preserve the original template with local layout rules. */
+*{box-sizing:border-box} [hidden]{display:none!important}
+body{min-height:100vh;padding:32px;display:flex;justify-content:center;align-items:flex-start}
+.case-file{width:100%;max-width:1152px;position:relative;margin-top:16px;border-radius:3px}
+header{background:#1e293b;color:#f1f5f9;padding:28px;border-bottom:4px solid #0f172a;border-radius:3px 3px 0 0}
+header h1{font:700 clamp(22px,3vw,30px)/1.3 Inter,sans-serif;letter-spacing:.025em;margin:0;padding-right:115px}
+header p{margin:12px 0 0}header p:first-of-type{color:#94a3b8;font-family:'Courier Prime',monospace}
+header p:last-child{font:14px/1.75 Inter,sans-serif;max-width:930px}
+.case-file > .bg-indigo-900{background:#312e81;color:#e0e7ff;padding:20px 28px;font:14px/1.8 Inter,sans-serif}
+.two-col{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:28px;padding:32px}
+.two-col>*{min-width:0}.sticky-board{align-self:start;position:sticky;top:16px}
+.diagram-card>svg{display:block;width:100%;height:auto}
+h2{font:700 20px/1.45 Inter,sans-serif;color:#1e293b;letter-spacing:.045em;text-transform:uppercase;margin:0 0 18px}
+h3{font:700 16px/1.5 Inter,sans-serif;margin:0 0 12px}
+p{margin:0 0 14px}p:last-child{margin-bottom:0}
+label{display:block;font:600 14px/1.75 Inter,sans-serif;margin-bottom:10px}
+strong{font-weight:700}ol{padding-left:24px;margin:0}li+li{margin-top:12px}
+.concept-card,.logic-card,.warning-card,.question-card,.evidence,.solution-step{min-width:0;line-height:1.8;overflow-wrap:break-word}
+.question-card.m-0{margin:0}.ratio-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+.action-btn{min-height:44px;line-height:1.5;white-space:normal}.mt-2{margin-top:8px}.mt-4{margin-top:16px}
+.text-center{text-align:center}.font-sans{font-family:Inter,sans-serif}.font-semibold{font-weight:600}.mb-2{margin-bottom:8px}
+.formula-box{padding:16px 12px;overflow-x:auto;max-width:100%}
+mjx-container[display="true"]{display:block!important;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:4px 0;margin:16px 0!important}
+mjx-container svg{max-width:100%;height:auto}mjx-container:not([display="true"]){display:inline-block;max-width:100%;vertical-align:middle}
+.details-card summary{line-height:1.65;padding:4px 0}details[open] summary{margin-bottom:14px}
+.mini-table{table-layout:fixed}.mini-table th,.mini-table td{overflow-wrap:break-word;padding:9px 6px}
+#height-key{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;font:12px/1.6 Inter,sans-serif;text-align:center}
+#height-key>div{border:1px solid #a7f3d0;background:#ecfdf5;border-radius:4px;padding:8px}
+#height-key>div+div{border-color:#fed7aa;background:#fff7ed}
+footer{background:#e2e8f0;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:4px solid #cbd5e1}
+button:focus-visible,summary:focus-visible{outline:3px solid #6366f1;outline-offset:3px}
+@media(max-width:1000px){.two-col{grid-template-columns:minmax(0,1fr)}.sticky-board{position:static;max-width:460px;width:100%;margin:0 auto}}
+@media(max-width:650px){body{padding:12px}.case-file{margin-top:0}header{padding:22px 18px}header h1{padding-right:0}.stamp{position:static;display:table;margin:12px 18px 0 auto;opacity:.4;font-size:14px}.case-file>.stamp{position:absolute;top:0;right:0;margin:4px 8px;font-size:10px;border-width:2px}header h1{padding-top:14px}.case-file>.bg-indigo-900{padding:18px}.two-col{padding:18px;gap:22px}.ratio-grid{grid-template-columns:1fr}.stage-nav{gap:6px}.stage-nav button{flex:1 1 130px}footer{flex-wrap:wrap;justify-content:center}#progress{order:-1;flex-basis:100%;text-align:center}.formula-box{font-size:.9rem}.diagram-card{padding:12px}}
+
+
+.math{font-family:Georgia,'Times New Roman',serif;font-size:1.08em;letter-spacing:0;line-height:1.65}.eq{display:block;text-align:center;margin:12px 0;overflow-wrap:break-word}.eqline{display:block;margin:6px 0}.term{display:inline-block;white-space:nowrap}.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.4;margin:0 5px}.frac>span:first-child{border-bottom:1px solid;padding:0 5px 3px}.frac>span:last-child{padding:3px 5px 0}.boxed{border:1px solid #64748b;padding:10px;display:block}.stage-section:focus{outline:none}.diagram-card>svg text{font-family:Arial,sans-serif}.note-status{font:12px/1.5 Arial,sans-serif;color:#64748b}.mini-table{table-layout:auto}.mini-table td{vertical-align:top}.stamp{z-index:1}code{font-size:.95em} .formula-box{overflow:visible} @media(max-width:650px){.math{font-size:1em}.two-col{padding:14px}.concept-card,.logic-card,.warning-card,.question-card{padding:12px}.mini-table{font-size:.8rem}}
+
+.equation-line{display:block;margin:8px 0}.evidence-item{padding:12px 0;border-bottom:1px solid #cbd5e1}.evidence-item:last-child{border-bottom:0}.evidence-item .math{display:block;font-size:.95em}.formula-label{font:700 12px/1.5 Arial,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#4338ca;margin-bottom:8px}.formula-box{overflow-wrap:break-word}.eq{line-height:1.9}.case-section-label{font:700 12px/1.5 Arial,sans-serif;color:#64748b;text-transform:uppercase;letter-spacing:.08em}.route{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}.route span{padding:5px 10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:4px;font:600 13px/1.5 Arial,sans-serif} .formula-box .frac{font-size:.95em} @media(max-width:650px){.two-col{padding:14px}.eq{font-size:15px}.formula-box{padding:12px 8px}}
+</style></head><body><div class="case-file"><div class="stamp">OPEN CASE</div><header><h1>MATH DETECTIVE: CASE FILE #13</h1><p>Subject: Conversion Formulae</p><p><strong>Mission:</strong> Convert products into sums and differences, then use that discovery to convert sums and differences into products.</p></header><div class="bg-indigo-900"><strong>Detective Briefing:</strong> Familiar terms are hiding in known identities. Find them, cancel what you do not need, and discover how the same evidence solves the reverse problem.</div><nav class="stage-nav" id="stage-nav" aria-label="Investigation stages"></nav><div class="two-col"><aside class="sticky-board"><div class="diagram-card"><div class="diagram-title">Evidence board / Known identities</div><div class="evidence-item"><strong>Sine: sum</strong><span class="math">sin(A + B) =<br>sin A cos B + cos A sin B</span></div><div class="evidence-item"><strong>Sine: difference</strong><span class="math">sin(A − B) =<br>sin A cos B − cos A sin B</span></div><div class="evidence-item"><strong>Cosine: sum</strong><span class="math">cos(A + B) =<br>cos A cos B − sin A sin B</span></div><div class="evidence-item"><strong>Cosine: difference</strong><span class="math">cos(A − B) =<br>cos A cos B + sin A sin B</span></div></div><div class="evidence"><strong>The detective’s question</strong><p>Where have I seen this term—or something similar—before?</p></div><div class="concept-card"><strong>Cancellation tools</strong><p class="math">(X + Y) + (X − Y) = 2X</p><p class="math">(X + Y) − (X − Y) = 2Y</p></div><div class="diagram-note">First recognise the pattern.<br>Then choose the operation.</div></aside><main id="case-content"><section class="stage-section" data-step="0" aria-labelledby="title-0"><span class="case-badge">Clue 01 — List the possibilities</span><h2 id="title-0" tabindex="-1">Which products need investigating?</h2>
+<p class="case-section-label">Part I / Products into sums or differences</p>
+<p>Choose sine or cosine for angle A, and sine or cosine for angle B. What products can we make?</p>
+<div class="formula-box math"><div class="eq">sin A sin B, &nbsp; sin A cos B, &nbsp; cos A cos B</div></div>
+<div class="question-card"><label for="fourth">There is one more ordered possibility. What is it?</label><input class="input-field" id="fourth" placeholder="For example: sin A cos B" autocomplete="off"><p class="feedback" id="fourth-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="fourth">Check this clue</button></div>
+<details class="details-card"><summary>Open the fourth possibility</summary><div class="formula-box math"><div class="eq">cos A sin B = sin B cos A</div></div><p>Sine and cosine values are real numbers, and multiplication of real numbers is commutative: xy = yx. We can therefore reverse the order of the factors.</p><p>Once we know the formula for sin A cos B, we can interchange A and B to obtain the formula for sin B cos A.</p></details>
+<div class="warning-card"><strong>Watch the labels:</strong> cos A sin B equals sin B cos A. It does <em>not</em> generally equal sin A cos B. Swapping factors and swapping angle labels are different steps.</div>
+<div class="logic-card"><strong>Three main investigations:</strong> sin A sin B, cos A cos B, and sin A cos B. The fourth follows by interchanging A and B.</div>
+<p>Have we seen these products before? Search the four addition and difference identities on the evidence board.</p>
+<div class="question-card"><label for="recognition">Field notes: In which two identities do you see sin A sin B?</label><textarea class="field-notes" id="recognition" placeholder="Record your reasoning here…"></textarea></div>
+</section><section class="stage-section" data-step="1" hidden aria-labelledby="title-1"><span class="case-badge">Clue 02 — Spot and cancel</span><h2 id="title-1" tabindex="-1">First suspect: sin A sin B</h2>
+<p>The product appears in the two cosine identities. Write them together and inspect their signs.</p>
+<div class="formula-box math"><div class="eq">cos(A + B) = cos A cos B − sin A sin B</div><div class="eq">cos(A − B) = cos A cos B + sin A sin B</div></div>
+<p>Our target is sin A sin B. The shared term cos A cos B is in the way. Which operation will cancel it?</p>
+<div class="question-card"><label for="cancel">Should we add or subtract the two equations?</label><input class="input-field" id="cancel" placeholder="Type add or subtract" autocomplete="off"><p class="feedback" id="cancel-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="cancel">Check this clue</button></div>
+<details class="details-card"><summary>Clue — Choose the subtraction order</summary><p>Subtract cos(A + B) from cos(A − B). This leaves the sine product with a positive coefficient.</p></details>
+<details class="details-card"><summary>Open the first deduction</summary><div class="formula-box math"><div class="eq">cos(A − B) − cos(A + B)</div><div class="eq">= (cos A cos B + sin A sin B)</div><div class="eq">− (cos A cos B − sin A sin B)</div><div class="eq">= 2 sin A sin B</div></div><p>Divide both sides by 2:</p><div class="formula-box math"><div class="eq">sin A sin B =</div><div class="eq"><span class="frac"><span>1</span><span>2</span></span>[cos(A − B) − cos(A + B)]</div></div></details>
+<div class="detective-hint"><strong>Detective’s Note:</strong> We chose subtraction for a reason: it cancels the common cosine product and doubles the sine product.</div>
+</section><section class="stage-section" data-step="2" hidden aria-labelledby="title-2"><span class="case-badge">Clue 03 — Use the same evidence</span><h2 id="title-2" tabindex="-1">Second suspect: cos A cos B</h2>
+<p>Keep the same pair of cosine identities. This time, we want to remove the sine product.</p>
+<div class="formula-box math"><div class="eq">cos(A − B) = cos A cos B + sin A sin B</div><div class="eq">cos(A + B) = cos A cos B − sin A sin B</div></div>
+<div class="question-card"><label for="cos-operation">Which operation cancels the opposite sine-product terms?</label><input class="input-field" id="cos-operation" placeholder="Type add or subtract" autocomplete="off"><p class="feedback" id="cos-operation-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="cos-operation">Check this clue</button></div>
+<details class="details-card"><summary>Open the cosine-product deduction</summary><div class="formula-box math"><div class="eq">cos(A − B) + cos(A + B)</div><div class="eq">= (cos A cos B + sin A sin B)</div><div class="eq">+ (cos A cos B − sin A sin B)</div><div class="eq">= 2 cos A cos B</div></div><p>Divide by 2:</p><div class="formula-box math"><div class="eq">cos A cos B =</div><div class="eq"><span class="frac"><span>1</span><span>2</span></span>[cos(A − B) + cos(A + B)]</div></div></details>
+<div class="logic-card"><strong>One pair, two discoveries.</strong> Subtraction isolated sin A sin B. Addition isolates cos A cos B.</div>
+</section><section class="stage-section" data-step="3" hidden aria-labelledby="title-3"><span class="case-badge">Clue 04 — Follow the mixed products</span><h2 id="title-3" tabindex="-1">Third suspect—and the fourth</h2>
+<p>For sin A cos B, inspect the sine addition and difference identities.</p>
+<div class="formula-box math"><div class="eq">sin(A + B) = sin A cos B + cos A sin B</div><div class="eq">sin(A − B) = sin A cos B − cos A sin B</div></div>
+<div class="question-card"><label for="mixed-operation">How can we cancel cos A sin B?</label><input class="input-field" id="mixed-operation" placeholder="Type add or subtract" autocomplete="off"><p class="feedback" id="mixed-operation-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="mixed-operation">Check this clue</button></div>
+<details class="details-card"><summary>Open the mixed-product deduction</summary><div class="formula-box math"><div class="eq">sin(A + B) + sin(A − B)</div><div class="eq">= 2 sin A cos B</div></div><div class="formula-box math"><div class="eq">sin A cos B =</div><div class="eq"><span class="frac"><span>1</span><span>2</span></span>[sin(A + B) + sin(A − B)]</div></div></details>
+<h3>The fourth product: interchange A and B</h3>
+<p>By commutativity, cos A sin B = sin B cos A. Apply the formula just found with the angle labels interchanged:</p>
+<div class="formula-box math"><div class="eq">cos A sin B = sin B cos A</div><div class="eq">= <span class="frac"><span>1</span><span>2</span></span>[sin(B + A) + sin(B − A)]</div></div>
+<div class="evidence"><strong>Recall:</strong> B + A = A + B, while B − A = −(A − B). Sine changes sign when its angle is negated.</div>
+<div class="formula-box math"><div class="eq">sin(B − A) = −sin(A − B)</div></div>
+<div class="formula-box math"><div class="eq">cos A sin B =</div><div class="eq"><span class="frac"><span>1</span><span>2</span></span>[sin(A + B) − sin(A − B)]</div></div>
+<details class="details-card"><summary>Cross-check — Subtract the sine identities</summary><div class="formula-box math"><div class="eq">sin(A + B) − sin(A − B)</div><div class="eq">= 2 cos A sin B</div></div><p>This gives the same fourth formula directly.</p></details>
+</section><section class="stage-section" data-step="4" hidden aria-labelledby="title-4"><span class="case-badge">Clue 05 — Recognise the reverse route</span><h2 id="title-4" tabindex="-1">Can the discovery work backwards?</h2>
+<p class="case-section-label">Part II / Sums or differences into products</p>
+<p>Our new targets are:</p><div class="formula-box math"><div class="eq">sin C + sin D, &nbsp; sin C − sin D</div><div class="eq">cos C + cos D, &nbsp; cos C − cos D</div></div>
+<p>It may not be obvious how to begin. Ask the detective’s question: <strong>Have we just seen something similar?</strong></p>
+<div class="concept-card"><p>We have already found a sum of two sines:</p><div class="formula-box math"><div class="eq">sin(A + B) + sin(A − B)</div><div class="eq">= 2 sin A cos B</div></div><p>The angle inputs are written as A + B and A − B. Could these simply be our new angles C and D?</p></div>
+<div class="formula-box math"><div class="eq">C = A + B, &nbsp; D = A − B</div></div>
+<p>Given any real C and D, elementary algebra lets us find A and B. Add the equations to find A; subtract the second from the first to find B.</p>
+<div class="question-card"><label for="half-sum">What is A in terms of C and D?</label><input class="input-field" id="half-sum" placeholder="For example: (C+D)/2" autocomplete="off"><p class="feedback" id="half-sum-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="half-sum">Check this clue</button></div>
+<div class="question-card"><label for="half-difference">What is B in terms of C and D?</label><input class="input-field" id="half-difference" placeholder="Use C and D" autocomplete="off"><p class="feedback" id="half-difference-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="half-difference">Check this clue</button></div>
+<details class="details-card"><summary>Open the algebra envelope</summary><div class="formula-box math"><div class="eq">C + D = 2A, &nbsp; C − D = 2B</div><div class="eq">A = <span class="frac"><span>C + D</span><span>2</span></span>, &nbsp; B = <span class="frac"><span>C − D</span><span>2</span></span></div></div><p>Substitution verifies A + B = C and A − B = D. These choices work for every pair of real angles C and D.</p></details>
+<div class="logic-card"><strong>The bridge:</strong> A is the half-sum of C and D; B is the half-difference. The earlier identities already contain the conversions we need.</div>
+</section><section class="stage-section" data-step="5" hidden aria-labelledby="title-5"><span class="case-badge">Clue 06 — Make the substitution</span><h2 id="title-5" tabindex="-1">Turn sin C + sin D into a product</h2>
+<p>Start with the identity we discovered by adding the two sine formulas:</p>
+<div class="formula-box math"><div class="eq">sin(A + B) + sin(A − B)</div><div class="eq">= 2 sin A cos B</div></div>
+<p>Set C = A + B and D = A − B. Then</p>
+<div class="formula-box math"><div class="eq">sin C + sin D = 2 sin A cos B</div></div>
+<p>Now replace A by the half-sum and B by the half-difference.</p>
+<div class="formula-box math"><div class="eq">sin C + sin D =</div><div class="eq">2 sin(<span class="frac"><span>C + D</span><span>2</span></span>) cos(<span class="frac"><span>C − D</span><span>2</span></span>)</div></div>
+<div class="detective-hint"><strong>What changed?</strong> We recognised C and D as a sum and a difference of suitable angles. Solving two linear equations made the earlier product identity immediately useful.</div>
+<div class="question-card"><label for="numeric-a">If C = 70° and D = 30°, what is A?</label><input class="input-field" id="numeric-a" placeholder="Enter a number in degrees" autocomplete="off"><p class="feedback" id="numeric-a-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="numeric-a">Check this clue</button></div>
+<details class="details-card"><summary>Check the substitution</summary><div class="formula-box math"><div class="eq">A = 50°, &nbsp; B = 20°</div><div class="eq">sin 70° + sin 30° = 2 sin 50° cos 20°</div></div><p>The inputs recombine correctly: 50° + 20° = 70° and 50° − 20° = 30°.</p></details>
+<div class="question-card"><label for="bridge-notes">Field notes: Explain why writing an angle as A + B causes no restriction on C or D.</label><textarea class="field-notes" id="bridge-notes" placeholder="Record your reasoning here…"></textarea></div>
+</section><section class="stage-section" data-step="6" hidden aria-labelledby="title-6"><span class="case-badge">Clue 07 — Repeat the method</span><h2 id="title-6" tabindex="-1">The other three conversions</h2>
+<p>Use the same substitution throughout:</p><div class="formula-box math"><div class="eq">A = <span class="frac"><span>C + D</span><span>2</span></span>, &nbsp; B = <span class="frac"><span>C − D</span><span>2</span></span></div></div>
+<h3>1. Difference of sines</h3>
+<p>Our fourth product formula gives</p><div class="formula-box math"><div class="eq">sin(A + B) − sin(A − B)</div><div class="eq">= 2 cos A sin B</div></div><div class="formula-box math"><div class="eq">sin C − sin D =</div><div class="eq">2 cos(<span class="frac"><span>C + D</span><span>2</span></span>) sin(<span class="frac"><span>C − D</span><span>2</span></span>)</div></div>
+<h3>2. Sum of cosines</h3>
+<p>Our cosine-product formula gives</p><div class="formula-box math"><div class="eq">cos(A + B) + cos(A − B)</div><div class="eq">= 2 cos A cos B</div></div><div class="formula-box math"><div class="eq">cos C + cos D =</div><div class="eq">2 cos(<span class="frac"><span>C + D</span><span>2</span></span>) cos(<span class="frac"><span>C − D</span><span>2</span></span>)</div></div>
+<h3>3. Difference of cosines</h3>
+<p>The first product formula had cos(A − B) <em>minus</em> cos(A + B). Reverse that subtraction to match cos C − cos D:</p>
+<div class="formula-box math"><div class="eq">cos(A + B) − cos(A − B)</div><div class="eq">= −2 sin A sin B</div></div>
+<div class="question-card"><label for="last-sign">What sign must appear before 2 in the cosine-difference formula?</label><input class="input-field" id="last-sign" placeholder="Type + or −" autocomplete="off"><p class="feedback" id="last-sign-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="last-sign">Check this clue</button></div>
+<details class="details-card"><summary>Open the final conversion</summary><div class="formula-box math"><div class="eq">cos C − cos D =</div><div class="eq">−2 sin(<span class="frac"><span>C + D</span><span>2</span></span>) sin(<span class="frac"><span>C − D</span><span>2</span></span>)</div></div></details>
+<div class="warning-card"><strong>Keep the order:</strong> The half-difference is (C − D)/2. With this order, cos C − cos D has a negative sign in front.</div>
+</section><section class="stage-section" data-step="7" hidden aria-labelledby="title-7"><span class="case-badge">Clue 08 — Close the case</span><h2 id="title-7" tabindex="-1">The complete conversion file</h2>
+<div class="logic-card"><strong>Our discovery route:</strong> Recognise familiar products → add or subtract to cancel → reverse the result → replace A and B by the half-sum and half-difference.</div>
+<h3>Products into sums or differences</h3>
+<div class="formula-box math"><div class="eq">sin A sin B =</div><div class="eq"><span class="frac"><span>1</span><span>2</span></span>[cos(A − B) − cos(A + B)]</div></div><div class="formula-box math"><div class="eq">cos A cos B =</div><div class="eq"><span class="frac"><span>1</span><span>2</span></span>[cos(A − B) + cos(A + B)]</div></div><div class="formula-box math"><div class="eq">sin A cos B =</div><div class="eq"><span class="frac"><span>1</span><span>2</span></span>[sin(A + B) + sin(A − B)]</div></div><div class="formula-box math"><div class="eq">cos A sin B =</div><div class="eq"><span class="frac"><span>1</span><span>2</span></span>[sin(A + B) − sin(A − B)]</div></div>
+<h3>Sums or differences into products</h3>
+<div class="formula-box math"><div class="eq">sin C + sin D =</div><div class="eq">2 sin(<span class="frac"><span>C + D</span><span>2</span></span>) cos(<span class="frac"><span>C − D</span><span>2</span></span>)</div></div><div class="formula-box math"><div class="eq">sin C − sin D =</div><div class="eq">2 cos(<span class="frac"><span>C + D</span><span>2</span></span>) sin(<span class="frac"><span>C − D</span><span>2</span></span>)</div></div><div class="formula-box math"><div class="eq">cos C + cos D =</div><div class="eq">2 cos(<span class="frac"><span>C + D</span><span>2</span></span>) cos(<span class="frac"><span>C − D</span><span>2</span></span>)</div></div><div class="formula-box math"><div class="eq">cos C − cos D =</div><div class="eq">−2 sin(<span class="frac"><span>C + D</span><span>2</span></span>) sin(<span class="frac"><span>C − D</span><span>2</span></span>)</div></div>
+<p class="small">All eight identities hold for all real angles. Use one consistent angle unit throughout.</p>
+<div class="question-card"><label for="sanity">Let C = D. What must both difference formulas give?</label><input class="input-field" id="sanity" placeholder="Enter a number" autocomplete="off"><p class="feedback" id="sanity-feedback" aria-live="polite"></p><button type="button" class="action-btn mt-2" data-check="sanity">Check this clue</button></div>
+<details class="details-card"><summary>Open the final check</summary><p>Both differences on the left are zero. On the right, the half-difference is zero, and sin 0 = 0, so both products vanish.</p></details>
+<div class="question-card"><label for="final-report">Final Detective Report: How did discovering product-to-sum formulas immediately unlock sum-to-product formulas?</label><textarea class="field-notes" id="final-report" placeholder="Record your reasoning here…"></textarea></div>
+<div class="detective-hint"><strong>Case Closed:</strong> The second family was hidden inside the first. Recognising the pattern and changing the angle variables revealed it.</div>
+</section></main></div><footer><button class="action-btn secondary" id="back" type="button">Previous clue</button><div class="status-bar" id="progress" aria-live="polite"></div><button class="action-btn" id="next" type="button">Next clue →</button></footer></div><script>(()=>{'use strict';const names=['Possibilities','Sine × sine','Cosine × cosine','Mixed products','The algebra bridge','Sum of sines','Other conversions','Case closed'];let current=0;const nav=document.getElementById('stage-nav'),back=document.getElementById('back'),next=document.getElementById('next');function show(i,focus){current=i;document.querySelectorAll('.stage-section').forEach((s,j)=>s.hidden=j!==i);[...nav.children].forEach((b,j)=>{if(j===i)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});back.disabled=i===0;next.hidden=i===names.length-1;next.textContent=i<names.length-1?names[i+1]+' →':'Next clue';document.getElementById('progress').textContent='Clue '+(i+1)+' of '+names.length;if(focus)document.getElementById('title-'+i).focus()}names.forEach((n,i)=>{const b=document.createElement('button');b.type='button';b.textContent=(i+1)+'. '+n;b.onclick=()=>show(i,true);nav.append(b)});back.onclick=()=>show(Math.max(0,current-1),true);next.onclick=()=>show(Math.min(names.length-1,current+1),true);
+const rules={fourth:[['cosasinb','sinbcosa'],'Correct. cos A sin B = sin B cos A, by commutativity.','Choose cosine for A and sine for B.'],cancel:[['subtract','subtraction','-'],'Correct. Subtract the sum-angle cosine from the difference-angle cosine.','The common cos A cos B terms have the same sign. How can they cancel?'],'cos-operation':[['add','addition','+'],'Correct. Addition cancels the opposite sine-product terms.','The sine products have opposite signs.'],'mixed-operation':[['add','addition','+'],'Correct. Adding cancels cos A sin B and doubles sin A cos B.','The cos A sin B terms have opposite signs.'],'half-sum':[['(c+d)/2','(d+c)/2','c/2+d/2','d/2+c/2'],'Correct. Adding gives C + D = 2A, so A = (C + D)/2.','Add C = A + B and D = A − B. Use parentheses around the numerator.'],'half-difference':[['(c-d)/2','c/2-d/2'],'Correct. Subtracting gives C − D = 2B, so B = (C − D)/2.','Subtract the equation for D from the equation for C.'],'numeric-a':[['50','50°','50degrees'],'Correct. A = (70° + 30°)/2 = 50°.','A is half the sum, not half the difference.'],'last-sign':[['-','minus','negative'],'Correct. Reversing the subtraction introduces the minus sign.','Our first identity had the cosine terms in the opposite order.'],sanity:[['0','zero'],'Correct. Both differences vanish, and sin((C − D)/2) = sin 0 = 0.','When C = D, each function is subtracted from itself.']};
+function check(id){const input=document.getElementById(id),out=document.getElementById(id+'-feedback'),r=rules[id];let value=input.value.trim().toLowerCase().replace(/−/g,'-').replace(/\s/g,'').replace(/[×*]/g,'');if(id==='fourth')value=value.replace(/[()]/g,'');const ok=r[0].includes(value);out.textContent=!value?'Enter your answer, then check the clue.':ok?r[1]:r[2];out.className='feedback '+(!value?'':ok?'good':'retry');input.className='input-field '+(!value?'':ok?'good':'retry');input.setAttribute('aria-invalid',String(!!value&&!ok))}document.querySelectorAll('[data-check]').forEach(b=>{b.onclick=()=>check(b.dataset.check);document.getElementById(b.dataset.check).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check(b.dataset.check)}})});show(0,false);})();</script></body></html>

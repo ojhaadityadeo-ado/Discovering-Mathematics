@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 25 — Classification of Second-Degree Curves</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;
+      background-image:radial-gradient(#cbd5e1 1px,transparent 1px);
+      background-size:20px 20px;font-family:Inter,Arial,sans-serif
+    }
+    .case-file{
+      max-width:896px;margin:12px auto;position:relative;overflow:hidden;
+      border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;
+      font:17px/1.8 "Courier Prime",monospace
+    }
+    .stamp{
+      position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;
+      font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);
+      opacity:.2;pointer-events:none
+    }
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}
+    .mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:725px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}
+    .briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}
+    .act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}
+    p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}
+    .evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}
+    .success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .question-card label{display:block;font-weight:bold;margin-bottom:9px}
+    .answer-line{display:flex;align-items:center;gap:8px}
+    .hole{min-width:0;width:100%;padding:9px 10px;font:14px Inter,Arial,sans-serif;border:2px dashed #94a3b8;border-radius:4px;background:#f1f5f9;color:#1e293b;cursor:pointer}
+    .hole:focus{outline:3px solid #c7d2fe;border-color:#4f46e5;background:#fff}
+    .hole.correct{border:2px solid #16a34a;background:#f0fdf4;color:#15803d}
+    .hole.incorrect{border:2px solid #dc2626;background:#fef2f2;color:#b91c1c}
+    .feedback-icon{width:25px;flex-shrink:0;font:20px Inter,Arial,sans-serif}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}
+    [hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}
+    .notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .condition-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+    .condition{background:#fff;border:1px solid #cbd5e1;border-top:4px solid #6366f1;padding:13px;font:14px/1.75 Inter,Arial,sans-serif}
+    .condition strong{display:block;margin-bottom:6px}
+    .math-block{overflow-x:auto;padding:3px 0}
+    .table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}
+    th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}
+    th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}
+    .graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}
+    .graph-head .mini-label{display:block;margin-bottom:4px}
+    .case-buttons{display:flex;gap:8px;flex-wrap:wrap;padding:13px 18px;border-bottom:1px solid #e2e8f0}
+    .case-buttons button,.control-row button{padding:8px 12px;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc;color:#334155;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    .case-buttons button[aria-pressed="true"]{background:#4338ca;color:#fff;border-color:#4338ca}
+    button:focus-visible{outline:3px solid #a5b4fc;outline-offset:3px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}
+    .control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}
+    .control-row label{min-width:190px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}
+    .control-row button{background:#fff;color:#4338ca}
+    .legend{padding:10px 18px;display:flex;gap:15px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;font:12px/1.7 Inter,Arial,sans-serif}
+    .swatch{display:inline-block;width:15px;height:4px;margin-right:5px;vertical-align:middle}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .output-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#e2e8f0}
+    .output-cell{padding:12px 13px;background:#f8fafc;font:12px/1.7 Inter,Arial,sans-serif}
+    .output-cell strong{display:block;font-size:17px;color:#312e81;font-variant-numeric:tabular-nums}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}
+    figure{margin:0}svg{display:block;width:100%;height:auto;background:#fff}
+    svg text{font:14px Inter,Arial,sans-serif;fill:#475569}.plot-label{font-size:16px;font-weight:600;fill:#1e293b}
+    .axis{stroke:#cbd5e1;stroke-width:1.2}.grid-line{stroke:#e2e8f0;stroke-width:1}
+    .circle-main{fill:#eef2ff;fill-opacity:.48;stroke:#4f46e5;stroke-width:4}
+    .line-main{fill:none;stroke:#ea580c;stroke-width:4;stroke-linecap:round}
+    .line-tangent{fill:none;stroke:#16a34a;stroke-width:4;stroke-linecap:round}
+    .true-tangent{fill:none;stroke:#16a34a;stroke-width:2.5;stroke-dasharray:8 5}
+    .radius-line{fill:none;stroke:#4f46e5;stroke-width:4;stroke-linecap:round}
+    .distance-line{fill:none;stroke:#0f766e;stroke-width:4;stroke-linecap:round}
+    .along-line{fill:none;stroke:#ea580c;stroke-width:3;stroke-linecap:round}
+    .test-line{fill:none;stroke:#64748b;stroke-width:2.5;stroke-dasharray:6 4}
+    .right-angle{fill:none;stroke:#0f172a;stroke-width:1.8}
+    .triangle-fill{fill:#14b8a6;fill-opacity:.15}
+    .point-center{fill:#0f172a;stroke:#fff;stroke-width:2}
+    .point-foot{fill:#fff;stroke:#0f172a;stroke-width:2}
+    .point-test{fill:#dc2626;stroke:#fff;stroke-width:2}
+    .point-hit{fill:#16a34a;stroke:#fff;stroke-width:2}
+    .point-second{fill:#2563eb;stroke:#fff;stroke-width:2}
+    figcaption{padding:13px 18px;border-top:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif;background:#f8fafc}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    #overall-feedback{flex:1;min-width:210px;font-size:14px;line-height:1.8}
+    .primary-button{padding:12px 18px;border:2px solid #0f172a;background:#1e293b;color:#fff;border-radius:4px;font:700 13px Inter,Arial,sans-serif;cursor:pointer}
+    .primary-button:hover{background:#4338ca}.print-button{padding:12px 15px;background:#fff;color:#334155;border:1px solid #94a3b8;border-radius:4px;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){
+      body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}
+      header,.briefing,.act,.report,footer{padding:23px 19px}.stamp{display:none}h2{font-size:19px}
+      .condition-grid{grid-template-columns:1fr}.evidence,.question-card{padding:14px}.lead-question{font-size:17px}
+      .control-row label{min-width:100%}.output-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media print{
+      body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}
+      header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}
+      .case-buttons,.lab-controls,footer button{display:none}.graph-card,.question-card,.notes-box{break-inside:avoid}
+      .graph-card svg{max-height:300px}.field-notes{min-height:80px}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
+  </style>
+<style>
+fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}
+.choice{display:flex!important;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}
+.choice:has(input:checked){background:#eef2ff;border-color:#6366f1}.choice input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}
+.clue-feedback:empty{display:none}.clue-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+.reason{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 24px;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}
+.reason summary{color:#3730a3;font-weight:600;cursor:pointer}caption{text-align:left;font-weight:600;margin-bottom:10px}
+.intro-note{padding:10px 30px}select{max-width:100%;padding:9px;font:14px Inter,Arial,sans-serif;color:#1e293b}
+#empty-label{font-size:21px;font-weight:bold}#expanded{overflow-wrap:anywhere;text-align:left}
+@media print{details>summary{display:none}.reason{break-inside:avoid}.clue-feedback,.detective-hint{display:none}}
+</style></head>
+
+<body><main class="case-file">
+<div class="stamp" aria-hidden="true">CASE FILE</div>
+<header><h1>MATH DETECTIVE: CASE FILE #25</h1><p class="subject">Subject: Why Second-Degree Equations Give Only a Few Types of Loci</p>
+<p class="mission"><strong>Mission:</strong> Strip away position and direction, follow every possible case, and explain what the discriminant can—and cannot—tell us.</p></header>
+<div class="briefing"><p><strong>Detective Briefing:</strong> Six coefficients look like six ways to invent a new shape. But some only move or turn a familiar shape. Can we prove that our list leaves nothing out?</p></div>
+<p class="small-note intro-note">Choose an answer before opening its explanation. “Real locus” means all real points \((x,y)\) that satisfy the equation. The diagrams and questions work offline; equation formatting and the display fonts need internet access.</p>
+<noscript><p class="evidence warning-evidence">Enable JavaScript for the explorer and answer checking. The written proof and explanations can still be read.</p></noscript>
+
+<section class="act" aria-labelledby="act1"><h2 id="act1">Act 1: What are we allowed to assume?</h2>
+<div class="evidence"><div class="math-block">\[
+Ax^2+2Hxy+By^2+2Gx+2Fy+C=0,
+\qquad (A,H,B)\ne(0,0,0).
+\]</div><p>All six coefficients are real. The coefficients of the mixed and linear terms are \(2H,2G,2F\), not \(H,G,F\).</p></div>
+<div class="question-card"><fieldset><legend>Clue 1 · What immediate observation do you make about the condition on A, H and B?</legend><label class="choice"><input type="radio" name="q1" value="0"><span>A. Each of A, H and B must be nonzero.</span></label><label class="choice"><input type="radio" name="q1" value="1"><span>B. At least one second-degree term remains. If all three vanish, this is no longer a quadratic equation.</span></label><label class="choice"><input type="radio" name="q1" value="2"><span>C. Only A and B matter; a nonzero xy term cannot make an equation quadratic.</span></label></fieldset><p id="feedback1" class="clue-feedback" role="status"></p><p id="hint1" class="detective-hint" hidden>Hint: Degree means the highest total power with a nonzero coefficient. The term xy has degree 2.</p></div>
+<details class="reason"><summary>Open the reasoning</summary><p>At least one of \(x^2,xy,y^2\) must have a nonzero coefficient. In particular, \(xy=0\) is a second-degree equation even though the two square terms are absent.</p>
+<p>If \(A=H=B=0\), we get \(2Gx+2Fy+C=0\). It describes a line if \((G,F)\ne(0,0)\); no points if \(G=F=0,\ C\ne0\); and the whole plane if \(G=F=C=0\).</p></details>
+<div class="question-card"><fieldset><legend>Clue 2 · So we have to check the kind of shape, not just its position. What can we do first?</legend><label class="choice"><input type="radio" name="q2" value="0"><span>A. Solve for every intersection with the x-axis; that will identify the whole locus.</span></label><label class="choice"><input type="radio" name="q2" value="1"><span>B. Set G, F and H equal to zero without changing the coordinates.</span></label><label class="choice"><input type="radio" name="q2" value="2"><span>C. Rotate and translate the coordinates, keeping a reversible link to every original point.</span></label></fieldset><p id="feedback2" class="clue-feedback" role="status"></p><p id="hint2" class="detective-hint" hidden>Hint: Moving the axes is allowed. Simply deleting terms changes the equation.</p></div>
+<details class="reason"><summary>Open the reasoning</summary><p>A rotation turns the axes; a translation moves their origin. Neither stretches the plane. Every point has exactly one old and one new coordinate pair, so no solutions are lost or invented.</p><p>Size can still vary: two ellipses may have different axis lengths. We seek a few <em>types</em>, not a claim that every ellipse is the same size or shape.</p></details>
+<div class="table-wrap"><table><caption>First suspects: the patterns we hope to explain</caption><thead><tr><th>Equation</th><th>Real locus</th></tr></thead><tbody>
+<tr><td>\(x^2+y^2=1\)</td><td>Circle—a special ellipse</td></tr><tr><td>\(x^2+4y^2=1\)</td><td>Ellipse</td></tr>
+<tr><td>\(x^2-y^2=1\)</td><td>Hyperbola</td></tr><tr><td>\(y^2=x\)</td><td>Parabola</td></tr>
+<tr><td>\(x^2+y^2=0\)</td><td>One point</td></tr><tr><td>\(x^2-y^2=0\)</td><td>Two intersecting lines</td></tr>
+<tr><td>\(x^2=1\)</td><td>Two parallel lines</td></tr><tr><td>\(x^2=0\)</td><td>One line, counted twice in the equation</td></tr>
+<tr><td>\(x^2+1=0\)</td><td>No real points</td></tr></tbody></table></div>
+</section>
+
+<section class="act white" aria-labelledby="act2"><h2 id="act2">Act 2: Can we remove the mixed term?</h2>
+<p>Start with \(Ax^2+2Hxy+By^2\). It tells us which squared directions are present. A useful way to store its coefficients is</p>
+<div class="math-block">\[
+Q=\begin{pmatrix}A&H\\H&B\end{pmatrix},\qquad
+\begin{pmatrix}x&y\end{pmatrix}Q\begin{pmatrix}x\\y\end{pmatrix}
+=Ax^2+2Hxy+By^2.
+\]</div>
+<p>The two off-diagonal entries each contribute \(Hxy\). That explains the factor 2. No matrix method is needed for the next step.</p>
+<p>Turn the axes through an angle \(\theta\):</p>
+<div class="math-block">\[
+x=u\cos\theta-v\sin\theta,\qquad
+y=u\sin\theta+v\cos\theta.
+\]</div>
+<p>On substituting, the coefficient of \(uv\) is</p>
+<div class="math-block">\[
+2H\cos2\theta+(B-A)\sin2\theta.
+\]</div>
+<div class="question-card"><fieldset><legend>Clue 3 · We want that coefficient to be zero. What can we choose?</legend><label class="choice"><input type="radio" name="q3" value="0"><span>A. An angle θ that makes the displayed sine-and-cosine expression zero; such an angle always exists.</span></label><label class="choice"><input type="radio" name="q3" value="1"><span>B. Only θ = 90°; it removes every mixed term.</span></label><label class="choice"><input type="radio" name="q3" value="2"><span>C. Nothing unless A = B; most mixed terms cannot be removed.</span></label></fieldset><p id="feedback3" class="clue-feedback" role="status"></p><p id="hint3" class="detective-hint" hidden>Hint: For p cos φ + q sin φ, choose a unit direction perpendicular to (p,q). Handle p = q = 0 separately.</p></div>
+<details class="reason"><summary>Open the reasoning and the special case</summary><p>Put \(p=2H,\ q=B-A\). If \(p=q=0\), the expression is already zero for every angle.</p>
+<p>Otherwise let \(r=\sqrt{p^2+q^2}&gt;0\). Choose an angle with</p>
+<div class="math-block">\[
+\cos2\theta=\frac{q}{r},\qquad \sin2\theta=-\frac{p}{r}.
+\]</div><p>This is possible because the two right-hand sides have squares adding to 1. Their substitution gives \(pq/r-qp/r=0\).</p></details>
+<p>After rotation the whole equation becomes</p>
+<div class="math-block">\[
+\lambda u^2+\mu v^2+2gu+2fv+C=0.
+\]</div>
+<p>Here \(\lambda,\mu\) are the new quadratic coefficients; \(g,f\) are the new linear coefficients. Since the rotation can be undone, it cannot turn a nonzero quadratic part into zero. Thus \(\lambda,\mu\) cannot both be zero.</p>
+<div class="evidence"><p><strong>The first big split:</strong> either both squared terms remain, or exactly one remains. There is no third case.</p></div>
+</section>
+
+<section class="act" aria-labelledby="act3"><h2 id="act3">Act 3: Two squared terms remain</h2>
+<p>Assume \(\lambda\ne0\) and \(\mu\ne0\).</p>
+<div class="question-card"><fieldset><legend>Clue 4 · The mixed term is gone, but the linear terms remain. What can we do next?</legend><label class="choice"><input type="radio" name="q4" value="0"><span>A. Divide by g and f; they must both be nonzero.</span></label><label class="choice"><input type="radio" name="q4" value="1"><span>B. Complete each square, then move the origin to remove the linear terms.</span></label><label class="choice"><input type="radio" name="q4" value="2"><span>C. Ignore the linear terms because only the quadratic part can affect real existence.</span></label></fieldset><p id="feedback4" class="clue-feedback" role="status"></p><p id="hint4" class="detective-hint" hidden>Hint: A square such as λ(u + g/λ)² contains both λu² and 2gu. We know λ ≠ 0, not g ≠ 0.</p></div>
+<details class="reason"><summary>Open the calculation</summary>
+<div class="math-block">\[
+\lambda u^2+2gu=\lambda\left(u+\frac g\lambda\right)^2-\frac{g^2}{\lambda},
+\qquad
+\mu v^2+2fv=\mu\left(v+\frac f\mu\right)^2-\frac{f^2}{\mu}.
+\]</div>
+<p>Both divisions are allowed in this case. Set</p>
+<div class="math-block">\[
+U=u+\frac g\lambda,\quad V=v+\frac f\mu,\quad
+K=\frac{g^2}{\lambda}+\frac{f^2}{\mu}-C.
+\]</div></details>
+<div class="evidence success-evidence"><div class="math-block">\[
+\boxed{\lambda U^2+\mu V^2=K.}
+\]</div><p>Now only the signs and the remaining constant need attention.</p></div>
+<h3>Same signs</h3>
+<p>If both coefficients are negative, multiply the <em>whole</em> equation by \(-1\), including K. Below, \(\lambda,\mu&gt;0\) and K means the right-hand side after this sign change.</p>
+<div class="question-card"><fieldset><legend>Clue 5 · What immediate observation decides whether λU² + μV² = K has points when λ, μ > 0?</legend><label class="choice"><input type="radio" name="q5" value="0"><span>A. It always gives an ellipse because two squared terms are present.</span></label><label class="choice"><input type="radio" name="q5" value="1"><span>B. K = 0 gives two lines, since either square may be zero.</span></label><label class="choice"><input type="radio" name="q5" value="2"><span>C. The left side is nonnegative: K > 0 gives an ellipse, K = 0 one point, and K < 0 no real points.</span></label></fieldset><p id="feedback5" class="clue-feedback" role="status"></p><p id="hint5" class="detective-hint" hidden>Hint: For the sum to be zero, both nonnegative terms must be zero—not just one.</p></div>
+<details class="reason"><summary>Open the three cases</summary>
+<p>If \(K&gt;0\), division by K gives</p>
+<div class="math-block">\[
+\frac{U^2}{K/\lambda}+\frac{V^2}{K/\mu}=1.
+\]</div><p>Both denominators are positive, so this is an ellipse. It is a circle when \(\lambda=\mu\). If \(K=0\), only \(U=V=0\) works. If \(K&lt;0\), no real point can work.</p></details>
+<h3>Opposite signs</h3>
+<p>Reorder the coordinates if needed so \(\lambda&gt;0,\ \mu&lt;0\). If \(K&gt;0\), divide by K to get a hyperbola. If \(K&lt;0\), multiply the equation by \(-1\), then exchange the roles of U and V. Again the form is</p>
+<div class="math-block">\[
+\frac{U^2}{a^2}-\frac{V^2}{b^2}=1,\qquad a,b&gt;0.
+\]</div>
+<div class="question-card"><fieldset><legend>Clue 6 · Now K = 0, so division by K is not allowed. What can we do instead?</legend><label class="choice"><input type="radio" name="q6" value="0"><span>A. Factor the difference of squares. Its zero set is two intersecting lines.</span></label><label class="choice"><input type="radio" name="q6" value="1"><span>B. Cancel K and keep the same hyperbola equation.</span></label><label class="choice"><input type="radio" name="q6" value="2"><span>C. Conclude there are no real points, because one squared term has a minus sign.</span></label></fieldset><p id="feedback6" class="clue-feedback" role="status"></p><p id="hint6" class="detective-hint" hidden>Hint: A product is zero when at least one factor is zero.</p></div>
+<details class="reason"><summary>Open the factorisation</summary>
+<div class="math-block">\[
+\lambda U^2-|\mu|V^2
+=(\sqrt\lambda\,U-\sqrt{|\mu|}\,V)
+ (\sqrt\lambda\,U+\sqrt{|\mu|}\,V)=0.
+\]</div><p>Each factor describes a line through \((0,0)\). The lines are different because both square coefficients are nonzero.</p></details>
+</section>
+
+<section class="act white" aria-labelledby="act4"><h2 id="act4">Act 4: Only one squared term remains</h2>
+<p>Suppose \(\lambda\ne0,\ \mu=0\). Exchange the coordinates first if necessary. Complete the one available square:</p>
+<div class="math-block">\[
+\lambda U^2+2fv+C'=0,\qquad
+U=u+\frac g\lambda,\quad C'=C-\frac{g^2}{\lambda}.
+\]</div>
+<div class="question-card"><fieldset><legend>Clue 7 · We cannot complete a v-square because none is present. What should we check next?</legend><label class="choice"><input type="radio" name="q7" value="0"><span>A. Whether λ is positive; a negative λ rules out a parabola.</span></label><label class="choice"><input type="radio" name="q7" value="1"><span>B. Whether C′ is zero; the linear term in v never matters.</span></label><label class="choice"><input type="radio" name="q7" value="2"><span>C. Whether f is zero. A nonzero linear term in the direction without a square gives a parabola.</span></label></fieldset><p id="feedback7" class="clue-feedback" role="status"></p><p id="hint7" class="detective-hint" hidden>Hint: If f ≠ 0, solve for v. If f = 0, v is completely free.</p></div>
+<details class="reason"><summary>Open both branches</summary>
+<p>If \(f\ne0\), set \(V=v+C'/(2f)\). Then</p>
+<div class="math-block">\[
+\lambda U^2+2fV=0
+\quad\Longrightarrow\quad
+U^2=-\frac{2f}{\lambda}V.
+\]</div><p>The multiplier of V is nonzero. This is a parabola; its sign selects the opening direction.</p>
+<p>If \(f=0\), set \(k=-C'/\lambda\). We get \(U^2=k\). V may be <em>any</em> real number.</p>
+<div class="table-wrap"><table><thead><tr><th>k</th><th>Allowed U</th><th>Real locus</th></tr></thead><tbody>
+<tr><td>\(k&gt;0\)</td><td>\(U=\sqrt{k}\) or \(U=-\sqrt{k}\)</td><td>Two parallel lines</td></tr>
+<tr><td>\(k=0\)</td><td>\(U=0\)</td><td>One double line</td></tr>
+<tr><td>\(k&lt;0\)</td><td>No real U</td><td>No real points</td></tr></tbody></table></div>
+<p>“Double line” means the same linear factor occurs twice: \(U^2=U\cdot U\). As a set of points, it is just one line.</p></details>
+</section>
+
+<section class="act" aria-labelledby="act5"><h2 id="act5">Act 5: Watch the cases, then move the axes</h2>
+<p><strong>Try this:</strong> keep “two positive squares” selected and move K through zero. Then try opposite signs. Finally choose “one square” and switch the remaining linear term on and off.</p>
+<div class="graph-card"><div class="graph-head"><span class="mini-label">Conic explorer</span>One equation, every branch of the proof</div>
+<div class="lab-controls">
+<div class="control-row"><label for="family">Squared terms</label><select id="family"><option value="same">Two positive squares: U² + 2V²</option><option value="opposite">Opposite signs: U² − V²</option><option value="rank">One square: U²</option></select></div>
+<div class="control-row"><label for="k">K: <output id="kv">2</output></label><input id="k" type="range" min="-3" max="3" step=".25" value="2"><button id="kzero" type="button">Set K = 0</button></div>
+<div class="control-row" id="frow" hidden><label for="f">Remaining linear term</label><select id="f"><option value="0">f = 0: U² = K</option><option value="1">f = 1: U² + 2V = K</option></select></div>
+<div class="control-row"><label for="angle">Turn: <output id="av">0°</output></label><input id="angle" type="range" min="0" max="180" step="1" value="0"></div>
+<div class="control-row"><label for="tx">Move right: <output id="xv">0</output></label><input id="tx" type="range" min="-2" max="2" step=".25" value="0"></div>
+<div class="control-row"><label for="ty">Move up: <output id="yv">0</output></label><input id="ty" type="range" min="-2" max="2" step=".25" value="0"></div>
+<button id="reset" class="print-button" type="button">Reset explorer</button>
+</div>
+<div id="canonical" class="formula-live"></div>
+<figure><svg id="plot" viewBox="0 0 760 580" role="img" aria-labelledby="plot-title plot-desc">
+<title id="plot-title">Real locus of the selected quadratic equation</title><desc id="plot-desc">Change K, the squared terms and the remaining linear term to explore the classification.</desc>
+<defs><clipPath id="plot-clip"><rect x="40" y="20" width="680" height="520"/></clipPath></defs>
+<g id="grid"></g><g clip-path="url(#plot-clip)"><path id="local-axes" fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="6 5"/><path id="curve" fill="none" stroke="#4f46e5" stroke-width="3.5"/><circle id="point" r="6" fill="#4f46e5"/><circle id="origin" r="3" fill="#d97706"/></g>
+<text id="empty-label" x="380" y="265" text-anchor="middle" visibility="hidden">No real points</text>
+<text x="705" y="566">x</text><text x="16" y="34">y</text>
+</svg><figcaption>The purple set is the real locus. Dashed orange axes show U and V directions; their crossing is the chosen new origin. Each grid step is 1 unit. Unbounded curves continue outside the viewing window.</figcaption></figure>
+<div id="lab-status" class="lab-message" role="status" aria-live="polite"></div>
+<div class="formula-live" id="expanded"></div>
+<p class="small-note intro-note">The expanded coefficients are rounded for display only. The calculations and graph use full values. Here \(x=U\cos\theta-V\sin\theta+h,\ y=U\sin\theta+V\cos\theta+k_0\); the move-up control is \(k_0\), not the equation constant K.</p>
+</div>
+<div class="question-card"><fieldset><legend>Clue 8 · Have we proved a classification, or only collected examples? What closes the argument?</legend><label class="choice"><input type="radio" name="q8" value="0"><span>A. The gallery contains enough familiar pictures, so another kind is unlikely.</span></label><label class="choice"><input type="radio" name="q8" value="1"><span>B. Every quadratic enters one of the two branches, every branch has been checked, and every coordinate change is reversible.</span></label><label class="choice"><input type="radio" name="q8" value="2"><span>C. The names ellipse, parabola and hyperbola cover all curves by definition.</span></label></fieldset><p id="feedback8" class="clue-feedback" role="status"></p><p id="hint8" class="detective-hint" hidden>Hint: To prove a complete list, explain why no algebraic case has been left out.</p></div>
+<details class="reason"><summary>Open the completeness argument</summary><p>Rotation always removes the mixed term. A nonzero quadratic part then has either two nonzero square coefficients or one. With two, the signs are the same or opposite, and K is zero or nonzero (with its sign checked where needed). With one, the remaining linear coefficient is zero or nonzero. Every resulting case has been covered.</p><p>Reversible changes pair old points with new points. So every original real locus comes from one of these patterns—not necessarily the exact unit-sized equations in the opening table.</p></details>
+</section>
+
+<section class="act white" aria-labelledby="act6"><h2 id="act6">Act 6: What does D actually tell us?</h2>
+<p>We have learned to look at the signs of \(\lambda,\mu\). Can we read that information before rotating?</p>
+<div class="math-block">\[
+D=H^2-AB,\qquad
+\lambda\mu=AB-H^2=-D.
+\]</div>
+<p>The product is unchanged by rotation. One explanation is \(Q_{\rm new}=S^TQS\), where S is a rotation matrix. Since \(\det S=1\), both matrices have the same determinant.</p>
+<div class="table-wrap"><table><thead><tr><th>D</th><th>Product \(\lambda\mu\)</th><th>What follows?</th></tr></thead><tbody>
+<tr><td>\(D&lt;0\)</td><td>Positive</td><td>Both coefficients are nonzero and have the same sign.</td></tr>
+<tr><td>\(D&gt;0\)</td><td>Negative</td><td>They have opposite signs.</td></tr>
+<tr><td>\(D=0\)</td><td>Zero</td><td>Exactly one is zero; they cannot both be zero.</td></tr>
+</tbody></table></div>
+<div class="question-card"><fieldset><legend>Clue 9 · We find D < 0. Can we immediately write ‘real ellipse’?</legend><label class="choice"><input type="radio" name="q9" value="0"><span>A. No. We must still check the constant after completing squares; the locus could be an ellipse, one point, or empty.</span></label><label class="choice"><input type="radio" name="q9" value="1"><span>B. Yes. A negative D rules out all exceptional cases.</span></label><label class="choice"><input type="radio" name="q9" value="2"><span>C. No. A negative D means the squared terms have opposite signs.</span></label></fieldset><p id="feedback9" class="clue-feedback" role="status"></p><p id="hint9" class="detective-hint" hidden>Hint: Compare x² + y² = 1, x² + y² = 0 and x² + y² = −1.</p></div>
+<details class="reason"><summary>Open the counterexample</summary><p>All three equations in the hint have \(D=-1\), but their real loci are a circle, one point and no points. The quadratic part gives the sign pattern, not the whole answer. The completed-square constant matters.</p><p>Likewise, \(D=0\) says “one squared direction,” not automatically “parabola.” We must check the remaining linear term.</p></details>
+</section>
+
+<section class="act" aria-labelledby="act7"><h2 id="act7">Act 7: What does the full determinant add?</h2>
+<p>The full coefficient matrix also records the linear terms and constant:</p>
+<div class="math-block">\[
+M=\begin{pmatrix}A&H&G\\H&B&F\\G&F&C\end{pmatrix},
+\qquad \Delta=\det M.
+\]</div>
+<p>Indeed, \(\begin{pmatrix}x&y&1\end{pmatrix}M\begin{pmatrix}x\\y\\1\end{pmatrix}\) is the original polynomial.</p>
+<p class="lead-question">We are about to compute \(\Delta\) from a simpler equation. Why are we allowed to do that?</p>
+<details class="reason"><summary>Why rotation and translation preserve this determinant</summary>
+<p>Write the coordinate change as</p>
+<div class="math-block">\[
+\begin{pmatrix}x\\y\\1\end{pmatrix}
+=T\begin{pmatrix}U\\V\\1\end{pmatrix},
+\qquad
+T=\begin{pmatrix}\cos\theta&-\sin\theta&h\\
+\sin\theta&\cos\theta&k_0\\0&0&1\end{pmatrix}.
+\]</div>
+<p>The new matrix is \(T^TMT\). Since \(\det T=1\),</p>
+<div class="math-block">\[
+\det(T^TMT)=(\det T)^2\det M=\Delta.
+\]</div>
+<p>So rotation and translation preserve \(\Delta\). Multiplying the <em>whole equation</em> by a nonzero number s is different: it multiplies \(\Delta\) by \(s^3\), though it leaves the zero/nonzero test unchanged.</p></details>
+<h3>Two nonzero squared coefficients</h3>
+<p>For \(\lambda U^2+\mu V^2=K\), the constant on the left is \(-K\), so</p>
+<div class="math-block">\[
+M_{\rm new}=\begin{pmatrix}\lambda&0&0\\0&\mu&0\\0&0&-K\end{pmatrix},
+\qquad
+\Delta=-\lambda\mu K.
+\]</div>
+<p>Since \(\lambda\mu\ne0\), \(\Delta=0\iff K=0\). The earlier branches then give a point (same signs) or two intersecting real lines (opposite signs).</p>
+<h3>One nonzero squared coefficient</h3>
+<p>For \(\lambda U^2+2fV+C'=0\),</p>
+<div class="math-block">\[
+M_{\rm new}=\begin{pmatrix}\lambda&0&0\\0&0&f\\0&f&C'\end{pmatrix},
+\qquad
+\Delta=\lambda(0\cdot C'-f^2)=-\lambda f^2.
+\]</div>
+<p>Since \(\lambda\ne0\), \(\Delta\ne0\iff f\ne0\): this is the parabola branch. If \(\Delta=0\), we return to \(U^2=k\), giving parallel lines, a double line, or no real points.</p>
+<div class="evidence"><p><strong>Meaning of “algebraically degenerate” here:</strong> the full matrix has determinant zero. This is an algebraic test. It is not a test for whether the real graph is empty.</p></div>
+<div class="question-card"><fieldset><legend>Clue 10 · Both x² + y² + 1 = 0 and x² + 1 = 0 have no real points. What should we check before calling them degenerate?</legend><label class="choice"><input type="radio" name="q10" value="0"><span>A. Nothing: every empty real locus has Δ = 0.</span></label><label class="choice"><input type="radio" name="q10" value="1"><span>B. Only D: if there are no real points, its value decides degeneracy.</span></label><label class="choice"><input type="radio" name="q10" value="2"><span>C. Compute Δ. It is 1 for the first equation and 0 for the second, so only the second is algebraically degenerate.</span></label></fieldset><p id="feedback10" class="clue-feedback" role="status"></p><p id="hint10" class="detective-hint" hidden>Hint: The two full matrices are diagonal: diag(1,1,1) and diag(1,0,1).</p></div>
+<details class="reason"><summary>Open the calculation</summary><div class="math-block">\[
+\Delta_1=\det\begin{pmatrix}1&0&0\\0&1&0\\0&0&1\end{pmatrix}=1,\qquad
+\Delta_2=\det\begin{pmatrix}1&0&0\\0&0&0\\0&0&1\end{pmatrix}=0.
+\]</div><p>Both equations are impossible over the reals. Yet their determinant tests differ. Keep “real existence” and “algebraic degeneracy” as two separate questions.</p></details>
+</section>
+
+<section class="act white" aria-labelledby="act8"><h2 id="act8">Act 8: Build a reliable decision table</h2>
+<p>Use the same original coefficient convention throughout: \(Ax^2+2Hxy+By^2+2Gx+2Fy+C=0\).</p>
+<div class="table-wrap"><table><caption>Classification for \((A,H,B)\ne(0,0,0)\)</caption><thead><tr><th>Conditions</th><th>Real locus</th><th>Any extra check?</th></tr></thead><tbody>
+<tr><td>\(D&lt;0,\ \Delta\ne0\)</td><td>Ellipse/circle or empty</td><td>\((A+B)\Delta&lt;0\): real ellipse. \((A+B)\Delta&gt;0\): empty.</td></tr>
+<tr><td>\(D=0,\ \Delta\ne0\)</td><td>Parabola</td><td>No extra existence test.</td></tr>
+<tr><td>\(D&gt;0,\ \Delta\ne0\)</td><td>Hyperbola</td><td>No extra existence test.</td></tr>
+<tr><td>\(D&lt;0,\ \Delta=0\)</td><td>One point</td><td>Both completed squares vanish.</td></tr>
+<tr><td>\(D&gt;0,\ \Delta=0\)</td><td>Two intersecting real lines</td><td>Factor the difference of squares.</td></tr>
+<tr><td>\(D=0,\ \Delta=0\)</td><td>Two parallel lines, double line, or empty</td><td>Reduce to \(U^2=k\) and check the sign of k.</td></tr>
+</tbody></table></div>
+<p class="lead-question">Why does \((A+B)\Delta\) settle real existence in the first row?</p>
+<details class="reason"><summary>Derive the sign test</summary>
+<p>Rotation preserves the sum: \(A+B=\lambda+\mu\). Keep the signed coefficients and K from the same equation, before any sign normalisation. For \(D&lt;0\), \(\lambda,\mu\) have the same sign and \(\lambda\mu&gt;0\).</p>
+<div class="math-block">\[
+(A+B)\Delta=-(\lambda+\mu)\lambda\mu K.
+\]</div><p>This is negative precisely when K has the same sign as \(\lambda,\mu\). That is exactly when the two squared terms can equal nonzero K and form a real ellipse. The opposite sign gives no real points.</p>
+<p>In this row neither \(A+B\) nor \(\Delta\) is zero. Also, scaling the original equation by \(s\ne0\) multiplies \((A+B)\Delta\) by \(s^4&gt;0\). Thus its sign does not depend on which scaled equation we use.</p></details>
+<p>Within the real-ellipse case, the circle condition in the original coordinates is \(A=B\) and \(H=0\). Then both squared directions have the same coefficient.</p>
+<details class="reason"><summary>One full check: a moved and turned ellipse</summary>
+<p>Consider \(5x^2+6xy+5y^2-16x-16y+8=0\). First read the coefficients carefully: \(A=B=5,\ H=3,\ G=F=-8,\ C=8\).</p>
+<p>We find \(D=3^2-5\cdot5=-16\) and \(\Delta=-128\). Also \((A+B)\Delta=10(-128)&lt;0\). The table predicts a real ellipse. Can the coordinate changes confirm it?</p>
+<div class="math-block">\[
+u=\frac{x+y}{\sqrt2},\qquad v=\frac{-x+y}{\sqrt2}
+\quad\Longrightarrow\quad
+8u^2+2v^2-16\sqrt2\,u+8=0.
+\]</div>
+<p>Complete the square, then translate:</p>
+<div class="math-block">\[
+8(u-\sqrt2)^2+2v^2=8,\qquad
+U=u-\sqrt2,\quad V=v.
+\]</div>
+<div class="math-block">\[
+\boxed{U^2+\frac{V^2}{4}=1.}
+\]</div><p>The ellipse is centered at \((1,1)\) in the original plane and has turned axes. Both the sign tests and the direct calculation give the same answer.</p>
+</details>
+</section>
+
+<section class="act" aria-labelledby="act9"><h2 id="act9">Act 9: When is the hyperbola rectangular?</h2>
+<p>“Rectangular hyperbola” means its two asymptotes meet at a right angle. First make sure the equation is a nondegenerate hyperbola: \(D&gt;0,\ \Delta\ne0\).</p>
+<div class="question-card"><fieldset><legend>Clue 11 · Now we observe A + B = 0. What does this tell us about its two squared coefficients?</legend><label class="choice"><input type="radio" name="q11" value="0"><span>A. Both λ and μ must vanish, so the equation has no quadratic terms.</span></label><label class="choice"><input type="radio" name="q11" value="1"><span>B. They have equal magnitudes and opposite signs, giving equal semiaxes and perpendicular asymptotes.</span></label><label class="choice"><input type="radio" name="q11" value="2"><span>C. It makes K = 0, so the hyperbola becomes two lines.</span></label></fieldset><p id="feedback11" class="clue-feedback" role="status"></p><p id="hint11" class="detective-hint" hidden>Hint: Rotation keeps λ + μ = A + B. For this hyperbola λ and μ are already nonzero with opposite signs.</p></div>
+<details class="reason"><summary>Follow the conclusion in both directions</summary>
+<div class="math-block">\[
+A+B=0\iff \lambda+\mu=0\iff |\lambda|=|\mu|.
+\]</div>
+<p>In the standard hyperbola equation \(U^2/a^2-V^2/b^2=1\), equal coefficient magnitudes give \(a=b\). The asymptotes are \(V=\pm(b/a)U\).</p>
+<p>Their direction vectors \((a,b)\) and \((a,-b)\) have dot product \(a^2-b^2\). This is zero exactly when \(a=b\), since a and b are positive. So the asymptotes are perpendicular exactly in this case.</p>
+<div class="math-block">\[
+\boxed{A+B=0\iff\text{rectangular hyperbola}}
+\]</div><p><strong>Only after checking \(D&gt;0,\Delta\ne0\).</strong> For example, \(x^2-y^2=0\) also has \(A+B=0\), but is a pair of intersecting lines, not a nondegenerate hyperbola.</p></details>
+</section>
+
+<section class="report" aria-labelledby="report"><h2 id="report">Final Report: Why the list ends here</h2>
+<div class="evidence success-evidence"><p><strong>Rotate → count the squared terms → complete squares → check signs and the remaining linear term.</strong></p><p>Every nonzero quadratic part enters this chain. Every branch has been covered, and every coordinate change can be undone. That is why the list is complete.</p></div>
+<p>D tells us the signs of the squared terms. \(\Delta\) tests algebraic degeneracy and separates the parabola from the other one-square cases. Real existence can still require a constant-sign check.</p>
+<div class="notes-box"><label for="notes1">Explain the proof, not just the table: why does every quadratic reach one of the listed patterns?</label><textarea id="notes1" class="field-notes" placeholder="We can first … Then either … The next check is … We lose no points because …"></textarea></div>
+<div class="notes-box"><label for="notes2">Closing inquiry: If D identifies the signs of the squared terms, what additional information decides whether we get a curve, a point, or no real points?</label><textarea id="notes2" class="field-notes" placeholder="With two squared terms I still need … With one squared term I must check … An empty real locus does not necessarily …"></textarea></div>
+</section>
+<footer><div id="overall-feedback" role="status" aria-live="polite">11 clues to check. Written notes are for discussion, not an automatic score.</div><button id="submit" class="primary-button" type="button">Submit Findings</button><button id="print" class="print-button" type="button">Print Case File</button></footer>
+</main>
+<script>
+"use strict";
+const answerKeys=[1,2,0,1,2,0,2,1,0,2,1];
+let checked=false;
+function $(id){return document.getElementById(id);}
+function fmt(x){return String(Math.abs(x)<1e-9?0:Number(x.toFixed(4))).replace("-","−");}
+function checkFindings(){
+ let score=0,missing=0;
+ answerKeys.forEach((key,i)=>{
+  const n=i+1,selected=document.querySelector('input[name="q'+n+'"]:checked');
+  const ok=!!selected&&Number(selected.value)===key;
+  if(ok)score++; if(!selected)missing++;
+  $("feedback"+n).textContent=!selected?"Choose an answer.":ok?"✓ Correct. Open the reasoning and explain why.":"Not yet. Use the hint and try again.";
+  $("feedback"+n).style.color=ok?"#15803d":"#9a3412";
+  $("hint"+n).hidden=!selected||ok;
+ });
+ const written=[...document.querySelectorAll(".field-notes")].filter(x=>x.value.trim()).length;
+ $("overall-feedback").textContent=score+" of 11 clues correct. "+(score===11?"Case closed—now explain why no branch is missing.":missing?missing+" unanswered.":"Revisit the marked clues.")+" Written notes: "+written+" of 2 filled; not automatically graded.";
+ checked=true;
+}
+function classify(family,K,f){
+ if(family==="same")return K>0?"Ellipse":K===0?"One point":"Empty real locus";
+ if(family==="opposite")return K===0?"Two intersecting lines":"Hyperbola";
+ return f!==0?"Parabola":K>0?"Two parallel lines":K===0?"Double line":"Empty real locus";
+}
+function data(family,K,f,angle,h,k0){
+ const mu=family==="same"?2:family==="opposite"?-1:0;
+ f=family==="rank"?f:0;
+ const r=angle*Math.PI/180,c=Math.cos(r),s=Math.sin(r);
+ const A=c*c+mu*s*s,H=(1-mu)*c*s,B=s*s+mu*c*c;
+ const dx=-f*s,dy=f*c;
+ const G=dx-A*h-H*k0,F=dy-H*h-B*k0;
+ const C=A*h*h+2*H*h*k0+B*k0*k0-2*(dx*h+dy*k0)-K;
+ const D=H*H-A*B,delta=A*(B*C-F*F)-H*(H*C-G*F)+G*(H*F-B*G);
+ const transform=p=>({x:c*p.x-s*p.y+h,y:s*p.x+c*p.y+k0});
+ const branches=[];let point=null;
+ const range=(lo,hi,N,fn)=>Array.from({length:N+1},(_,i)=>fn(lo+(hi-lo)*i/N));
+ if(family==="same"){
+  if(K>0)branches.push(range(0,2*Math.PI,240,t=>({x:Math.sqrt(K)*Math.cos(t),y:Math.sqrt(K/2)*Math.sin(t)})));
+  else if(K===0)point={x:0,y:0};
+ }else if(family==="opposite"){
+  if(K===0){for(const sign of [-1,1])branches.push([{x:-12,y:-12*sign},{x:12,y:12*sign}]);}
+  else for(const sign of [-1,1]){
+   const a=Math.sqrt(Math.abs(K));
+   branches.push(range(-4,4,400,t=>K>0?{x:sign*a*Math.cosh(t),y:a*Math.sinh(t)}:{x:a*Math.sinh(t),y:sign*a*Math.cosh(t)}));
+  }
+ }else if(f!==0){
+  branches.push(range(-10,10,500,u=>({x:u,y:(K-u*u)/(2*f)})));
+ }else if(K>=0){
+  for(const u of K===0?[0]:[-Math.sqrt(K),Math.sqrt(K)])branches.push([{x:u,y:-12},{x:u,y:12}]);
+ }
+ return {family,K,f,mu,angle,h,k0,A,H,B,G,F,C,D,delta,trace:A+B,kind:classify(family,K,f),transform,branches,point};
+}
+function equation(d){
+ const terms=[[d.A,"x²"],[2*d.H,"xy"],[d.B,"y²"],[2*d.G,"x"],[2*d.F,"y"],[d.C,""]];
+ let text="";
+ for(const [a,label] of terms){
+  if(Math.abs(a)<1e-9)continue;
+  const mag=Math.abs(a),part=(Math.abs(mag-1)<1e-9&&label?"":fmt(mag))+label;
+  text+=(text?(a<0?" − ":" + "):(a<0?"−":""))+part;
+ }
+ return (text||"0")+" = 0";
+}
+function draw(){
+ const family=$("family").value,K=Number($("k").value),f=Number($("f").value);
+ const d=data(family,K,f,Number($("angle").value),Number($("tx").value),Number($("ty").value));
+ const mx=x=>380+50*x,my=y=>280-50*y;
+ const path=pts=>pts.map((p,i)=>(i?"L":"M")+mx(p.x).toFixed(3)+" "+my(p.y).toFixed(3)).join(" ");
+ $("curve").setAttribute("d",d.branches.map(pts=>path(pts.map(d.transform))).join(" "));
+ $("point").setAttribute("opacity",d.point?1:0);
+ if(d.point){const p=d.transform(d.point);$("point").setAttribute("cx",mx(p.x));$("point").setAttribute("cy",my(p.y));}
+ $("origin").setAttribute("cx",mx(d.h));$("origin").setAttribute("cy",my(d.k0));
+ $("local-axes").setAttribute("d",path([{x:-15,y:0},{x:15,y:0}].map(d.transform))+" "+path([{x:0,y:-15},{x:0,y:15}].map(d.transform)));
+ $("empty-label").setAttribute("visibility",d.kind==="Empty real locus"?"visible":"hidden");
+ $("frow").hidden=family!=="rank";
+ $("kv").textContent=fmt(K);$("av").textContent=fmt(d.angle)+"°";$("xv").textContent=fmt(d.h);$("yv").textContent=fmt(d.k0);
+ $("canonical").textContent=(family==="same"?"U² + 2V²":family==="opposite"?"U² − V²":d.f?"U² + 2V":"U²")+" = "+fmt(K)+"  →  "+d.kind;
+ const why=family==="same"?(K>0?"A positive sum of squares equals a positive number.":K===0?"Both squares must vanish together.":"A nonnegative sum cannot equal a negative number."):
+ family==="opposite"?(K===0?"The difference of squares factors into two lines.":"The squared terms have opposite signs and K is nonzero."):
+ d.f?"A nonzero linear term remains in the direction with no square.":K>0?"U has two fixed values; V is free.":K===0?"U is zero; V is free. The factor U appears twice.":"No real square equals this K.";
+ $("lab-status").textContent=why+" D = "+fmt(d.D)+", Δ = "+fmt(d.delta)+", A + B = "+fmt(d.trace)+". Turning and moving do not change these three values.";
+ $("expanded").textContent="Same locus in x,y coordinates: "+equation(d);
+ $("plot-desc").textContent=d.kind+". "+why+" Rotated "+d.angle+" degrees and shifted by ("+d.h+", "+d.k0+").";
+ return d;
+}
+function grid(){
+ const NS="http://www.w3.org/2000/svg";
+ for(let i=-6;i<=6;i++){
+  const p=document.createElementNS(NS,"path");
+  p.setAttribute("d","M"+(380+i*50)+" 20 V540");p.setAttribute("stroke",i?"#e2e8f0":"#94a3b8");$("grid").appendChild(p);
+  if(i!==0){const t=document.createElementNS(NS,"text");t.setAttribute("x",380+i*50);t.setAttribute("y",556);t.setAttribute("text-anchor","middle");t.textContent=i;$("grid").appendChild(t);}
+ }
+ for(let i=-5;i<=5;i++){const p=document.createElementNS(NS,"path");p.setAttribute("d","M40 "+(280-i*50)+" H720");p.setAttribute("stroke",i?"#e2e8f0":"#94a3b8");$("grid").appendChild(p);}
+}
+["family","f"].forEach(id=>$(id).addEventListener("change",draw));
+["k","angle","tx","ty"].forEach(id=>$(id).addEventListener("input",draw));
+$("kzero").addEventListener("click",()=>{$("k").value="0";draw();});
+$("reset").addEventListener("click",()=>{for(const [id,value] of Object.entries({family:"same",k:2,f:0,angle:0,tx:0,ty:0}))$(id).value=String(value);draw();});
+$("submit").addEventListener("click",checkFindings);
+document.querySelectorAll('input[type="radio"]').forEach(el=>el.addEventListener("change",()=>{if(checked)checkFindings();}));
+document.querySelectorAll(".field-notes").forEach(el=>el.addEventListener("input",()=>{if(checked)checkFindings();}));
+let openedBeforePrint=[];
+window.addEventListener("beforeprint",()=>{openedBeforePrint=[...document.querySelectorAll("details")].map(el=>[el,el.open]);openedBeforePrint.forEach(([el])=>el.open=true);});
+window.addEventListener("afterprint",()=>openedBeforePrint.forEach(([el,open])=>el.open=open));
+$("print").addEventListener("click",()=>window.print());
+grid();draw();
+</script>
+</body></html>

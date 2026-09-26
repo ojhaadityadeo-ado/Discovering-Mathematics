@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 35 — Shortest Distance Between Skew Lines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;
+      background-image:radial-gradient(#cbd5e1 1px,transparent 1px);
+      background-size:20px 20px;font-family:Inter,Arial,sans-serif
+    }
+    .case-file{
+      max-width:896px;margin:12px auto;position:relative;overflow:hidden;
+      border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;
+      font:17px/1.8 "Courier Prime",monospace
+    }
+    .stamp{
+      position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;
+      font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);
+      opacity:.2;pointer-events:none
+    }
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}
+    .mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:725px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}
+    .briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}
+    .act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}
+    p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}
+    .evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}
+    .success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .question-card label{display:block;font-weight:bold;margin-bottom:9px}
+    .answer-line{display:flex;align-items:center;gap:8px}
+    .hole{min-width:0;width:100%;padding:9px 10px;font:14px Inter,Arial,sans-serif;border:2px dashed #94a3b8;border-radius:4px;background:#f1f5f9;color:#1e293b;cursor:pointer}
+    .hole:focus{outline:3px solid #c7d2fe;border-color:#4f46e5;background:#fff}
+    .hole.correct{border:2px solid #16a34a;background:#f0fdf4;color:#15803d}
+    .hole.incorrect{border:2px solid #dc2626;background:#fef2f2;color:#b91c1c}
+    .feedback-icon{width:25px;flex-shrink:0;font:20px Inter,Arial,sans-serif}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}
+    [hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}
+    .notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .condition-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+    .condition{background:#fff;border:1px solid #cbd5e1;border-top:4px solid #6366f1;padding:13px;font:14px/1.75 Inter,Arial,sans-serif}
+    .condition strong{display:block;margin-bottom:6px}
+    .math-block{overflow-x:auto;padding:3px 0}
+    .table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}
+    th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}
+    th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}
+    .graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}
+    .graph-head .mini-label{display:block;margin-bottom:4px}
+    .case-buttons{display:flex;gap:8px;flex-wrap:wrap;padding:13px 18px;border-bottom:1px solid #e2e8f0}
+    .case-buttons button,.control-row button{padding:8px 12px;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc;color:#334155;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    .case-buttons button[aria-pressed="true"]{background:#4338ca;color:#fff;border-color:#4338ca}
+    button:focus-visible{outline:3px solid #a5b4fc;outline-offset:3px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}
+    .control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}
+    .control-row label{min-width:190px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}
+    .control-row button{background:#fff;color:#4338ca}
+    .legend{padding:10px 18px;display:flex;gap:15px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;font:12px/1.7 Inter,Arial,sans-serif}
+    .swatch{display:inline-block;width:15px;height:4px;margin-right:5px;vertical-align:middle}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .output-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#e2e8f0}
+    .output-cell{padding:12px 13px;background:#f8fafc;font:12px/1.7 Inter,Arial,sans-serif}
+    .output-cell strong{display:block;font-size:17px;color:#312e81;font-variant-numeric:tabular-nums}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}
+    figure{margin:0}svg{display:block;width:100%;height:auto;background:#fff}
+    svg text{font:14px Inter,Arial,sans-serif;fill:#475569}.plot-label{font-size:16px;font-weight:600;fill:#1e293b}
+    .axis{stroke:#cbd5e1;stroke-width:1.2}.grid-line{stroke:#e2e8f0;stroke-width:1}
+    .circle-main{fill:#eef2ff;fill-opacity:.48;stroke:#4f46e5;stroke-width:4}
+    .line-main{fill:none;stroke:#ea580c;stroke-width:4;stroke-linecap:round}
+    .line-tangent{fill:none;stroke:#16a34a;stroke-width:4;stroke-linecap:round}
+    .true-tangent{fill:none;stroke:#16a34a;stroke-width:2.5;stroke-dasharray:8 5}
+    .radius-line{fill:none;stroke:#4f46e5;stroke-width:4;stroke-linecap:round}
+    .distance-line{fill:none;stroke:#0f766e;stroke-width:4;stroke-linecap:round}
+    .along-line{fill:none;stroke:#ea580c;stroke-width:3;stroke-linecap:round}
+    .test-line{fill:none;stroke:#64748b;stroke-width:2.5;stroke-dasharray:6 4}
+    .right-angle{fill:none;stroke:#0f172a;stroke-width:1.8}
+    .triangle-fill{fill:#14b8a6;fill-opacity:.15}
+    .point-center{fill:#0f172a;stroke:#fff;stroke-width:2}
+    .point-foot{fill:#fff;stroke:#0f172a;stroke-width:2}
+    .point-test{fill:#dc2626;stroke:#fff;stroke-width:2}
+    .point-hit{fill:#16a34a;stroke:#fff;stroke-width:2}
+    .point-second{fill:#2563eb;stroke:#fff;stroke-width:2}
+    figcaption{padding:13px 18px;border-top:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif;background:#f8fafc}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    #overall-feedback{flex:1;min-width:210px;font-size:14px;line-height:1.8}
+    .primary-button{padding:12px 18px;border:2px solid #0f172a;background:#1e293b;color:#fff;border-radius:4px;font:700 13px Inter,Arial,sans-serif;cursor:pointer}
+    .primary-button:hover{background:#4338ca}.print-button{padding:12px 15px;background:#fff;color:#334155;border:1px solid #94a3b8;border-radius:4px;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){
+      body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}
+      header,.briefing,.act,.report,footer{padding:23px 19px}.stamp{display:none}h2{font-size:19px}
+      .condition-grid{grid-template-columns:1fr}.evidence,.question-card{padding:14px}.lead-question{font-size:17px}
+      .control-row label{min-width:100%}.output-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media print{
+      body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}
+      header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}
+      .case-buttons,.lab-controls,footer button{display:none}.graph-card,.question-card,.notes-box{break-inside:avoid}
+      .graph-card svg{max-height:300px}.field-notes{min-height:80px}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
+  </style>
+<style>
+fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}
+.choice{display:flex!important;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}
+.choice:has(input:checked){background:#eef2ff;border-color:#6366f1}.choice input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}
+.clue-feedback:empty{display:none}.clue-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+.reason{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 24px;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}
+.reason summary{color:#3730a3;font-weight:600;cursor:pointer}caption{text-align:left;font-weight:600;margin-bottom:10px}
+.intro-note{padding:10px 30px}select{max-width:100%;padding:9px;font:14px Inter,Arial,sans-serif;color:#1e293b}
+#empty-label{font-size:21px;font-weight:bold}#expanded{overflow-wrap:anywhere;text-align:left}
+@media print{details>summary{display:none}.reason{break-inside:avoid}.clue-feedback,.detective-hint{display:none}}
+</style>
+<style>
+.plane-outputs{grid-template-columns:repeat(3,minmax(0,1fr))}
+.field-label{display:block;font:600 15px/1.8 Inter,Arial,sans-serif;margin-top:24px}
+.field-notes{display:block;width:100%;padding:12px;resize:vertical;font:15px/1.8 Inter,Arial,sans-serif;border:1px solid #94a3b8;border-radius:4px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.actions button,#onplane{padding:11px 15px;border:1px solid #4338ca;border-radius:4px;background:#4338ca;color:white;font:600 14px Inter,Arial,sans-serif;cursor:pointer}
+.actions .secondary{background:white;color:#334155;border-color:#94a3b8}
+#onplane{padding:8px 11px;font-size:12px}
+.score{font:600 14px/1.8 Inter,Arial,sans-serif}
+.formula-live{text-align:center;font:600 17px/1.7 Inter,Arial,sans-serif;padding:18px 12px;background:#f8fafc}
+.lab-message{margin:16px;padding:14px;border-left:4px solid #f97316;background:#fff7ed;font:14px/1.8 Inter,Arial,sans-serif}
+.lab-message[data-onplane="true"]{border-left-color:#22c55e;background:#f0fdf4}
+#e1-label{fill:#4338ca}#e2-label{fill:#0f766e}#n-label{fill:#c2410c}
+#plot text{paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+#plot .plot-label{font-weight:700}button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f59e0b;outline-offset:3px}
+@media(max-width:550px){.plane-outputs{grid-template-columns:1fr}.plane-outputs .output-cell{border-bottom:1px solid #e2e8f0}}
+@media print{.actions,.score{display:none}.plane-outputs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style><style>.three{grid-template-columns:repeat(3,minmax(0,1fr))}.key{display:inline-block;width:20px;height:4px;margin-right:6px;vertical-align:middle}.purple{background:#4f46e5}.red{background:#dc2626}.gray{background:#cbd5e1}#plot text{paint-order:stroke;stroke:#fff;stroke-width:3px}#range-caption{font-size:14px}.output-cell strong{font-size:15px;overflow-wrap:anywhere}@media(max-width:600px){.three{grid-template-columns:1fr}}@media print{.three{grid-template-columns:repeat(3,minmax(0,1fr))}}</style><style>.three{grid-template-columns:repeat(3,minmax(0,1fr))}.key{display:inline-block;width:20px;height:4px;margin-right:6px;vertical-align:middle}.blue{background:#2563eb}.orange{background:#ea580c}.green{background:#16a34a}.black{background:#0f172a}#plot text{paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}#caption{font-size:13px}#plot .plot-label{font-size:17px;font-weight:bold}.case-buttons{padding:10px 0}.lab-controls input[type=range]{min-width:120px}@media(max-width:600px){.three{grid-template-columns:1fr}}@media print{.three{grid-template-columns:repeat(3,minmax(0,1fr))}}</style><style>
+.micro{background:#fffbeb;border-left:4px solid #eab308;padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}.micro>p{margin:0}.micro details{margin-top:8px}.micro summary{font-size:14px;color:#854d0e}.micro details p{font-size:15px}.weight-rows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:18px;font-size:14px}.weight-rows strong{float:right}.track{height:9px;background:#e2e8f0;border-radius:8px;margin-top:8px;overflow:hidden}.bar{height:100%}.a-bar{background:#2563eb}.b-bar{background:#d97706}.c-bar{background:#059669}
+#weights-plot text,#distance-plot text{font:14px Inter,Arial,sans-serif;fill:#334155;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+#weights-plot .plot-label,#distance-plot .plot-label{font-weight:700;font-size:16px}
+@media(max-width:550px){.weight-rows{grid-template-columns:1fr;gap:12px}}@media print{.micro{break-inside:avoid}.weight-rows{grid-template-columns:repeat(3,minmax(0,1fr))}.graph-card{break-inside:auto}}
+</style><style>
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:center;margin:20px 0;font:14px/1.7 Inter,Arial,sans-serif}.flow>div:not(.flow-arrow){padding:16px 10px;background:#eef2ff;border-top:3px solid #6366f1;border-radius:5px;text-align:center;min-width:0}.flow strong,.flow span,.flow small{display:block}.flow strong{color:#3730a3}.flow small{margin-top:6px;color:#475569}.flow-arrow{font-size:24px;color:#64748b}.lab-flow{padding:0 16px}.lab-flow span{font-weight:600;overflow-wrap:anywhere}.lab-flow small{overflow-wrap:anywhere}#slope-plot text{paint-order:stroke;stroke:white;stroke-width:4px;stroke-linejoin:round}#slope-plot .plot-label{font-size:15px;font-weight:bold}
+@media(max-width:560px){.flow{grid-template-columns:1fr}.flow-arrow{text-align:center;transform:rotate(90deg);height:26px}.flow>div:not(.flow-arrow){padding:10px}.lab-flow{padding:0 14px}}
+@media print{.flow{grid-template-columns:1fr auto 1fr auto 1fr}.flow-arrow{transform:none;height:auto}.flow>div:not(.flow-arrow){padding:10px}.reason{break-inside:auto}}
+</style><style>#plane-plot text{font:14px Inter,Arial,sans-serif;paint-order:stroke;stroke:white;stroke-width:4px;stroke-linejoin:round}#plane-plot .plot-label{font-size:16px;font-weight:bold}.lab-definitions{margin:16px}.math-block mjx-container{max-width:100%}@media print{.lab-definitions{break-inside:auto}}</style><style>#skew-plot text,#parallel-plot text{font:14px Inter,Arial,sans-serif;paint-order:stroke;stroke:white;stroke-width:4px;stroke-linejoin:round}#skew-plot .plot-label,#parallel-plot .plot-label{font-size:16px;font-weight:bold}.control-row button[aria-pressed=true]{background:#4338ca;color:white}</style></head>
+
+
+
+
+
+<body><main class="case-file"><div class="stamp" aria-hidden="true">CASE FILE</div>
+<header><h1>MATH DETECTIVE: CASE FILE #35</h1><p class="subject">Subject: The Shortest Distance Between Two Lines in Space</p><p class="mission"><strong>Mission:</strong> Find the part of a connector that moving its endpoints cannot remove, then prove that this remaining part is the shortest distance.</p></header>
+<div class="briefing"><p><strong>Detective Briefing:</strong> Two lines in space need not meet, even if their directions are not parallel. Such lines are called <strong>skew lines</strong>. We will explain the scalar triple product formula and why parallel lines need a different formula.</p></div>
+<p class="small-note intro-note">Choose answers to 8 main clues. Try the short small-step questions before opening their answers. The two labs and answer checking work offline; equation formatting and display fonts need internet access.</p>
+<noscript><div class="evidence warning-evidence">Enable JavaScript for the labs and answer checking. The written proof and small-step answers remain readable.</div></noscript>
+<section class="act" aria-labelledby="act1"><h2 id="act1">Act 1: What do the assumptions tell us?</h2>
+<p>Let</p><div class="math-block">\[L_1:\mathbf r=\mathbf a+t\mathbf u,\qquad
+L_2:\mathbf r=\mathbf b+s\mathbf v,\qquad t,s\in\mathbb R.\]</div><p>The vectors \(\mathbf a,\mathbf b\) locate chosen points A and B. The direction vectors \(\mathbf u,\mathbf v\) are nonzero. For now, assume</p><div class="math-block">\[\mathbf u\times\mathbf v\ne\mathbf0.\]</div><div class="question-card"><fieldset><legend>Clue 1 · What does this extra condition mean?</legend><label class="choice"><input type="radio" name="q1" value="0"><span>A. The lines must be skew.</span></label><label class="choice"><input type="radio" name="q1" value="1"><span>B. The directions are not parallel, so their cross product supplies a nonzero direction perpendicular to both.</span></label><label class="choice"><input type="radio" name="q1" value="2"><span>C. The two direction vectors must be perpendicular to each other.</span></label></fieldset><p id="feedback1" class="clue-feedback" role="status"></p><p id="hint1" class="detective-hint" hidden>Hint: Intersecting lines can also have nonparallel directions.</p></div><div class="micro"><p><strong>Small step 1 · </strong>What would fail if \(\mathbf u=\mathbf0\)?</p><details><summary>Check this step</summary><p>Then \(\mathbf r=\mathbf a+t\mathbf0=\mathbf a\) gives only one point, not a line. The same applies to \(\mathbf v=\mathbf0\).</p></details></div><div class="micro"><p><strong>Small step 2 · </strong>What is the cross product, and why can we use it here?</p><details><summary>Check this step</summary><div class="math-block">\[\mathbf u\times\mathbf v=
+(u_2v_3-u_3v_2,\ u_3v_1-u_1v_3,\ u_1v_2-u_2v_1).\]</div><div class="math-block">\[|\mathbf u\times\mathbf v|=|\mathbf u|\,|\mathbf v|\sin\theta.\]</div><p>For nonparallel nonzero vectors, \(0<\theta<\pi\), so this length is positive. The cross product is perpendicular to both vectors. Its length is also the area of their parallelogram.</p></details></div><div class="evidence"><p>We will prove, for all nonparallel lines,</p><div class="math-block">\[\boxed{d(L_1,L_2)=
+\frac{|(\mathbf b-\mathbf a)\cdot(\mathbf u\times\mathbf v)|}
+{|\mathbf u\times\mathbf v|}.}\]</div><p>This includes skew lines and intersecting lines. A formula for parallel lines will come later.</p></div></section>
+<section class="act white" aria-labelledby="act2"><h2 id="act2">Act 2: Why is AB not necessarily shortest?</h2>
+<p>A and B are only our chosen starting points. We can slide either endpoint along its line. So we seek points P on the first line and Q on the second that make PQ as short as possible.</p><div class="question-card"><fieldset><legend>Clue 2 · Suppose a nonzero connector PQ is shortest. What can we say about its direction?</legend><label class="choice"><input type="radio" name="q2" value="0"><span>A. It must be parallel to one of the lines.</span></label><label class="choice"><input type="radio" name="q2" value="1"><span>B. It must be parallel to AB, because A and B are fixed.</span></label><label class="choice"><input type="radio" name="q2" value="2"><span>C. It must be perpendicular to both lines; otherwise moving one endpoint to a perpendicular foot would shorten it.</span></label></fieldset><p id="feedback2" class="clue-feedback" role="status"></p><p id="hint2" class="detective-hint" hidden>Hint: Hold Q fixed first. Which point of the first line is closest to Q? Then reverse the roles.</p></div><details class="reason"><summary>Why this is only the beginning of a proof</summary><p>If PQ is not perpendicular to the first line, replacing P by the perpendicular foot from Q makes the segment shorter. The same argument applies to the second line.</p><p>So a nonzero shortest connector must be parallel to \(\mathbf n=\mathbf u\times\mathbf v\). But this does not yet prove that such endpoints exist. We must find them and show that no other connector is shorter.</p><p>If the lines intersect, the shortest connector is the zero vector. It has no direction; we will include that case directly.</p></details>
+<p>Write any pair of endpoints as</p><div class="math-block">\[P=\mathbf a+t\mathbf u,\qquad Q=\mathbf b+s\mathbf v.\]</div><div class="micro"><p><strong>Small step 3 · </strong>Subtract the starting point from the ending point. What is the connector vector?</p><details><summary>Check this step</summary><div class="math-block">\[\overrightarrow{PQ}=\mathbf q-\mathbf p
+=(\mathbf b+s\mathbf v)-(\mathbf a+t\mathbf u)
+=\mathbf w+s\mathbf v-t\mathbf u,\qquad
+\mathbf w=\mathbf b-\mathbf a.\]</div><p>The minus sign in front of t comes from subtracting P.</p></details></div></section>
+<section class="act" aria-labelledby="act3"><h2 id="act3">Act 3: Find the part that cannot change</h2>
+<p>Make the common normal a unit vector:</p><div class="math-block">\[\widehat{\mathbf n}
+=\frac{\mathbf u\times\mathbf v}{|\mathbf u\times\mathbf v|}.\]</div><div class="micro"><p><strong>Small step 4 · </strong>What does a dot product with a unit vector measure?</p><details><summary>Check this step</summary><div class="math-block">\[\mathbf c\cdot\widehat{\mathbf n}
+=|\mathbf c|\cos\phi.\]</div><p>It is the <strong>signed component</strong> of \(\mathbf c\) along the unit normal. In coordinates, \(\mathbf c\cdot\mathbf d=c_1d_1+c_2d_2+c_3d_3\). For nonzero vectors, the other description is \(\mathbf c\cdot\mathbf d=|\mathbf c||\mathbf d|\cos\phi\).</p><p>The unit length matters: without it, the dot product would also include the length of the chosen normal.</p></details></div><p>Take the dot product of the connector with this unit normal:</p><div class="math-block">\[\begin{aligned}
+(\mathbf w+s\mathbf v-t\mathbf u)\cdot\widehat{\mathbf n}
+&=\mathbf w\cdot\widehat{\mathbf n}
++s(\mathbf v\cdot\widehat{\mathbf n})
+-t(\mathbf u\cdot\widehat{\mathbf n}).
+\end{aligned}\]</div><div class="question-card"><fieldset><legend>Clue 3 · What immediate observation removes the two terms involving s and t?</legend><label class="choice"><input type="radio" name="q3" value="0"><span>A. Both direction vectors are perpendicular to the normal, so both dot products are zero.</span></label><label class="choice"><input type="radio" name="q3" value="1"><span>B. Both parameters must be zero at every point.</span></label><label class="choice"><input type="radio" name="q3" value="2"><span>C. The two direction vectors have equal lengths.</span></label></fieldset><p id="feedback3" class="clue-feedback" role="status"></p><p id="hint3" class="detective-hint" hidden>Hint: The normal was chosen to be perpendicular to both line directions.</p></div><div class="math-block">\[\boxed{\overrightarrow{PQ}\cdot\widehat{\mathbf n}
+=\mathbf w\cdot\widehat{\mathbf n}.}\]</div><p>This signed component is fixed for every pair P, Q. Sliding the endpoints changes the connector, but cannot change this component.</p><div class="micro"><p><strong>Small step 5 · </strong>Why must every connector have length at least the magnitude of this component?</p><details><summary>Check this step</summary><div class="math-block">\[|\mathbf c\cdot\widehat{\mathbf n}|
+=|\mathbf c|\,|\cos\phi|\le|\mathbf c|.\]</div><p>This is also true for \(\mathbf c=\mathbf0\). Apply it to \(\mathbf c=\overrightarrow{PQ}\):</p><div class="math-block">\[PQ\ge|\mathbf w\cdot\widehat{\mathbf n}|
+=\frac{|\mathbf w\cdot(\mathbf u\times\mathbf v)|}{|\mathbf u\times\mathbf v|}.\]</div></details></div><div class="evidence warning-evidence"><p>We have proved a <strong>lower bound</strong>: no connector can be shorter than this number. We have not yet proved that any connector reaches it.</p></div></section>
+<section class="act white" aria-labelledby="act4"><h2 id="act4">Act 4: Can we reach the lower bound?</h2>
+<p>The vectors \(\mathbf u,\mathbf v\) are independent: neither is a multiple of the other. They span a plane of directions. The nonzero normal points outside that plane, so the three vectors \(\mathbf u,\mathbf v,\widehat{\mathbf n}\) form a basis of space.</p>
+<p>This means every vector has one unique expression using them:</p><div class="math-block">\[\mathbf w=\alpha\mathbf u+\beta\mathbf v+\gamma\widehat{\mathbf n}.\]</div><div class="micro"><p><strong>Small step 6 · </strong>Why is \(\gamma=\mathbf w\cdot\widehat{\mathbf n}\)?</p><details><summary>Check this step</summary><div class="math-block">\[\mathbf w\cdot\widehat{\mathbf n}
+=\alpha\,0+\beta\,0+\gamma\,1=\gamma.\]</div><p>We used perpendicularity and \(\widehat{\mathbf n}\cdot\widehat{\mathbf n}=1\). The vectors \(\mathbf u,\mathbf v\) need not be perpendicular to each other, so α and β are not generally their simple dot products with w.</p></details></div><div class="question-card"><fieldset><legend>Clue 4 · We want to remove the αu and βv terms from w + sv − tu. Which parameters do that?</legend><label class="choice"><input type="radio" name="q4" value="0"><span>A. \(t=-\alpha,\ s=\beta\).</span></label><label class="choice"><input type="radio" name="q4" value="1"><span>B. \(t=\alpha,\ s=-\beta\).</span></label><label class="choice"><input type="radio" name="q4" value="2"><span>C. \(t=\alpha,\ s=\beta\).</span></label></fieldset><p id="feedback4" class="clue-feedback" role="status"></p><p id="hint4" class="detective-hint" hidden>Hint: Check the minus sign in −tu and the plus sign in +sv separately.</p></div><div class="micro"><p><strong>Small step 7 · </strong>Substitute these parameters and show every cancellation.</p><details><summary>Check this step</summary><div class="math-block">\[\begin{aligned}
+\overrightarrow{PQ}
+&=\alpha\mathbf u+\beta\mathbf v+\gamma\widehat{\mathbf n}
++(-\beta)\mathbf v-\alpha\mathbf u\\
+&=(\alpha-\alpha)\mathbf u+(\beta-\beta)\mathbf v
++\gamma\widehat{\mathbf n}\\
+&=\gamma\widehat{\mathbf n}.
+\end{aligned}\]</div></details></div><p>This is a real connector between points on the two lines. Its length is</p><div class="math-block">\[PQ=|\gamma\widehat{\mathbf n}|=|\gamma|
+=|\mathbf w\cdot\widehat{\mathbf n}|.\]</div><div class="evidence success-evidence"><p>Every connector is at least this long, and our chosen endpoints achieve that length. Therefore</p><div class="math-block">\[\boxed{d(L_1,L_2)=
+\frac{|(\mathbf b-\mathbf a)\cdot(\mathbf u\times\mathbf v)|}
+{|\mathbf u\times\mathbf v|}.}\]</div><p>The formula gives an actual minimum, not just a bound that the lines might only approach.</p></div><div class="micro"><p><strong>Small step 8 · </strong>Why is this closest pair unique when the directions are not parallel?</p><details><summary>Check this step</summary><p>Any connector has the form</p><div class="math-block">\[(\alpha-t)\mathbf u+(\beta+s)\mathbf v+\gamma\widehat{\mathbf n}.\]</div><p>The first two terms together are perpendicular to the last. Thus</p><div class="math-block">\[PQ^2=
+|(\alpha-t)\mathbf u+(\beta+s)\mathbf v|^2+\gamma^2.\]</div><p>To reach the minimum \(\gamma^2\), the first vector must be zero. Independence of \(\mathbf u,\mathbf v\) then forces \(t=\alpha,\ s=-\beta\), one pair only. This includes the single intersection point when \(\gamma=0\).</p></details></div></section><section class="act" aria-labelledby="act5"><h2 id="act5">Act 5: Move the endpoints and keep one component fixed</h2>
+<p>Start with the simple skew lines</p><div class="math-block">\[L_1:(x,y,z)=(t,0,0),\qquad L_2:(x,y,z)=(0,s,3).\]</div><div class="math-block">\[\mathbf u=(1,0,0),\quad \mathbf v=(0,1,0),\quad
+\mathbf w=(0,0,3),\quad \mathbf u\times\mathbf v=(0,0,1).\]</div><p>The formula gives d = 3. The closest endpoints are \((0,0,0)\) and \((0,0,3)\). But an arbitrary connector is \((-t,s,3)\), so</p><div class="math-block">\[PQ^2=t^2+s^2+9\ge9,\]</div><p>with equality only at \(t=s=0\). The direction vectors are perpendicular, yet the lines do not intersect.</p>
+<div class="graph-card"><div class="graph-head"><span class="mini-label">Visual lab 1 · the fixed normal component</span>Move either endpoint. Then remove the extra movement and compare the lengths.</div>
+<div class="lab-controls">
+<div class="control-row"><label for="t">P on L₁: t = <output id="t-value">−1</output></label><input id="t" type="range" min="-2" max="2" step=".1" value="-1"></div>
+<div class="control-row"><label for="s">Q on L₂: s = <output id="s-value">1.5</output></label><input id="s" type="range" min="-2" max="2" step=".1" value="1.5"></div>
+<div class="control-row"><label for="height">Height h = <output id="height-value">3</output></label><input id="height" type="range" min="0" max="3" step=".1" value="3"></div>
+<div class="control-row"><label for="angle">Direction angle θ = <output id="angle-value">90°</output></label><input id="angle" type="range" min="20" max="160" step="1" value="90"></div>
+<div class="control-row"><button id="closest" type="button">Find the closest pair</button><button id="intersect" type="button">Make the lines intersect</button><button id="volume" type="button" aria-pressed="false">Show volume picture</button><button id="reset-skew" type="button">Reset</button></div></div>
+<div class="formula-live">\[
+L_1=(t,0,0),\qquad L_2=(s\cos\theta,s\sin\theta,h).
+\]</div>
+<figure><svg id="skew-plot" viewBox="0 0 760 560" role="img" aria-labelledby="skew-title skew-desc"><title id="skew-title">A connector and its fixed normal component</title><desc id="skew-desc">The first line lies in the base plane. The second lies at height h. A connector splits into a removable base-plane component and a fixed vertical component.</desc>
+<path id="base-patch" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+<path id="base-grid" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+<path id="prism-base" fill="#a5b4fc" fill-opacity=".35" stroke="#6366f1" stroke-width="2"/>
+<path id="prism-top" fill="#c4b5fd" fill-opacity=".25" stroke="#8b5cf6" stroke-width="2"/>
+<path id="prism-edges" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path id="l1" fill="none" stroke="#2563eb" stroke-width="3"/><path id="l2" fill="none" stroke="#7c3aed" stroke-width="3"/>
+<path id="minimum" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="7 5"/>
+<path id="removable" fill="none" stroke="#64748b" stroke-width="2.5" stroke-dasharray="5 4"/>
+<path id="fixed" fill="none" stroke="#d97706" stroke-width="4"/>
+<path id="connector" fill="none" stroke="#dc2626" stroke-width="3"/>
+<circle id="a-point" r="5" fill="#16a34a" stroke="white" stroke-width="2"/><circle id="b-point" r="5" fill="#16a34a" stroke="white" stroke-width="2"/>
+<circle id="r-point" r="5" fill="white" stroke="#64748b" stroke-width="2"/><circle id="p-point" r="6" fill="#2563eb" stroke="white" stroke-width="2"/><circle id="q-point" r="6" fill="#7c3aed" stroke="white" stroke-width="2"/>
+<text id="a-label" class="plot-label">A</text><text id="b-label" class="plot-label">B</text><text id="p-label" class="plot-label">P</text><text id="q-label" class="plot-label">Q</text><text id="r-label" class="plot-label">R</text>
+<text id="l1-label" class="plot-label">L₁</text><text id="l2-label" class="plot-label">L₂</text>
+<text id="skew-caption" x="380" y="510" text-anchor="middle"></text>
+<text x="380" y="534" text-anchor="middle">Red: PQ · Amber: fixed height RQ · Gray dashed: PR</text>
+</svg><figcaption>R is Q’s perpendicular projection onto the base plane. It need not lie on L₁. The split \(PQ^2=PR^2+RQ^2\) shows why PQ cannot be less than h. This is a slanted 3D view; use the numerical values for true lengths and angles.</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>Compare</th><th>Live value</th></tr></thead><tbody>
+<tr><td>Endpoints P and Q</td><td id="endpoints"></td></tr>
+<tr><td>Connector Q − P</td><td id="connector-read"></td></tr>
+<tr><td>Fixed normal component</td><td id="fixed-read"></td></tr>
+<tr><td>\(PQ^2=PR^2+h^2\)</td><td id="pythagoras"></td></tr>
+<tr><td>Current PQ and shortest distance</td><td id="distance-read"></td></tr>
+<tr><td>Base area \(|\mathbf u\times\mathbf v|\)</td><td id="area-read"></td></tr>
+<tr><td>Volume \(|\mathbf w\cdot(\mathbf u\times\mathbf v)|\)</td><td id="volume-read"></td></tr>
+<tr><td>Volume ÷ area</td><td id="ratio-read"></td></tr>
+</tbody></table></div><div id="skew-message" class="lab-message" role="status" aria-live="polite"></div>
+<p class="small-note intro-note">The direction angle stays strictly between 0° and 180°, so this lab always uses nonparallel directions. The next lab handles parallel lines. Values are rounded for display.</p></div></section>
+<section class="act white" aria-labelledby="act6"><h2 id="act6">Act 6: Why does volume divided by area appear?</h2>
+<p>The cross product gives the area of the parallelogram spanned by \(\mathbf u,\mathbf v\). The absolute scalar triple product gives the volume of the parallelepiped made from \(\mathbf u,\mathbf v,\mathbf w\). This is a box that may be slanted.</p><div class="question-card"><fieldset><legend>Clue 5 · What does volume divided by base area measure?</legend><label class="choice"><input type="radio" name="q5" value="0"><span>A. The length of w, whether or not w is perpendicular to the base.</span></label><label class="choice"><input type="radio" name="q5" value="1"><span>B. The sum of the lengths of u and v.</span></label><label class="choice"><input type="radio" name="q5" value="2"><span>C. The perpendicular height—the part of w that movement along the lines cannot remove.</span></label></fieldset><p id="feedback5" class="clue-feedback" role="status"></p><p id="hint5" class="detective-hint" hidden>Hint: For a slanted box, volume is still base area times perpendicular height.</p></div><div class="math-block">\[\text{volume}
+=|\mathbf w\cdot\widehat{\mathbf n}|\,
+|\mathbf u\times\mathbf v|,
+\qquad
+\frac{\text{volume}}{\text{base area}}
+=|\mathbf w\cdot\widehat{\mathbf n}|.\]</div><div class="micro"><p><strong>Small step 9 · </strong>Why is that height not generally the length AB?</p><details><summary>Check this step</summary><p>The vector \(\mathbf w=\overrightarrow{AB}\) may include movement along the base plane as well as movement normal to it. Only its normal component determines the height. In our lab, the chosen A and B happen to be the closest pair, so AB equals the height; that is a special choice of representatives.</p></details></div><div class="question-card"><fieldset><legend>Clue 6 · Would choosing different starting points A and B on the same lines change the answer?</legend><label class="choice"><input type="radio" name="q6" value="0"><span>A. No. The added multiples of u and v have zero dot product with the common normal.</span></label><label class="choice"><input type="radio" name="q6" value="1"><span>B. Yes. The distance depends on the chosen A and B.</span></label><label class="choice"><input type="radio" name="q6" value="2"><span>C. No, but only if both starting points move by the same amount.</span></label></fieldset><p id="feedback6" class="clue-feedback" role="status"></p><p id="hint6" class="detective-hint" hidden>Hint: Write the new separation vector before taking its triple product.</p></div><div class="micro"><p><strong>Small step 10 · </strong>If \(\mathbf a'=\mathbf a+p\mathbf u\) and \(\mathbf b'=\mathbf b+q\mathbf v\), what happens to the numerator?</p><details><summary>Check this step</summary><div class="math-block">\[\mathbf w'=\mathbf w+q\mathbf v-p\mathbf u.\]</div><div class="math-block">\[\mathbf w'\cdot(\mathbf u\times\mathbf v)
+=\mathbf w\cdot(\mathbf u\times\mathbf v)+q\,0-p\,0.\]</div><p>The numerator is unchanged. The formula depends on the lines, not on which points we first chose.</p></details></div><details class="reason"><summary>What if we rescale or reverse a direction vector?</summary><p>Replacing \(\mathbf u,\mathbf v\) by \(k\mathbf u,\ell\mathbf v\), with \(k,\ell\ne0\), gives the same lines after changing their parameters. The cross product becomes \(k\ell(\mathbf u\times\mathbf v)\). Both absolute numerator and denominator are multiplied by \(|k\ell|\), so the distance is unchanged.</p></details></section><section class="act" aria-labelledby="act7"><h2 id="act7">Act 7: What does a zero triple product mean?</h2><div class="question-card"><fieldset><legend>Clue 7 · For nonparallel lines, what follows if the scalar triple product is zero?</legend><label class="choice"><input type="radio" name="q7" value="0"><span>A. The lines might stay apart while only approaching zero distance.</span></label><label class="choice"><input type="radio" name="q7" value="1"><span>B. The lines intersect: our constructed closest connector is the zero vector.</span></label><label class="choice"><input type="radio" name="q7" value="2"><span>C. The lines must be parallel.</span></label></fieldset><p id="feedback7" class="clue-feedback" role="status"></p><p id="hint7" class="detective-hint" hidden>Hint: Use the endpoints constructed in Act 4, not just the lower bound.</p></div><div class="micro"><p><strong>Small step 11 · </strong>Why is the existence step essential to this conclusion?</p><details><summary>Check this step</summary><p>A zero lower bound alone says only \(PQ\ge0\), which is true for every pair of points. But we proved there are endpoints with connector \(\gamma\widehat{\mathbf n}\). If the triple product is zero, then \(\gamma=0\), so</p><div class="math-block">\[\mathbf q-\mathbf p=\mathbf0\quad\Longrightarrow\quad P=Q.\]</div><p>They are the same point on both lines. Therefore the lines really intersect.</p></details></div><div class="math-block">\[\boxed{\text{For nonparallel lines: }\quad
+L_1\cap L_2\ne\varnothing
+\iff
+(\mathbf b-\mathbf a)\cdot(\mathbf u\times\mathbf v)=0.}\]</div><p>A nonzero triple product means the nonparallel lines are skew. In the lab, h = 0 makes the lines intersect; h &gt; 0 separates them. Perpendicular direction vectors alone do not force an intersection.</p></section>
+<section class="act white" aria-labelledby="act8"><h2 id="act8">Act 8: What changes for parallel lines?</h2>
+<p>When the directions are parallel, \(\mathbf u\times\mathbf v=\mathbf0\). The previous numerator and denominator are both zero. The fraction is undefined; it does not tell us the distance is zero.</p><div class="question-card"><fieldset><legend>Clue 8 · We still want to remove all possible movement along the lines. What should we do now?</legend><label class="choice"><input type="radio" name="q8" value="0"><span>A. Set the previous 0/0 fraction equal to zero.</span></label><label class="choice"><input type="radio" name="q8" value="1"><span>B. Choose any nonzero denominator instead.</span></label><label class="choice"><input type="radio" name="q8" value="2"><span>C. Split w into a part along the common direction u and a part perpendicular to it.</span></label></fieldset><p id="feedback8" class="clue-feedback" role="status"></p><p id="hint8" class="detective-hint" hidden>Hint: There is now only one independent direction of motion along the lines.</p></div><div class="math-block">\[\mathbf w_\parallel=
+\frac{\mathbf w\cdot\mathbf u}{|\mathbf u|^2}\mathbf u,\qquad
+\mathbf w_\perp=\mathbf w-\mathbf w_\parallel.\]</div><div class="micro"><p><strong>Small step 12 · </strong>Check that the remaining vector is perpendicular to u.</p><details><summary>Check this step</summary><div class="math-block">\[\mathbf w_\perp\cdot\mathbf u
+=\mathbf w\cdot\mathbf u-
+\frac{\mathbf w\cdot\mathbf u}{|\mathbf u|^2}|\mathbf u|^2=0.\]</div><p>Endpoint movement can remove \(\mathbf w_\parallel\). For example, keep \(Q=B\) by taking \(s=0\), and choose \(t=(\mathbf w\cdot\mathbf u)/|\mathbf u|^2\). Then \(\overrightarrow{PQ}=\mathbf w-t\mathbf u=\mathbf w_\perp\). Movement along either parallel line cannot change \(\mathbf w_\perp\). Every connector has squared length \(|\mathbf w_\perp|^2\) plus a nonnegative squared component along u, and we can choose the endpoints to make that last component zero.</p></details></div><div class="math-block">\[\boxed{d=|\mathbf w_\perp|
+=\sqrt{|\mathbf w|^2-
+\frac{(\mathbf w\cdot\mathbf u)^2}{|\mathbf u|^2}}.}\]</div><div class="micro"><p><strong>Small step 13 · </strong>Why can we write the same result with a cross product?</p><details><summary>Check this step</summary><div class="math-block">\[|\mathbf w\times\mathbf u|^2
+=|\mathbf w|^2|\mathbf u|^2-(\mathbf w\cdot\mathbf u)^2.\]</div><div class="math-block">\[\boxed{d=\frac{|\mathbf w\times\mathbf u|}{|\mathbf u|}.}\]</div><p>For nonzero w this also says \(|\mathbf w_\perp|=|\mathbf w|\sin\phi\). If w is zero, both forms give zero directly.</p></details></div><p>For a concrete example, take</p><div class="math-block">\[L_1=(t,0,0),\qquad L_2=(3+s,2,0).
+\quad \mathbf w=(3,2,0),\quad\mathbf u=(1,0,0).\]</div><div class="micro"><p><strong>Small step 14 · </strong>Find the distance and the condition on t and s for a closest pair.</p><details><summary>Check this step</summary><div class="math-block">\[\mathbf w_\parallel=(3,0,0),\quad
+\mathbf w_\perp=(0,2,0),\quad d=2.\]</div><div class="math-block">\[\overrightarrow{PQ}=(3+s-t,2,0),\qquad
+PQ^2=(3+s-t)^2+4.\]</div><p>The minimum occurs whenever \(t=3+s\). For every real s there is such a t. That gives infinitely many closest pairs.</p></details></div><div class="graph-card"><div class="graph-head"><span class="mini-label">Visual lab 2 · slide a closest pair together</span>The parallel lines stay 2 units apart. A shared slide changes both endpoints but not their separation.</div>
+<div class="lab-controls"><div class="control-row"><label for="shared">Shared position c = <output id="shared-value">0</output></label><input id="shared" type="range" min="-2" max="2" step=".1" value="0"></div>
+<div class="control-row"><label for="mismatch">Extra horizontal change m = <output id="mismatch-value">1</output></label><input id="mismatch" type="range" min="-1.5" max="1.5" step=".1" value="1"></div>
+<div class="control-row"><button id="align" type="button">Make this pair closest</button><button id="slide-pair" type="button">Slide both endpoints</button><button id="reset-parallel" type="button">Reset</button></div></div>
+<figure><svg id="parallel-plot" viewBox="0 0 760 340" role="img" aria-labelledby="parallel-title parallel-desc"><title id="parallel-title">Infinitely many closest pairs on parallel lines</title><desc id="parallel-desc">The two lines lie at y equals zero and y equals two. A vertical connector has length two at every shared horizontal position.</desc>
+<path d="M80 230 H680" fill="none" stroke="#2563eb" stroke-width="3"/><path d="M80 90 H680" fill="none" stroke="#7c3aed" stroke-width="3"/>
+<text x="85" y="256">L₁: y = 0, z = 0</text><text x="85" y="68">L₂: y = 2, z = 0</text>
+<path id="parallel-short" stroke="#16a34a" stroke-width="3" stroke-dasharray="6 5" fill="none"/><path id="parallel-current" stroke="#dc2626" stroke-width="3" fill="none"/>
+<circle id="parallel-p" r="6" fill="#2563eb" stroke="white" stroke-width="2"/><circle id="parallel-q" r="6" fill="#7c3aed" stroke="white" stroke-width="2"/>
+<text id="parallel-p-label" class="plot-label">P</text><text id="parallel-q-label" class="plot-label">Q</text>
+<text id="parallel-caption" x="380" y="303" text-anchor="middle"></text>
+</svg><figcaption>Here \(P=(c,0,0)\), \(Q=(c+m,2,0)\). The line parameters are \(t=c\) and \(s=c+m-3\). Setting m = 0 removes the extra horizontal change. Moving c then produces another closest pair.</figcaption></figure>
+<div id="parallel-read" class="formula-live"></div><div id="parallel-message" class="lab-message" role="status" aria-live="polite"></div></div>
+<p>With two independent line directions, there is one way to cancel the two removable terms. With parallel directions, the endpoints can slide together without changing their connector.</p>
+<p>For distinct parallel lines the distance is positive and there are infinitely many closest pairs. If the lines coincide, the distance is zero and each point gives a pair with P = Q.</p></section>
+<section class="report" aria-labelledby="report"><h2 id="report">Final report: remove only what motion can change</h2>
+<div class="table-wrap"><table><thead><tr><th>Case</th><th>Distance</th><th>Closest pairs</th></tr></thead><tbody>
+<tr><td>Nonparallel directions</td><td>\(\dfrac{|\mathbf w\cdot(\mathbf u\times\mathbf v)|}{|\mathbf u\times\mathbf v|}\)</td><td>One pair. Zero distance means intersection.</td></tr>
+<tr><td>Parallel directions</td><td>\(\dfrac{|\mathbf w\times\mathbf u|}{|\mathbf u|}\)</td><td>Infinitely many. Zero distance means the lines coincide.</td></tr>
+</tbody></table></div>
+<div class="evidence success-evidence"><p><strong>The proof had two jobs:</strong> show that every connector is at least as long as the fixed perpendicular component, then choose endpoints that leave only that component.</p></div>
+<label class="field-label" for="note1">Your field notes · Why was a lower bound not enough to prove the distance formula?</label><textarea id="note1" class="field-notes" rows="3" placeholder="We also needed to find ... The choices t = ... and s = ... give ..."></textarea>
+<label class="field-label" for="note2">One last explanation · Why does the number of closest pairs change when the directions become parallel?</label><textarea id="note2" class="field-notes" rows="3" placeholder="Independent directions force ... Parallel directions allow ..."></textarea>
+<div class="actions"><button id="submit" type="button">Submit Findings</button><button id="print" class="secondary" type="button">Print Case File</button></div>
+<p id="score" class="score" role="status" aria-live="polite">8 main clues to investigate. The 14 small-step questions are for practice.</p>
+<p class="small-note">Answers and notes stay on this page while it is open. Print to keep a copy; explanations and small-step answers open automatically for printing.</p></section>
+<footer>END OF CASE FILE #35 · A fixed component gives a bound. A constructed connector proves it is the minimum.</footer></main><script>
+const $=id=>document.getElementById(id);
+const fmt=x=>Math.abs(x)<1e-12?'0':String(Number(x.toPrecision(7))),tuple=p=>'('+p.map(fmt).join(', ')+')';
+const add=(a,b)=>a.map((x,i)=>x+b[i]),sub=(a,b)=>a.map((x,i)=>x-b[i]),mul=(k,a)=>a.map(x=>k*x);
+const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0),norm=a=>Math.hypot(...a);
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+let showVolume=false;
+function skewData(){
+ const t=Number($('t').value),s=Number($('s').value),h=Number($('height').value),angle=Number($('angle').value),theta=angle*Math.PI/180;
+ const u=[1,0,0],v=[Math.cos(theta),Math.sin(theta),0],A=[0,0,0],B=[0,0,h],P=[t,0,0],Q=add(B,mul(s,v)),R=mul(s,v),w=sub(B,A),n=cross(u,v);
+ const connector=sub(Q,P),base=sub(R,P),base2=dot(base,base),area=norm(n),volume=Math.abs(dot(w,n));
+ return {t,s,h,angle,u,v,A,B,P,Q,R,w,n,connector,base2,area,volume,distance:volume/area,pq:norm(connector),closest:t===0&&s===0};
+}
+const project=p=>[360+65*p[0]-35*p[1],370+12*p[0]+24*p[1]-70*p[2]];
+const screenPath=pts=>pts.map((p,i)=>(i?'L':'M')+p.map(fmt).join(' ')).join(' ');
+const path=pts=>screenPath(pts.map(project));
+function visible(id,on){$(id).setAttribute('visibility',on?'visible':'hidden');}
+function mark(id,p){$(id).setAttribute('cx',fmt(p[0]));$(id).setAttribute('cy',fmt(p[1]));}
+function label(id,p,text,dx=0,dy=0){$(id).setAttribute('x',fmt(p[0]+dx));$(id).setAttribute('y',fmt(p[1]+dy));$(id).textContent=text;}
+function drawSkew(){
+ const d=skewData(),{A,B,P,Q,R,u,v,h,t,s}=d;
+ $('base-patch').setAttribute('d',path([[-2.6,-2.6,0],[2.6,-2.6,0],[2.6,2.6,0],[-2.6,2.6,0]])+' Z');
+ let grid='';for(let j=-2;j<=2;j++){grid+=path([[j,-2.6,0],[j,2.6,0]])+' '+path([[-2.6,j,0],[2.6,j,0]])+' ';}$('base-grid').setAttribute('d',grid);
+ $('l1').setAttribute('d',path([mul(-3.3,u),mul(3.3,u)]));$('l2').setAttribute('d',path([add(B,mul(-3,v)),add(B,mul(3,v))]));
+ $('minimum').setAttribute('d',path([A,B]));$('removable').setAttribute('d',path([P,R]));$('fixed').setAttribute('d',path([R,Q]));$('connector').setAttribute('d',path([P,Q]));
+ const base=[A,u,add(u,v),v],top=base.map(x=>add(x,B));
+ $('prism-base').setAttribute('d',path(base)+' Z');$('prism-top').setAttribute('d',path(top)+' Z');$('prism-edges').setAttribute('d',base.map((p,i)=>path([p,top[i]])).join(' '));
+ ['prism-base','prism-top','prism-edges'].forEach(id=>visible(id,showVolume));
+ ['a','b','p','q','r'].forEach((id,i)=>mark(id+'-point',project([A,B,P,Q,R][i])));
+ label('a-label',project(A),h===0?'A = B':'A',-30,-14);
+ label('b-label',project(B),'B',-28,-14);
+ label('p-label',project(P),t===0?(h===0?'P = A = B':'P = A'):'P',12,25);
+ label('q-label',project(Q),d.closest&&h===0?'P = Q = A = B':s===0?(h===0?'Q = A = B':'Q = B'):'Q',12,-17);
+ label('r-label',project(R),'R',-24,40);
+ const showA=t!==0&&!(h===0&&s===0),showB=h!==0&&s!==0,showR=h!==0&&s!==0,merged=d.closest&&h===0;
+ ['a-point','a-label'].forEach(id=>visible(id,showA));['b-point','b-label'].forEach(id=>visible(id,showB));['r-point','r-label'].forEach(id=>visible(id,showR));['p-point','p-label'].forEach(id=>visible(id,!merged));
+ label('l1-label',project(mul(3.3,u)),'L₁',12,8);label('l2-label',project(add(B,mul(3,v))),'L₂',10,-12);
+ $('skew-caption').textContent=d.closest?(h===0?'P = Q: the nonparallel lines intersect.':'Only the normal component remains: PQ = h.'):'PQ² = PR² + h². Remove PR to reach the lower bound.';
+ ['t','s','height','angle'].forEach((id,i)=>$(id+'-value').textContent=fmt([t,s,h,d.angle][i])+(id==='angle'?'°':''));
+ $('endpoints').textContent='P = '+tuple(P)+'; Q = '+tuple(Q);
+ $('connector-read').textContent=tuple(d.connector);$('fixed-read').textContent='h = '+fmt(h);
+ $('pythagoras').textContent=fmt(d.base2)+' + '+fmt(h*h)+' = '+fmt(d.base2+h*h);
+ $('distance-read').textContent='PQ = '+fmt(d.pq)+'; minimum = '+fmt(d.distance);
+ $('area-read').textContent=fmt(d.area);$('volume-read').textContent=fmt(d.volume);$('ratio-read').textContent=fmt(d.volume)+' / '+fmt(d.area)+' = '+fmt(d.distance);
+ $('volume').setAttribute('aria-pressed',String(showVolume));$('volume').textContent=showVolume?'Hide volume picture':'Show volume picture';
+ $('skew-message').textContent=(d.closest?'The closest pair is reached at t = s = 0. ':'The current connector includes extra movement in the base plane. Choose “Find the closest pair” to remove it. ')+(h===0?'The height is zero, so the lines intersect at A = B. ':'Every connector keeps a normal component of '+fmt(h)+'. ')+(showVolume?'The shaded base is spanned by the unit direction vectors u and v. The top is shifted by w = (0,0,h); the height is h.':'The green dashed segment marks the shortest connector AB.');
+ $('skew-desc').textContent='Direction angle '+fmt(d.angle)+' degrees. P = '+tuple(P)+', Q = '+tuple(Q)+', R = '+tuple(R)+'. Current connector length '+fmt(d.pq)+', fixed height '+fmt(h)+'. '+(d.closest?'The closest pair is shown.':'Endpoints can slide to remove PR.')+(showVolume?' The parallelepiped with base u, v and height h is shown.':'');
+ return d;
+}
+function closest(){ $('t').value='0';$('s').value='0';return drawSkew();}
+['t','s','height','angle'].forEach(id=>$(id).addEventListener('input',drawSkew));
+$('closest').addEventListener('click',closest);$('intersect').addEventListener('click',()=>{$('height').value='0';closest();});
+$('volume').addEventListener('click',()=>{showVolume=!showVolume;drawSkew();});
+$('reset-skew').addEventListener('click',()=>{showVolume=false;Object.entries({t:-1,s:1.5,height:3,angle:90}).forEach(([id,v])=>$(id).value=String(v));drawSkew();});
+function parallelData(){
+ const c=Number($('shared').value),m=Number($('mismatch').value);
+ return {c,m,P:[c,0,0],Q:[c+m,2,0],t:c,s:c+m-3,pq:Math.hypot(m,2)};
+}
+function drawParallel(){
+ const d=parallelData(),P=[380+70*d.c,230],Q=[380+70*(d.c+d.m),90],H=[380+70*d.c,90];
+ $('parallel-short').setAttribute('d',screenPath([P,H]));$('parallel-current').setAttribute('d',screenPath([P,Q]));
+ mark('parallel-p',P);mark('parallel-q',Q);label('parallel-p-label',P,'P',12,-14);label('parallel-q-label',Q,'Q',12,26);
+ $('shared-value').textContent=fmt(d.c);$('mismatch-value').textContent=fmt(d.m);
+ $('parallel-caption').textContent=d.m===0?'A closest pair. Slide c: the connector stays 2 units long.':'The extra horizontal change adds m² to the squared length.';
+ $('parallel-read').textContent='t = '+fmt(d.t)+', s = '+fmt(d.s)+'; PQ² = '+fmt(d.m*d.m)+' + 4; PQ = '+fmt(d.pq);
+ $('parallel-message').textContent=d.m===0?'Now t = 3 + s, so the connector is perpendicular to both parallel lines and has length 2. Change the shared position c: every position gives another closest pair.':'The horizontal mismatch is '+fmt(d.m)+'. It makes PQ larger than 2. Set m = 0 to remove that extra component, then slide the pair together.';
+ $('parallel-desc').textContent='P = '+tuple(d.P)+', Q = '+tuple(d.Q)+'. Connector length '+fmt(d.pq)+'. The shortest distance is 2 for every shared position c.';
+ return d;
+}
+['shared','mismatch'].forEach(id=>$(id).addEventListener('input',drawParallel));
+$('align').addEventListener('click',()=>{$('mismatch').value='0';drawParallel();});
+$('slide-pair').addEventListener('click',()=>{const c=Number($('shared').value);$('shared').value=String(c>=1.5?-2:c+.5);drawParallel();});
+$('reset-parallel').addEventListener('click',()=>{$('shared').value='0';$('mismatch').value='1';drawParallel();});
+const answerKeys=[1,2,0,1,2,0,1,2];let submitted=false;
+function checkFindings(){
+ let correct=0,unanswered=0;answerKeys.forEach((key,i)=>{
+ const n=i+1,choice=document.querySelector('input[name="q'+n+'"]:checked'),f=$('feedback'+n),hint=$('hint'+n);
+ if(!choice){unanswered++;f.textContent='Choose an answer, then check again.';f.style.color='#92400e';hint.hidden=true;return;}
+ const ok=Number(choice.value)===key;if(ok)correct++;
+ f.textContent=ok?'Clue solved. Read the reasoning and explain it in your own words.':'Try again. Use the hint and follow the small steps.';
+ f.style.color=ok?'#166534':'#b91c1c';hint.hidden=ok;
+ });
+ $('score').textContent=correct+' of '+answerKeys.length+' main clues solved.'+(unanswered?' '+unanswered+' unanswered.':'')+(correct===answerKeys.length?' Now explain why the lower bound is reached and why the closest pair is unique.':' You can change your answers and check again.');
+ return {correct,unanswered};
+}
+$('submit').addEventListener('click',()=>{submitted=true;checkFindings();});
+document.querySelectorAll('input[type="radio"]').forEach(r=>r.addEventListener('change',()=>{if(submitted)checkFindings();}));
+let printStates=[];
+window.addEventListener('beforeprint',()=>{printStates=Array.from(document.querySelectorAll('details'),d=>[d,d.open]);printStates.forEach(([d])=>d.open=true);});
+window.addEventListener('afterprint',()=>printStates.forEach(([d,o])=>d.open=o));
+$('print').addEventListener('click',()=>window.print());
+drawSkew();drawParallel();
+</script></body></html>
+

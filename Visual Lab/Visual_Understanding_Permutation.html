@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Permutation (Ancient Indian Mathematics)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf9f6;
+            color: #333;
+        }
+        h1, h2, h3, h4, .serif-text {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Object Colors from the images */
+        .obj-1 { background-color: #FCE883; color: #000; } /* Yellow */
+        .obj-2 { background-color: #F0F0F0; color: #000; border: 1px solid #ddd; } /* White/Gray */
+        .obj-3 { background-color: #8B2323; color: #fff; } /* Dark Red */
+        .obj-4 { background-color: #EE7AE9; color: #000; } /* Pink */
+        .obj-5 { background-color: #87CEFA; color: #000; } /* Blue */
+        .obj-6 { background-color: #7CCD7C; color: #000; } /* Green */
+        .obj-7 { background-color: #FFA54F; color: #000; } /* Orange */
+
+        .circle {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .circle {
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.25rem;
+            }
+        }
+
+        .highlight-border {
+            border: 3px solid #333;
+            transform: scale(1.1);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sanskrit {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-8 border-b-4 border-emerald-700">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-emerald-900 mb-2">Permutation</h1>
+			<p class="text-3xl md:text-4xl serif-text text-[#8C6D46] italic mb-8">
+                Prastara <span class="text-xl md:text-2xl text-[#737373] italic font-light ml-2">&mdash; Arrangement of Objects</span>
+            </p>
+            <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                Suppose there are <span class="font-bold italic">r</span> distinct objects with you and you have to arrange them on a table. In how many ways can you do it? Let's explore the structured logic from Ancient Indian Mathematics.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 mt-12 space-y-20">
+
+        <!-- Context Section -->
+        <section class="bg-[#F5E6E6] rounded-2xl p-6 md:p-10 shadow-lg fade-in">
+            <div class="text-center mb-6">
+                <p class="text-lg uppercase tracking-widest text-gray-700 mb-2">This is a verse from</p>
+                <h2 class="text-3xl font-semibold text-gray-900">Saṅgītaratnākara of Śārṅgadeva</h2>
+                <p class="text-sm text-gray-600 mt-1">Vol. 1: Treatment of svaras | ONE OF THE SEMINAL TEXTS OF INDIAN MUSIC</p>
+            </div>
+            <div class="bg-white/60 p-6 rounded-xl text-center mb-6 shadow-inner">
+                <p class="sanskrit font-serif mb-4">
+                    क्रमं न्यस्य स्वरः स्थाप्यः पूर्वे पूर्वे परादधः ।<br>
+                    स चेदुपरि तत्पूर्वः पुरस्तूंपरिवर्तिनः ॥<br>
+                    मूलक्रमक्रमात् पृष्ठे शेषाः प्रस्तार ईदृशः ।
+                </p>
+                <p class="text-lg text-gray-800 font-medium">
+                    This verse gives us a way (an <span class="italic font-bold text-red-600">algorithm</span>) to list all the possible arrangements systematically in the form of an array.
+                </p>
+            </div>
+        </section>
+
+        <!-- The Algorithm Explanation -->
+        <section class="space-y-6 fade-in">
+            <div class="text-center">
+                <h2 class="text-4xl font-black tracking-tight text-gray-900">THE RULE:</h2>
+                <p class="text-xl font-bold tracking-widest text-gray-700 uppercase">(Interpretation)</p>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-1">
+                <div class="bg-[#D9EAD3] p-6 rounded-xl shadow-sm text-lg text-gray-800">
+                    <span class="font-bold">Initialization:</span> The first thing you do is label the objects as 1, 2, 3... r. These numbers act as their value. In the <span class="font-bold italic">first</span> row, the objects are kept in increasing order of their value.
+                </div>
+                <div class="bg-[#D9EAD3] p-6 rounded-xl shadow-sm text-lg text-gray-800">
+                    <span class="font-bold">The Iteration (i ≥ 2):</span> Look at the previous row starting from the left. Look for the first element that has <span class="font-bold italic">at least one element of lower value on its left</span> (call it M).
+                </div>
+                <div class="bg-[#D9EAD3] p-6 rounded-xl shadow-sm text-lg text-gray-800">
+                    <span class="font-bold">The Replacement:</span> The largest value object among those lesser value objects on its left is written just below M in the new row.
+                </div>
+                <div class="bg-[#D9EAD3] p-6 rounded-xl shadow-sm text-lg text-gray-800">
+                    <span class="font-bold">The Rest:</span> All numbers to the right of M's position are written exactly as they were. The remaining objects are placed to the left in ascending order of value. We continue till all objects are in descending order.
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Prastara Generator -->
+        <section class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+            <div class="bg-blue-600 p-6 text-center text-white">
+                <h2 class="text-3xl font-bold uppercase tracking-wider">Interactive Arrangement Generator</h2>
+                <p class="opacity-90 mt-2">Step through the ancient algorithm to generate permutations systematically.</p>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <div class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
+                    <div class="flex items-center gap-3">
+                        <label for="objectCount" class="font-semibold text-gray-700">Number of Objects (r):</label>
+                        <select id="objectCount" class="border border-gray-300 rounded-md px-3 py-1 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="3">3 (6 arrangements)</option>
+                            <option value="4" selected>4 (24 arrangements)</option>
+                            <option value="5">5 (120 arrangements)</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btnReset" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition">Reset</button>
+                        <button id="btnNext" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold shadow-md transition flex items-center gap-2">
+                            Next Arrangement <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-5 gap-8">
+                    <!-- Current State & Explanation -->
+                    <div class="md:col-span-3 space-y-6">
+                        <div class="bg-blue-50 rounded-xl p-6 border border-blue-100">
+                            <h3 class="text-sm font-bold text-blue-400 uppercase tracking-wide mb-2">Current Row (<span id="rowCount">1</span>)</h3>
+                            <div id="currentArray" class="flex flex-wrap gap-2 justify-center py-4">
+                                <!-- Circles injected by JS -->
+                            </div>
+                        </div>
+
+                        <div class="bg-[#fdf8f5] rounded-xl p-6 border border-[#f5e6dc] shadow-inner min-h-[150px]">
+                            <h3 class="text-sm font-bold text-orange-400 uppercase tracking-wide mb-2">Explanation of the Move</h3>
+                            <p id="explanationText" class="text-gray-700 text-lg leading-relaxed">
+                                Click "Next Arrangement" to apply the rule and generate the next permutation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- History Grid -->
+                    <div class="md:col-span-2 bg-gray-50 rounded-xl p-4 border border-gray-200 flex flex-col h-full max-h-[400px]">
+                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3 text-center border-b pb-2">Generated Arrangements</h3>
+                        <div id="historyContainer" class="overflow-y-auto flex-grow space-y-2 pr-2 custom-scrollbar">
+                            <!-- History rows injected here -->
+                        </div>
+                        <div class="text-center mt-3 text-xs text-gray-400" id="totalArrangementsText">0 / 24 generated</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mathematical Derivation -->
+        <section class="space-y-8 fade-in pt-8">
+            <div class="bg-[#F8E0E0] rounded-xl p-6 md:p-10 shadow-md">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">We denote number of ways to arrange <span class="italic">r</span> distinct objects by N(r)</h2>
+                
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4 border-b border-red-200 pb-4">
+                        <p class="text-lg font-medium w-64">1. When r = 1, there is just one way<br><span class="italic text-gray-600">N(1) = 1</span></p>
+                        <div class="flex gap-2"><div class="circle obj-1">1</div></div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 border-b border-red-200 pb-4">
+                        <p class="text-lg font-medium w-64">2. When r = 2, there are 2 ways<br><span class="italic text-gray-600">N(2) = 2</span></p>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex gap-2"><div class="circle obj-1">1</div><div class="circle obj-2">2</div></div>
+                            <div class="flex gap-2"><div class="circle obj-2">2</div><div class="circle obj-1">1</div></div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <p class="text-lg font-medium mb-4">3. For r = 3, we can fix the 3rd position with one of the 3 objects and see how the remaining are arranged.</p>
+                        <p class="text-gray-700 mb-6">Since there are a total of 3 options for the 3rd position, and in each case the other two can be arranged in N(2) ways. This implies:<br>
+                            <strong class="text-xl bg-white px-2 py-1 rounded inline-block mt-2">N(3) = 3 × N(2)</strong>
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                            <div class="bg-white p-4 rounded-lg shadow flex flex-col items-center border border-gray-100">
+                                <div class="flex gap-2 mb-2">
+                                    <div class="circle obj-1">1</div><div class="circle obj-2">2</div>
+                                    <div class="circle obj-3 border-4 border-gray-800 shadow-lg">3</div>
+                                </div>
+                                <div class="flex gap-2 mb-4">
+                                    <div class="circle obj-2">2</div><div class="circle obj-1">1</div>
+                                    <div class="circle obj-3 border-4 border-gray-800 shadow-lg">3</div>
+                                </div>
+                                <p class="text-xs text-gray-500">3rd position is fixed as 3.<br>Remaining arranged in N(2) ways.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow flex flex-col items-center border border-gray-100">
+                                <div class="flex gap-2 mb-2">
+                                    <div class="circle obj-1">1</div><div class="circle obj-3">3</div>
+                                    <div class="circle obj-2 border-4 border-gray-800 shadow-lg">2</div>
+                                </div>
+                                <div class="flex gap-2 mb-4">
+                                    <div class="circle obj-3">3</div><div class="circle obj-1">1</div>
+                                    <div class="circle obj-2 border-4 border-gray-800 shadow-lg">2</div>
+                                </div>
+                                <p class="text-xs text-gray-500">3rd position is fixed as 2.<br>Remaining arranged in N(2) ways.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow flex flex-col items-center border border-gray-100">
+                                <div class="flex gap-2 mb-2">
+                                    <div class="circle obj-2">2</div><div class="circle obj-3">3</div>
+                                    <div class="circle obj-1 border-4 border-gray-800 shadow-lg">1</div>
+                                </div>
+                                <div class="flex gap-2 mb-4">
+                                    <div class="circle obj-3">3</div><div class="circle obj-2">2</div>
+                                    <div class="circle obj-1 border-4 border-gray-800 shadow-lg">1</div>
+                                </div>
+                                <p class="text-xs text-gray-500">3rd position is fixed as 1.<br>Remaining arranged in N(2) ways.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- General Formula -->
+            <div class="bg-[#FDF6E3] p-6 md:p-10 rounded-xl shadow-md">
+                <h3 class="text-2xl font-bold bg-[#A8D08D] inline-block px-4 py-2 rounded-lg text-gray-900 mb-6">In general, we can show that:</h3>
+                
+                <div class="font-serif text-xl space-y-4 text-gray-800 pl-4 md:pl-10">
+                    <p>N(r) = r × N(r - 1)</p>
+                    <p>= r × (r - 1) × N(r - 2)</p>
+                    <p>= ... = r × (r - 1) × (r - 2) × ... × 2 × N(1)</p>
+                    <p>= 1 × 2 × ... × (r - 1) × r</p>
+                    <p class="text-3xl font-bold text-red-700 my-4">N(r) = r!</p>
+                </div>
+                <p class="text-xl font-medium mt-6 bg-white p-4 rounded border-l-4 border-red-700">Therefore, the total number of ways to arrange <span class="italic">r</span> distinct objects is <span class="font-bold text-2xl">= r!</span></p>
+            </div>
+
+            <!-- Conclusion Application -->
+            <div class="bg-gradient-to-br from-[#FCECD4] to-[#D4EDDA] rounded-xl p-6 md:p-10 shadow-lg text-center relative overflow-hidden">
+                 <p class="sanskrit font-serif mb-6 text-xl">
+                    अङ्कानेकादिसप्तान्तानूर्ध्वमूर्ध्वं लिखेत् क्रमात् ।<br>
+                    हते पूर्वेण पूर्वेण तेषु चाङ्के परे परे ॥<br>
+                    एकस्वरादिसंख्या स्यात् क्रमेण प्रतिमूर्च्छनम् ।
+                </p>
+                <p class="text-lg md:text-2xl font-serif text-gray-800 max-w-3xl mx-auto mb-6">
+                    This verse from <span class="italic">Saṅgītaratnākara</span> states that the number of distinct <span class="italic font-bold">Tānas</span> that can be made using <span class="italic">r svaras</span> is <br>
+                    <span class="block mt-4 text-3xl font-black">= 1 × 2 × ... × r-1 × r = r!</span>
+                </p>
+                
+                <div class="bg-white/80 p-4 rounded-lg inline-block shadow">
+                    <p class="text-lg">A <span class="text-red-600 font-bold italic">Tāna</span> is a sequence of seven <span class="text-red-600 italic">svaras</span>.</p>
+                    <p class="text-lg mt-2 font-bold text-gray-800">The 7 svaras are: Sa, Re, Ga, Ma, Pa, Dha, Ni</p>
+                    <p class="text-md mt-2 text-gray-600">Total arrangements = 7! = 5,040 combinations!</p>
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <div class="bg-[#81D4C6] text-black font-bold uppercase tracking-widest px-8 py-3 relative shadow-md">
+                        <div class="absolute left-[-20px] top-0 bottom-0 w-[40px] bg-[#81D4C6] transform skew-x-[30deg] -z-10 shadow-md"></div>
+                        <div class="absolute right-[-20px] top-0 bottom-0 w-[40px] bg-[#81D4C6] transform -skew-x-[30deg] -z-10 shadow-md"></div>
+                        THANK YOU
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8 mt-12 text-gray-500 text-sm font-medium border-t border-gray-200">
+        <p>Credits: Inspired by the course materials of <span class="font-bold text-gray-700">Culture AND History of Mathematics</span>.</p>
+    </footer>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const objectCountSelect = document.getElementById('objectCount');
+            const btnReset = document.getElementById('btnReset');
+            const btnNext = document.getElementById('btnNext');
+            const currentArrayDiv = document.getElementById('currentArray');
+            const historyContainer = document.getElementById('historyContainer');
+            const explanationText = document.getElementById('explanationText');
+            const rowCountEl = document.getElementById('rowCount');
+            const totalArrText = document.getElementById('totalArrangementsText');
+
+            let currentR = 4;
+            let currentArr = [];
+            let history = [];
+            let maxArrangements = 24;
+
+            // Math Factorial
+            const factorial = (n) => {
+                if (n === 0 || n === 1) return 1;
+                return n * factorial(n - 1);
+            };
+
+            const init = () => {
+                currentR = parseInt(objectCountSelect.value);
+                maxArrangements = factorial(currentR);
+                currentArr = Array.from({length: currentR}, (_, i) => i + 1);
+                history = [ [...currentArr] ];
+                
+                updateUI();
+                explanationText.innerHTML = `Initialized Row 1. Objects are placed in strictly ascending order: <strong>${currentArr.join(', ')}</strong>. Click "Next Arrangement" to apply the algorithm.`;
+                btnNext.disabled = false;
+                btnNext.classList.remove('opacity-50', 'cursor-not-allowed');
+            };
+
+            const renderCircles = (arr, highlightIdx = -1, smallContext = false) => {
+                let html = '';
+                const sizeClass = smallContext ? 'w-8 h-8 text-sm' : 'circle';
+                arr.forEach((val, idx) => {
+                    const extraClass = (idx === highlightIdx) ? 'highlight-border scale-110 shadow-lg' : '';
+                    html += `<div class="${sizeClass} obj-${val} ${extraClass} flex items-center justify-center rounded-full font-bold shadow-sm transition-all duration-300">${val}</div>`;
+                });
+                return html;
+            };
+
+            const updateUI = () => {
+                // Update Current Array Visual
+                currentArrayDiv.innerHTML = renderCircles(currentArr);
+                rowCountEl.innerText = history.length;
+                
+                // Update History
+                historyContainer.innerHTML = '';
+                history.forEach((arr, idx) => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'flex items-center gap-2 fade-in bg-white p-2 rounded border border-gray-100 shadow-sm';
+                    rowDiv.innerHTML = `<span class="w-6 text-xs text-gray-400 font-mono">${idx+1}.</span> <div class="flex gap-1">${renderCircles(arr, -1, true)}</div>`;
+                    // Prepend to show latest at top, or append. Let's append and scroll.
+                    historyContainer.appendChild(rowDiv);
+                });
+                // Scroll to bottom
+                historyContainer.scrollTop = historyContainer.scrollHeight;
+
+                totalArrText.innerText = `${history.length} / ${maxArrangements} generated`;
+            };
+
+            const generateNext = () => {
+                if (history.length >= maxArrangements) return;
+
+                let n = currentArr.length;
+                let k = -1;
+                let smallerElementsStr = [];
+                
+                // 1. Find first element from left with a smaller element to its left
+                for (let i = 0; i < n; i++) {
+                    let hasSmaller = false;
+                    for (let j = 0; j < i; j++) {
+                        if (currentArr[j] < currentArr[i]) {
+                            hasSmaller = true;
+                            smallerElementsStr.push(currentArr[j]);
+                        }
+                    }
+                    if (hasSmaller) {
+                        k = i;
+                        break;
+                    } else {
+                        smallerElementsStr = []; // Reset if we move to next i
+                    }
+                }
+
+                if (k === -1) {
+                    // Already strictly descending. Should not happen if history logic holds, but safe guard.
+                    explanationText.innerHTML = "All elements are in strictly descending order. Algorithm is complete!";
+                    btnNext.disabled = true;
+                    btnNext.classList.add('opacity-50', 'cursor-not-allowed');
+                    return;
+                }
+
+                let M = currentArr[k];
+                
+                // 2. Find max element < M to the left of k
+                let maxVal = -1;
+                for (let j = 0; j < k; j++) {
+                    if (currentArr[j] < M && currentArr[j] > maxVal) {
+                        maxVal = currentArr[j];
+                    }
+                }
+
+                // 3 & 4: Construct the new array
+                let nextArr = [...currentArr];
+                
+                // Element at k becomes maxVal
+                nextArr[k] = maxVal;
+
+                // Elements to the right (k+1 to n) remain exactly the same (already copied).
+                let rightSideStr = nextArr.slice(k+1).join(', ');
+                if(!rightSideStr) rightSideStr = "none";
+
+                // Elements to the left are everything that was there initially + M, MINUS maxVal.
+                // In exact terms, it's the original array slice [0...k] with M removed and maxVal placed at k? No.
+                // It is original slice [0..k] with maxVal removed, sorted ascending.
+                let leftPool = currentArr.slice(0, k + 1);
+                leftPool.splice(leftPool.indexOf(maxVal), 1);
+                leftPool.sort((a, b) => a - b);
+                
+                for(let i=0; i<k; i++){
+                    nextArr[i] = leftPool[i];
+                }
+
+                // Construct Explanation
+                let msg = `
+                    <p class="mb-2"><strong>Step 1:</strong> Looking from the left, <span class="inline-block px-2 py-1 rounded obj-${M}">${M}</span> is the first object with lower value objects to its left (${smallerElementsStr.join(', ')}).</p>
+                    <p class="mb-2"><strong>Step 2:</strong> The largest among these lower values is <span class="inline-block px-2 py-1 rounded obj-${maxVal}">${maxVal}</span>. We place this below the previous position of ${M}.</p>
+                    <p class="mb-2"><strong>Step 3:</strong> Objects to the right of this position (${rightSideStr}) remain unchanged.</p>
+                    <p><strong>Step 4:</strong> The remaining available objects [${leftPool.join(', ')}] are sorted in ascending order and placed on the left.</p>
+                `;
+
+                // Temporarily highlight M before changing state
+                currentArrayDiv.innerHTML = renderCircles(currentArr, k);
+                explanationText.innerHTML = msg;
+
+                // Update state
+                currentArr = nextArr;
+                history.push([...currentArr]);
+
+                // Small delay to let user see highlight before updating to new row
+                setTimeout(() => {
+                    updateUI();
+                    
+                    if (history.length >= maxArrangements) {
+                        explanationText.innerHTML += `<br><br><strong class="text-emerald-700">All ${maxArrangements} arrangements have been successfully generated! The final arrangement is strictly descending.</strong>`;
+                        btnNext.disabled = true;
+                        btnNext.classList.add('opacity-50', 'cursor-not-allowed');
+                        btnNext.innerText = "Completed";
+                    }
+                }, 600); // 600ms visual delay
+            };
+
+            // Event Listeners
+            objectCountSelect.addEventListener('change', init);
+            btnReset.addEventListener('click', () => {
+                btnNext.innerHTML = `Next Arrangement <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
+                init();
+            });
+            btnNext.addEventListener('click', generateNext);
+
+            // Initialize
+            init();
+        });
+    </script>
+</body>
+</html>

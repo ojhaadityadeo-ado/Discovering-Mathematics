@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 19 — Monotonicity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 32px 16px; color: #1e293b; background: #e2e8f0;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 20px 20px; font-family: Inter, Arial, sans-serif;
+    }
+    .case-file {
+      max-width: 896px; margin: 12px auto; position: relative; border-radius: 4px;
+      overflow: hidden; background: #fdfbf7; box-shadow: 0 10px 25px #0000001a;
+      font: 17px/1.8 "Courier Prime", monospace;
+    }
+    .stamp {
+      position: absolute; top: 20px; right: 20px; border: 4px solid #dc2626;
+      color: #dc2626; font-size: 22px; font-weight: bold; padding: 4px 16px;
+      transform: rotate(-15deg); opacity: .2; pointer-events: none;
+    }
+    header { padding: 28px 32px; background: #1e293b; color: #f1f5f9; border-bottom: 4px solid #0f172a; }
+    h1 { margin: 0; font: 700 clamp(23px, 4.5vw, 31px)/1.35 Inter, Arial, sans-serif; letter-spacing: 1px; }
+    .subject { color: #cbd5e1; margin: 10px 0 7px; }
+    .mission { font: 14px/1.75 Inter, Arial, sans-serif; margin: 0; max-width: 710px; }
+    .briefing { background: #312e81; color: #e0e7ff; padding: 18px 32px; font: 14px/1.75 Inter, Arial, sans-serif; }
+    .briefing p { margin: 0; }
+    .act, .report { padding: 32px 40px; border-bottom: 1px solid #e2e8f0; }
+    .act.white { background: white; }
+    .report { background: #f8fafc; }
+    h2 { margin: 0 0 20px; font: 700 21px/1.5 Inter, Arial, sans-serif; text-transform: uppercase; letter-spacing: .7px; }
+    h3 { font: 700 17px/1.6 Inter, Arial, sans-serif; margin: 24px 0 10px; }
+    p { margin: 13px 0; }
+    .lead-question { font-weight: bold; font-size: 19px; }
+    .mini-label { font: 700 11px/1.6 Inter, Arial, sans-serif; letter-spacing: 1px; text-transform: uppercase; color: #64748b; }
+    .evidence { padding: 17px 20px; margin: 18px 0; background: #eef2ff; border-left: 4px solid #6366f1; font: 15px/1.85 Inter, Arial, sans-serif; }
+    .evidence p:first-child { margin-top: 0; }
+    .evidence p:last-child { margin-bottom: 0; }
+    .warning-evidence { background: #fff7ed; border-left-color: #f97316; }
+    .success-evidence { background: #f0fdf4; border-left-color: #22c55e; }
+    .question-card { background: white; border: 1px solid #e2e8f0; padding: 17px; margin: 18px 0; border-radius: 4px; }
+    .question-card label { display: block; font-weight: bold; margin-bottom: 9px; }
+    .answer-line { display: flex; align-items: center; gap: 8px; }
+    .hole {
+      min-width: 0; width: 100%; padding: 9px 10px; font: 14px Inter, Arial, sans-serif;
+      border: 2px dashed #94a3b8; border-radius: 4px; background: #f1f5f9;
+      color: #1e293b; cursor: pointer;
+    }
+    .hole:focus { outline: 3px solid #c7d2fe; border-color: #4f46e5; background: white; }
+    .hole.correct { border: 2px solid #16a34a; background: #f0fdf4; color: #15803d; }
+    .hole.incorrect { border: 2px solid #dc2626; background: #fef2f2; color: #b91c1c; }
+    .feedback-icon { width: 25px; flex-shrink: 0; font: 20px Inter, Arial, sans-serif; }
+    .detective-hint { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 10px 13px; margin-top: 12px; font: 14px/1.7 Inter, Arial, sans-serif; color: #92400e; }
+    [hidden] { display: none !important; }
+    .notes-box { background: #eef2ff; border-left: 4px solid #818cf8; padding: 13px 16px; margin: 23px 0 5px; }
+    .notes-box label { display: block; font: 600 14px/1.75 Inter, Arial, sans-serif; color: #312e81; }
+    .field-notes {
+      display: block; width: 100%; min-height: 100px; padding: 12px; margin: 9px 0 0;
+      background: #fefce8; border: 1px solid #fde047; border-left: 4px solid #eab308;
+      border-radius: 4px; font: 16px/1.7 "Courier Prime", monospace; color: #3f3f46; resize: vertical;
+    }
+    .field-notes:focus { outline: 3px solid #fde68a; }
+    .field-notes::placeholder { color: #737373; }
+    .condition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 0; }
+    .condition { background: white; border: 1px solid #cbd5e1; border-top: 4px solid #6366f1; padding: 13px; font: 14px/1.75 Inter, Arial, sans-serif; }
+    .condition strong { display: block; margin-bottom: 6px; }
+    .math-block { overflow-x: auto; padding: 3px 0; }
+    .graph-card { margin: 20px 0; border: 1px solid #cbd5e1; border-radius: 5px; overflow: hidden; background: white; }
+    .graph-head { padding: 13px 18px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; font: 600 14px/1.7 Inter, Arial, sans-serif; }
+    .graph-head .mini-label { display: block; margin-bottom: 4px; }
+    .case-buttons { display: flex; gap: 8px; flex-wrap: wrap; padding: 13px 18px; border-bottom: 1px solid #e2e8f0; }
+    .case-buttons button { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; background: #f8fafc; color: #334155; font: 600 13px Inter, Arial, sans-serif; cursor: pointer; }
+    .case-buttons button[aria-pressed="true"] { background: #4338ca; color: white; border-color: #4338ca; }
+    button:focus-visible { outline: 3px solid #a5b4fc; outline-offset: 3px; }
+    svg { display: block; width: 100%; height: auto; background: white; }
+    svg text { font: 14px Inter, Arial, sans-serif; fill: #475569; }
+    svg .plot-label { font-size: 16px; font-weight: 600; fill: #1e293b; }
+    .axis { stroke: #94a3b8; stroke-width: 1.4; }
+    .level-line { stroke: #818cf8; stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .curve { fill: none; stroke: #4f46e5; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+    .orange-curve { stroke: #ea580c; }
+    .tangent { stroke: #16a34a; stroke-width: 3.5; }
+    .point { fill: #4f46e5; stroke: white; stroke-width: 2; }
+    figcaption { padding: 13px 18px; border-top: 1px solid #e2e8f0; font: 14px/1.8 Inter, Arial, sans-serif; background: #f8fafc; }
+    figure { margin: 0; }
+    .small-note { font: 13px/1.8 Inter, Arial, sans-serif; color: #64748b; }
+    .table-wrap { overflow-x: auto; margin: 17px 0; }
+    table { width: 100%; border-collapse: collapse; font: 14px/1.75 Inter, Arial, sans-serif; }
+    th, td { text-align: left; padding: 10px 12px; border: 1px solid #e2e8f0; vertical-align: top; }
+    th { background: #f1f5f9; font-weight: 600; }
+    details { margin-top: 17px; font: 14px/1.8 Inter, Arial, sans-serif; }
+    summary { cursor: pointer; font-weight: 600; color: #4338ca; }
+    footer { background: #e2e8f0; border-top: 4px solid #cbd5e1; padding: 23px 32px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; font-family: Inter, Arial, sans-serif; }
+    #overall-feedback { flex: 1; min-width: 210px; font-size: 14px; line-height: 1.8; }
+    .primary-button { padding: 12px 18px; border: 2px solid #0f172a; background: #1e293b; color: white; border-radius: 4px; font: 700 13px Inter, Arial, sans-serif; cursor: pointer; }
+    .primary-button:hover { background: #4338ca; }
+    .print-button { padding: 12px 15px; background: white; color: #334155; border: 1px solid #94a3b8; border-radius: 4px; font: 600 13px Inter, Arial, sans-serif; cursor: pointer; }
+    mjx-container[display="true"] { margin: 15px 0 !important; }
+    @media (max-width: 650px) {
+      body { padding: 10px 7px; } .case-file { font-size: 16px; margin-top: 4px; }
+      header, .briefing, .act, .report, footer { padding: 23px 19px; }
+      .stamp { display: none; } h2 { font-size: 19px; }
+      .condition-grid { grid-template-columns: 1fr; }
+      .evidence, .question-card { padding: 14px; }
+      .lead-question { font-size: 17px; }
+    }
+    @media print {
+      body { padding: 0; background: white; }
+      .case-file { max-width: none; margin: 0; box-shadow: none; font-size: 12px; }
+      header, .briefing, .act, .report, footer { padding: 18px 23px; }
+      h1 { font-size: 24px; } h2 { font-size: 17px; }
+      .case-buttons, footer button { display: none; }
+      .graph-card, .question-card, .notes-box { break-inside: avoid; }
+      .graph-card svg { max-height: 230px; }
+      .field-notes { min-height: 80px; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+  <style>
+    .two-cards { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .lab-controls { padding: 13px 18px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font: 14px/1.8 Inter,Arial,sans-serif; }
+    .control-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 8px 0; }
+    .control-row label { min-width: 180px; font-weight: 600; }
+    .control-row input { flex: 1; min-width: 130px; accent-color: #4338ca; }
+    .control-row button { border: 1px solid #94a3b8; background: white; color: #4338ca; padding: 8px 10px; border-radius: 4px; font: 600 12px Inter,Arial,sans-serif; cursor: pointer; }
+    .legend { padding: 10px 18px; display: flex; gap: 15px; flex-wrap: wrap; border-bottom: 1px solid #e2e8f0; font: 12px/1.7 Inter,Arial,sans-serif; }
+    .swatch { display: inline-block; width: 15px; height: 4px; margin-right: 5px; vertical-align: middle; }
+    .secant { fill: none; stroke: #ea580c; stroke-width: 2.5; stroke-dasharray: 7 5; }
+    .step-line { fill: none; stroke: #64748b; stroke-width: 1.5; stroke-dasharray: 5 4; }
+    .projection { fill: none; stroke: #cbd5e1; stroke-width: 1.2; stroke-dasharray: 4 4; }
+    .gap-line { fill: none; stroke: #0f766e; stroke-width: 3; stroke-dasharray: 4 3; }
+    .plot-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .plot-pair figure + figure { border-left: 1px solid #e2e8f0; }
+    .plot-pair figcaption { min-height: 91px; }
+    .lab-message { padding: 13px 18px; background: #eef2ff; color: #312e81; font: 14px/1.8 Inter,Arial,sans-serif; }
+    .graph-card .table-wrap { margin: 0; }
+    .graph-card td,.graph-card th { border-left: 0; border-right: 0; }
+    .positive-value { color: #15803d; font-weight: 600; }
+    .negative-value { color: #c2410c; font-weight: 600; }
+    .zero-value { color: #475569; font-weight: 600; }
+    .limit-line { fill: none; stroke: #16a34a; stroke-width: 2; stroke-dasharray: 5 4; }
+    @media(max-width:650px) {
+      .two-cards,.plot-pair { grid-template-columns: 1fr; }
+      .control-row label { min-width: 100%; }
+      .plot-pair figure + figure { border-left: 0; border-top: 1px solid #e2e8f0; }
+      .plot-pair figcaption { min-height: 0; }
+    }
+    @media print { .lab-controls { display:none; } .plot-pair { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  </style>
+</head>
+<body>
+<main class="case-file">
+  <div class="stamp" aria-hidden="true">CASE FILE</div>
+  <header>
+    <h1>MATH DETECTIVE: CASE FILE #19</h1>
+    <p class="subject">Subject: Monotonicity — From Local Slopes to an Entire Interval</p>
+    <p class="mission"><strong>Mission:</strong> Use MVT to connect slopes at individual points to the order of function values, and explain what zero, equal, or bounded derivatives tell us.</p>
+  </header>
+  <div class="briefing">
+    <p><strong>Detective Briefing:</strong> A derivative describes a rate at a point. To compare two points that may be far apart, we need a bridge. The Mean Value Theorem is that bridge.</p>
+  </div>
+
+  <section class="act" aria-labelledby="act1">
+    <h2 id="act1">Act 1: Connect Two Points</h2>
+    <div class="condition-grid two-cards">
+      <div class="condition"><strong>Nondecreasing</strong>For every pair \(x&lt;y\),<div class="math-block">\[f(x)\le f(y).\]</div>Equal values are allowed.</div>
+      <div class="condition"><strong>Strictly increasing</strong>For every pair \(x&lt;y\),<div class="math-block">\[f(x)&lt;f(y).\]</div>Different inputs must give this strict order.</div>
+    </div>
+    <div class="evidence">
+      <div class="mini-label">Our conditions throughout this case file</div>
+      <p>We work on an <strong>interval I</strong>. The function is differentiable at every interior point. If an endpoint belongs to I, the function is also continuous at that endpoint.</p>
+      <p>Endpoint derivatives are not needed. Differentiability gives continuity at interior points, so these conditions let us use MVT on any \([x,y]\subseteq I\).</p>
+    </div>
+    <p>Choose any two inputs \(x&lt;y\) in I. These need not be close together.</p>
+    <p class="lead-question">What connects the change \(f(y)-f(x)\) to a derivative somewhere between x and y?</p>
+    <div class="question-card">
+      <label for="hole1">Choose the bridge that works for the whole chosen interval.</label>
+      <div class="answer-line">
+        <select id="hole1" class="hole" aria-describedby="hint1">
+          <option value="">[Choose the bridge]</option>
+          <option value="one_endpoint">Use only the derivative at x.</option>
+          <option value="mvt">Apply MVT on [x, y].</option>
+          <option value="midpoint">Always use the derivative at the midpoint.</option>
+        </select>
+        <span id="feedback1" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint1" class="detective-hint" hidden><strong>Detective’s Note:</strong> We need an exact link between the secant slope and an interior derivative. MVT supplies that link, without saying the point is the midpoint.</div>
+    </div>
+    <div class="evidence">
+      <p>MVT gives some \(c\in(x,y)\) with</p>
+      <div class="math-block">\[
+        \frac{f(y)-f(x)}{y-x}=f'(c),
+        \qquad
+        \boxed{f(y)-f(x)=f'(c)(y-x).}
+      \]</div>
+      <p><strong>The input gap \(y-x\) is positive.</strong> So the sign of the height change is the sign of \(f'(c)\).</p>
+      <div class="math-block">\[
+        \begin{aligned}
+          f'\ge0&\ \Longrightarrow\ f(y)\ge f(x),\\
+          f'&gt;0&\ \Longrightarrow\ f(y)&gt;f(x).
+        \end{aligned}
+      \]</div>
+      <p>Since x and y were any two inputs, the conclusion holds throughout I. The point c may change when we choose a different pair. The derivative sign must hold throughout the interval, not just at one known point.</p>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head"><span class="mini-label">The MVT bridge you can move</span>Here x and y are two inputs on the horizontal axis. Move them and compare the total change with an interior slope.</div>
+      <div class="case-buttons" role="group" aria-label="Choose a function for the MVT bridge">
+        <button type="button" data-function="cubic" aria-pressed="true">x³: derivative ≥ 0</button>
+        <button type="button" data-function="positive" aria-pressed="false">x³ + x: derivative &gt; 0</button>
+        <button type="button" data-function="flat" aria-pressed="false">Constant: derivative 0</button>
+        <button type="button" data-function="decreasing" aria-pressed="false">−x³: derivative ≤ 0</button>
+      </div>
+      <div class="lab-controls">
+        <div class="control-row"><label for="left-input">Left input x = <output id="left-value" for="left-input">−1</output></label><input id="left-input" type="range" min="-1.25" max="1.25" step="0.05" value="-1" aria-label="Left input x"></div>
+        <div class="control-row"><label for="right-input">Right input y = <output id="right-value" for="right-input">1</output></label><input id="right-input" type="range" min="-1.25" max="1.25" step="0.05" value="1" aria-label="Right input y"><button id="reset-pair" type="button">Use x = −1, y = 1</button></div>
+        <p class="small-note">The sliders keep x &lt; y. The green point is one possible MVT point c, not necessarily the only one.</p>
+      </div>
+      <div class="legend">
+        <span><span class="swatch" style="background:#4f46e5"></span>Function</span>
+        <span><span class="swatch" style="background:#ea580c"></span>Secant between x and y</span>
+        <span><span class="swatch" style="background:#16a34a"></span>Matching tangent at c</span>
+      </div>
+      <figure>
+        <svg viewBox="0 0 800 490" role="img" aria-labelledby="bridge-title bridge-desc">
+          <title id="bridge-title">The MVT connects a total change to a local slope</title>
+          <desc id="bridge-desc">The cubic graph has two chosen points. Their secant has the same slope as a green interior tangent. The positive input gap times that slope equals the change in height.</desc>
+          <text id="bridge-formula" x="400" y="28" text-anchor="middle" class="plot-label">f(t) = t³</text>
+          <path d="M70 230 H730 M400 45 V414" class="axis"/>
+          <text x="670" y="252">input t</text><text x="418" y="49">height f(t)</text>
+          <path d="M160 225 V235 M640 225 V235" class="axis"/>
+          <text x="414" y="250">0</text>
+          <path id="bridge-curve" class="curve"/>
+          <path id="bridge-step" class="step-line"/>
+          <path id="bridge-secant" class="secant"/>
+          <path id="bridge-tangent" class="tangent"/>
+          <path id="bridge-project-x" class="projection"/><path id="bridge-project-y" class="projection"/>
+          <rect x="141" y="239" width="38" height="20" fill="white"/><rect x="631" y="239" width="18" height="20" fill="white"/>
+          <text x="160" y="253" text-anchor="middle">−1</text><text x="640" y="253" text-anchor="middle">1</text>
+          <circle id="bridge-point-x" r="6" class="point"/><circle id="bridge-point-y" r="6" class="point"/>
+          <circle id="bridge-point-c" r="6" fill="#16a34a" stroke="white" stroke-width="2"/>
+          <text id="bridge-x-label" y="440" text-anchor="middle" class="plot-label">x</text>
+          <text id="bridge-y-label" y="440" text-anchor="middle" class="plot-label">y</text>
+          <rect id="bridge-c-bg" width="32" height="25" rx="4" fill="white" fill-opacity="0.94"/>
+          <text id="bridge-c-label" text-anchor="middle" class="plot-label">c</text>
+          <text x="400" y="476" text-anchor="middle">The orange secant and green tangent have the same slope.</text>
+        </svg>
+        <figcaption id="bridge-caption">For x³, f′ is nonnegative everywhere, although f′(0) = 0. The chosen pair still has a positive total change.</figcaption>
+      </figure>
+      <div class="table-wrap">
+        <table aria-label="The sign connection in the MVT equation">
+          <thead><tr><th>Input gap y − x</th><th>Interior slope f′(c)</th><th>Height change f(y) − f(x)</th></tr></thead>
+          <tbody><tr><td id="read-input-gap" class="positive-value">2</td><td id="read-interior-slope">1</td><td id="read-height-change">2</td></tr></tbody>
+        </table>
+      </div>
+      <div id="bridge-message" class="lab-message" role="status" aria-live="polite">Total change = interior slope × input gap.</div>
+    </div>
+    <div class="table-wrap">
+      <table aria-label="Derivative signs and the corresponding order of values">
+        <thead><tr><th>Derivative inside the interval</th><th>Order for x &lt; y</th><th>What we can conclude</th></tr></thead>
+        <tbody>
+          <tr><td>\(f'\ge0\)</td><td>\(f(x)\le f(y)\)</td><td>Nondecreasing</td></tr>
+          <tr><td>\(f'&gt;0\)</td><td>\(f(x)&lt;f(y)\)</td><td>Strictly increasing</td></tr>
+          <tr><td>\(f'\le0\)</td><td>\(f(x)\ge f(y)\)</td><td>Nonincreasing</td></tr>
+          <tr><td>\(f'&lt;0\)</td><td>\(f(x)&gt;f(y)\)</td><td>Strictly decreasing</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <details>
+      <summary>Why continuity at included endpoints matters</summary>
+      <p>On \([0,1]\), set \(f(0)=1\) and \(f(t)=t\) for \(0&lt;t\le1\). The interior derivative is 1, but \(f(0)&gt;f(1/2)\), so f is not nondecreasing on the whole closed interval.</p>
+      <p>The function is not continuous at 0. We cannot apply MVT to a subinterval starting there. This is why our endpoint condition is part of the theorem.</p>
+    </details>
+    <div class="notes-box">
+      <label for="notes1">Field notes: Use any pair x &lt; y to explain why a nonnegative derivative throughout the interval makes f nondecreasing. Say why the conclusion is about the whole interval.</label>
+      <textarea id="notes1" class="field-notes" placeholder="For any x < y, MVT gives … Since y − x is positive … The pair was arbitrary, so …"></textarea>
+    </div>
+  </section>
+
+  <section class="act white" aria-labelledby="act2">
+    <h2 id="act2">Act 2: Strict Increase Can Have a Zero Slope</h2>
+    <p class="lead-question">Does strict increase force the derivative to be positive at every point?</p>
+    <div class="question-card">
+      <label for="hole2">Can a strictly increasing function have derivative zero at an interior point?</label>
+      <div class="answer-line">
+        <select id="hole2" class="hole" aria-describedby="hint2">
+          <option value="">[Decide]</option>
+          <option value="impossible">No. A zero derivative always stops strict increase.</option>
+          <option value="possible">Yes. x³ has derivative zero at 0 and is strictly increasing.</option>
+        </select><span id="feedback2" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint2" class="detective-hint" hidden><strong>Detective’s Note:</strong> Strict increase compares values at two different inputs. A zero slope at one point does not make two such values equal.</div>
+    </div>
+    <div class="evidence">
+      <div class="math-block">\[
+        f(t)=t^3,\qquad f'(t)=3t^2,\qquad f'(0)=0.
+      \]</div>
+      <p>The function is strictly increasing. Its tangent at 0 is horizontal, but the graph does not stay flat around 0.</p>
+      <p><strong>A positive derivative everywhere is enough for strict increase. It is not needed in every case.</strong></p>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head">A horizontal tangent at one point is not a flat interval.</div>
+      <figure>
+        <svg viewBox="0 0 560 350" role="img" aria-labelledby="strict-title strict-desc">
+          <title id="strict-title">A strictly increasing cubic with a zero derivative</title>
+          <desc id="strict-desc">The cubic passes from negative values to positive values. It has a horizontal tangent at 0 but is strictly increasing throughout the real line.</desc>
+          <path d="M50 175 H510 M280 35 V301" class="axis"/>
+          <path id="strict-curve" class="curve"/>
+          <path d="M218 175 H342" class="tangent"/>
+          <circle cx="280" cy="175" r="6" fill="#16a34a" stroke="white" stroke-width="2"/>
+          <circle cx="130" cy="245" r="5" class="point"/><circle cx="430" cy="105" r="5" class="point"/>
+          <text x="130" y="271" text-anchor="middle">(−1, −1)</text><text x="430" y="84" text-anchor="middle">(1, 1)</text>
+          <text x="293" y="202">0</text>
+          <text x="280" y="330" text-anchor="middle" class="plot-label">f′(0) = 0, but f is strictly increasing.</text>
+        </svg>
+        <figcaption>A single zero derivative is allowed. By contrast, the constant example in Act 1 shows that f′ ≥ 0 alone does not guarantee strict increase.</figcaption>
+      </figure>
+    </div>
+    <details>
+      <summary>Check directly that x³ is strictly increasing</summary>
+      <p>For any \(x&lt;y\),</p>
+      <div class="math-block">\[
+        \begin{aligned}
+          y^3-x^3
+          &=(y-x)(y^2+xy+x^2)\\
+          &=(y-x)\left(\frac34(x+y)^2+\frac14(y-x)^2\right)&gt;0.
+        \end{aligned}
+      \]</div>
+      <p>The first factor is positive. The bracket is also positive because \((y-x)^2&gt;0\). So \(x^3&lt;y^3\), even if the pair crosses 0.</p>
+    </details>
+    <p>Strictly increasing functions are also nondecreasing. “Nondecreasing” allows equal values; it does not require equal values to occur.</p>
+  </section>
+
+  <section class="act" aria-labelledby="act3">
+    <h2 id="act3">Act 3: Can We Go Back From Order to Slope?</h2>
+    <p class="lead-question">Can a differentiable nondecreasing function have a negative derivative inside?</p>
+    <div class="question-card">
+      <label for="hole3">Think about difference quotients from both sides of an interior point u.</label>
+      <div class="answer-line">
+        <select id="hole3" class="hole" aria-describedby="hint3">
+          <option value="">[Decide]</option>
+          <option value="negative_allowed">Yes, if the function still ends higher.</option>
+          <option value="nonnegative">No. Both kinds of quotient are nonnegative.</option>
+          <option value="positive_required">No, because the derivative must always be strictly positive.</option>
+        </select><span id="feedback3" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint3" class="detective-hint" hidden><strong>Detective’s Note:</strong> A step left has both a nonpositive height change and a negative input change. Dividing gives a nonnegative quotient, not a negative one.</div>
+    </div>
+    <p>Let u be an interior point. Take small steps that stay in the interval.</p>
+    <div class="table-wrap">
+      <table aria-label="Difference quotient signs for a nondecreasing function">
+        <thead><tr><th>Step</th><th>Order of heights</th><th>Difference quotient</th></tr></thead>
+        <tbody>
+          <tr><td>\(h&gt;0\)</td><td>\(f(u+h)-f(u)\ge0\)</td><td>\(\dfrac{f(u+h)-f(u)}h\ge0\)</td></tr>
+          <tr><td>\(h&lt;0\)</td><td>\(f(u+h)-f(u)\le0\)</td><td>\(\dfrac{f(u+h)-f(u)}h\ge0\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="evidence">
+      <p>The derivative exists, and all these quotients are nonnegative. Their limit is therefore nonnegative:</p>
+      <div class="math-block">\[
+        f'(u)=\lim_{h\to0}\frac{f(u+h)-f(u)}h\ge0.
+      \]</div>
+      <p>Since u was any interior point, \(f'\ge0\) throughout the interior.</p>
+    </div>
+    <div class="evidence success-evidence">
+      <div class="mini-label">Both directions are now proved</div>
+      Under our interval and continuity conditions,
+      <div class="math-block">\[
+        \boxed{f\text{ is nondecreasing}\iff f'\ge0.}
+      \]</div>
+      <p>Here the derivative condition is at all interior points. For nonincreasing functions, the corresponding condition is \(f'\le0\).</p>
+    </div>
+    <div class="evidence warning-evidence">
+      <p><strong>Why strict increase does not force a strictly positive derivative:</strong> even positive quotients can have limit zero. For \(f(t)=t^3\) at 0,</p>
+      <div class="math-block">\[
+        \frac{f(h)-f(0)}h=h^2&gt;0\ (h\ne0),
+        \qquad h^2\longrightarrow0.
+      \]</div>
+      <p>The limit keeps “at least zero”, but need not keep “strictly greater than zero”.</p>
+    </div>
+    <div class="notes-box">
+      <label for="notes2">Field notes: Explain why the quotient for h &lt; 0 is nonnegative, and why taking the limit gives f′ ≥ 0 rather than f′ &gt; 0.</label>
+      <textarea id="notes2" class="field-notes" placeholder="When h is negative, the height change is … so the quotient is … Its limit can be zero because …"></textarea>
+    </div>
+  </section>
+
+  <section class="act white" aria-labelledby="act4">
+    <h2 id="act4">Act 4: Zero Everywhere — But Where?</h2>
+    <p class="lead-question">What if the derivative is zero at every interior point of the interval?</p>
+    <div class="question-card">
+      <label for="hole4">Do the heights at any two inputs have to agree?</label>
+      <div class="answer-line">
+        <select id="hole4" class="hole" aria-describedby="hint4">
+          <option value="">[Find the whole-interval result]</option>
+          <option value="constant">Yes. The function is constant on the interval.</option>
+          <option value="some_flat">Only one point has a horizontal tangent.</option>
+          <option value="ends_only">Only the endpoint heights have to agree.</option>
+        </select><span id="feedback4" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint4" class="detective-hint" hidden><strong>Detective’s Note:</strong> For any x &lt; y, MVT gives f(y) − f(x) = f′(c)(y − x). Now f′(c) is zero for every possible interior c.</div>
+    </div>
+    <div class="evidence">
+      <p>For any \(x&lt;y\), MVT gives</p>
+      <div class="math-block">\[
+        f(y)-f(x)=f'(c)(y-x)=0.
+      \]</div>
+      <p>All function values agree. Therefore</p>
+      <div class="math-block">\[
+        \boxed{f'=0\text{ throughout an interval}
+        \ \Longrightarrow\ f\text{ is constant}.}
+      \]</div>
+      <p>Our continuity condition covers any included endpoints. A zero derivative at <strong>one</strong> point did not give this result; zero throughout the interval does.</p>
+    </div>
+    <h3>Why does “on an interval” matter?</h3>
+    <p>Consider a function whose domain leaves out 0:</p>
+    <div class="math-block">\[
+      f(t)=\begin{cases}0,&t&lt;0,\\1,&t&gt;0,\end{cases}
+      \qquad
+      I_{\text{domain}}=(-\infty,0)\cup(0,\infty).
+    \]</div>
+    <div class="question-card">
+      <label for="hole5">The derivative is zero everywhere in this domain. Can we use MVT to compare −1 and 1?</label>
+      <div class="answer-line">
+        <select id="hole5" class="hole" aria-describedby="hint5">
+          <option value="">[Check the missing point]</option>
+          <option value="yes">Yes. Zero derivatives are enough on any domain.</option>
+          <option value="no_interval">No. The function is not defined on all of [−1, 1].</option>
+        </select><span id="feedback5" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint5" class="detective-hint" hidden><strong>Detective’s Note:</strong> The interval [−1, 1] includes 0, but the function has no value there. We cannot apply MVT across that missing point.</div>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head">Two separate intervals can carry two different constants.</div>
+      <figure>
+        <svg viewBox="0 0 560 310" role="img" aria-labelledby="gap-title gap-desc">
+          <title id="gap-title">A zero derivative on a domain that is not an interval</title>
+          <desc id="gap-desc">The function is zero on negative inputs and one on positive inputs. Both branches have zero slope, but 0 is missing from the domain. Open dots at 0 show that neither endpoint value is included.</desc>
+          <path d="M50 230 H510 M280 35 V265" class="axis"/>
+          <path d="M50 230 H280 M280 90 H510" class="curve"/>
+          <circle cx="280" cy="230" r="7" fill="white" stroke="#4f46e5" stroke-width="3"/>
+          <circle cx="280" cy="90" r="7" fill="white" stroke="#4f46e5" stroke-width="3"/>
+          <text x="145" y="207" text-anchor="middle" class="plot-label">f = 0, slope = 0</text>
+          <text x="413" y="67" text-anchor="middle" class="plot-label">f = 1, slope = 0</text>
+          <text x="280" y="291" text-anchor="middle">0 is missing from the domain.</text>
+        </svg>
+        <figcaption>The function is constant on each separate interval, but not constant on the whole domain. There is no valid MVT bridge across 0.</figcaption>
+      </figure>
+    </div>
+    <p>An interval contains every point between any two of its points. That is exactly what lets us apply MVT between them.</p>
+  </section>
+
+  <section class="act" aria-labelledby="act5">
+    <h2 id="act5">Act 5: Equal Derivatives, Equal Functions?</h2>
+    <p>Let F and G satisfy the same interval conditions, and suppose \(F'=G'\) throughout the interior.</p>
+    <p class="lead-question">If two functions have the same slopes everywhere, must their heights be identical?</p>
+    <div class="question-card">
+      <label for="hole6">Apply our zero-derivative result to their difference.</label>
+      <div class="answer-line">
+        <select id="hole6" class="hole" aria-describedby="hint6">
+          <option value="">[Find what can differ]</option>
+          <option value="identical">They must be the same function.</option>
+          <option value="constant_gap">They can differ by one additive constant.</option>
+          <option value="changing_gap">Their difference can vary freely from point to point.</option>
+        </select><span id="feedback6" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint6" class="detective-hint" hidden><strong>Detective’s Note:</strong> (F − G)′ = F′ − G′ = 0. A zero derivative throughout one interval makes the difference constant, not necessarily zero.</div>
+    </div>
+    <div class="evidence">
+      <div class="math-block">\[
+        (F-G)'=F'-G'=0
+        \quad\Longrightarrow\quad
+        \boxed{F-G=C,\qquad F=G+C.}
+      \]</div>
+      <p>Their vertical difference is the same at every input. They may be the same graph shifted up or down.</p>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head"><span class="mini-label">Move the constant, keep the derivatives</span>Example: G(t) = t² and F(t) = t² + C. Both derivatives are 2t.</div>
+      <div class="lab-controls">
+        <div class="control-row"><label for="constant-slider">Constant C = <output id="constant-value" for="constant-slider">1</output></label><input id="constant-slider" type="range" min="-2" max="2" step="0.1" value="1" aria-label="Additive constant C"><button id="zero-constant" type="button">Set C = 0</button></div>
+      </div>
+      <div class="legend">
+        <span><span class="swatch" style="background:#4f46e5"></span>G(t) = t²</span>
+        <span><span class="swatch" style="background:#ea580c"></span>F(t) = t² + C</span>
+        <span><span class="swatch" style="background:#0f766e"></span>Difference at t = 1</span>
+        <span><span class="swatch" style="background:#16a34a"></span>Tangents</span>
+      </div>
+      <div class="plot-pair">
+        <figure>
+          <svg viewBox="0 0 500 420" role="img" aria-labelledby="shift-title shift-desc">
+            <title id="shift-title">Functions with the same derivative differ by a constant shift</title>
+            <desc id="shift-desc">Two parabolas differ by C in height. Their tangents at input 1 have the same slope 2. The vertical difference is the same everywhere.</desc>
+            <text id="shift-formula" x="250" y="27" text-anchor="middle" class="plot-label">F(t) = t² + 1, G(t) = t²</text>
+            <path d="M50 270 H450 M250 45 V385" class="axis"/>
+            <path id="shift-g-curve" class="curve"/><path id="shift-f-curve" class="curve orange-curve"/>
+            <path id="shift-g-tangent" class="tangent"/><path id="shift-f-tangent" class="tangent"/>
+            <path id="shift-gap" class="gap-line"/>
+            <circle id="shift-g-point" r="5" class="point"/><circle id="shift-f-point" r="5" fill="#ea580c" stroke="white" stroke-width="2"/>
+            <text x="145" y="406" text-anchor="middle">−1</text><text x="250" y="406" text-anchor="middle">0</text><text x="355" y="406" text-anchor="middle">1</text>
+          </svg>
+          <figcaption>The two tangents at t = 1 both have slope 2. Changing C moves F vertically but does not change its derivative.</figcaption>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 500 420" role="img" aria-labelledby="flat-gap-title flat-gap-desc">
+            <title id="flat-gap-title">The difference function is constant</title>
+            <desc id="flat-gap-desc">F minus G is the horizontal line of height C. Its derivative is zero everywhere.</desc>
+            <text id="flat-gap-formula" x="250" y="27" text-anchor="middle" class="plot-label">F(t) − G(t) = 1</text>
+            <path d="M50 270 H450 M250 45 V385" class="axis"/>
+            <path id="flat-gap-curve" class="curve"/>
+            <path id="flat-gap-tangent" class="tangent"/>
+            <circle id="flat-gap-point" r="6" fill="#16a34a" stroke="white" stroke-width="2"/>
+            <text x="145" y="406" text-anchor="middle">−1</text><text x="250" y="406" text-anchor="middle">0</text><text x="355" y="406" text-anchor="middle">1</text>
+          </svg>
+          <figcaption>The difference has slope zero on the whole interval. Its value is C, which need not be zero.</figcaption>
+        </figure>
+      </div>
+      <div id="constant-message" class="lab-message" role="status" aria-live="polite">F′ = G′ = 2t, while F − G = 1 throughout the interval.</div>
+    </div>
+    <p>An <strong>antiderivative</strong> of a function is a function whose derivative equals that given function. If F and G are two antiderivatives of the same function on one interval, their difference is a constant. That is why an additive “+ C” appears.</p>
+    <p class="small-note">On separate intervals, the constants can be different. If F and G also agree at one input in the interval, then C = 0 and they agree everywhere on that interval.</p>
+  </section>
+
+  <section class="act white" aria-labelledby="act6">
+    <h2 id="act6">Act 6: A Bound on Rate Gives a Bound on Change</h2>
+    <p>Suppose \(|f'|\le M\) at all interior points, where M is a fixed nonnegative number.</p>
+    <p class="lead-question">Can the total height change exceed M times the input gap?</p>
+    <div class="question-card">
+      <label for="hole7">Use MVT, then take absolute values.</label>
+      <div class="answer-line">
+        <select id="hole7" class="hole" aria-describedby="hint7">
+          <option value="">[Find the bound]</option>
+          <option value="equal">The change must always equal M times the gap.</option>
+          <option value="bounded">No. |f(y) − f(x)| ≤ M |y − x|.</option>
+          <option value="unlimited">Yes. A local rate bound gives no total-change bound.</option>
+        </select><span id="feedback7" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint7" class="detective-hint" hidden><strong>Detective’s Note:</strong> MVT says the total change is one interior derivative times the input gap. The magnitude of that derivative is at most M.</div>
+    </div>
+    <div class="evidence">
+      <div class="math-block">\[
+        \begin{aligned}
+          |f(y)-f(x)|
+          &=|f'(c)(y-x)|\\
+          &=|f'(c)|\,|y-x|\\
+          &\le M|y-x|.
+        \end{aligned}
+      \]</div>
+      <div class="math-block">\[\boxed{|f(y)-f(x)|\le M|y-x|.}\]</div>
+      <p>Absolute values let us write the same bound in either order of x and y. If x = y, both sides are zero.</p>
+      <p>A bound is a limit on how large the change can be. It is not a claim that the change always equals that limit.</p>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head"><span class="mini-label">See the allowed change</span>For f(t) = ±sin t, |f′(t)| = |cos t| ≤ 1. Start at x = 0 and choose y = d. Here M = 1.</div>
+      <div class="case-buttons" role="group" aria-label="Choose a sine function">
+        <button type="button" data-bound-sign="1" aria-pressed="true">f(t) = sin t</button>
+        <button type="button" data-bound-sign="-1" aria-pressed="false">f(t) = −sin t</button>
+      </div>
+      <div class="lab-controls">
+        <div class="control-row"><label for="distance-slider">Input gap d = <output id="distance-value" for="distance-slider">2</output></label><input id="distance-slider" type="range" min="0.2" max="3" step="0.1" value="2" aria-label="Input distance d"></div>
+      </div>
+      <figure>
+        <svg viewBox="0 0 560 440" role="img" aria-labelledby="bound-title bound-desc">
+          <title id="bound-title">The derivative bound limits the size of the total change</title>
+          <desc id="bound-desc">The sine curve lies within the allowed region between heights minus t and plus t. At the chosen input distance d, the absolute change is at most d.</desc>
+          <text id="bound-formula" x="280" y="27" text-anchor="middle" class="plot-label">f(t) = sin t, M = 1</text>
+          <path d="M80 230 L470 80 L470 380 Z" fill="#ecfdf5"/>
+          <path d="M80 230 L470 80 M80 230 L470 380" class="limit-line"/>
+          <path d="M50 230 H510 M80 55 V399" class="axis"/>
+          <text x="514" y="235">t</text>
+          <path id="bound-range" stroke="#86efac" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
+          <path id="bound-curve" class="curve"/>
+          <path id="bound-change" class="gap-line"/>
+          <circle cx="80" cy="230" r="5" class="point"/>
+          <circle id="bound-point" r="6" fill="#0f766e" stroke="white" stroke-width="2"/>
+          <circle id="bound-upper" r="4" fill="#16a34a"/><circle id="bound-lower" r="4" fill="#16a34a"/>
+          <text x="80" y="420" text-anchor="middle">x = 0</text><text id="bound-y-label" y="420" text-anchor="middle">y = d</text>
+        </svg>
+        <figcaption>The pale green region shows heights allowed by |f(t) − f(0)| ≤ t. At y = d, the green bar runs from −d to +d. The actual change stays within it, even when the derivative changes sign.</figcaption>
+      </figure>
+      <div class="table-wrap">
+        <table aria-label="The derivative bound and the actual total change">
+          <thead><tr><th>Quantity</th><th>Current value</th></tr></thead>
+          <tbody>
+            <tr><td>Input gap d</td><td id="bound-read-gap">2</td></tr>
+            <tr><td>Signed change f(d) − f(0)</td><td id="bound-read-change">0.909297</td></tr>
+            <tr><td>Magnitude of the actual change</td><td id="bound-read-magnitude">0.909297</td></tr>
+            <tr><td>Upper bound M d</td><td id="bound-read-limit">2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="bound-message" class="lab-message" role="status" aria-live="polite">The magnitude of the change is at most the rate bound times the input gap.</div>
+    </div>
+    <p class="small-note">This result limits the size of the change. It does not say that the function must be increasing or decreasing throughout the interval.</p>
+  </section>
+
+  <section class="report" aria-labelledby="report">
+    <h2 id="report">Final Report: Close the Case</h2>
+    <div class="question-card">
+      <label for="hole8">MVT gives one interior slope for one pair. Why does our sign proof control the whole interval?</label>
+      <div class="answer-line">
+        <select id="hole8" class="hole" aria-describedby="hint8">
+          <option value="">[Explain the global conclusion]</option>
+          <option value="same_c">The same point c must work for every pair.</option>
+          <option value="arbitrary_pair">The argument works for every pair x &lt; y in the interval.</option>
+          <option value="endpoint_only">Only the first and last values matter.</option>
+        </select><span id="feedback8" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint8" class="detective-hint" hidden><strong>Detective’s Note:</strong> The derivative sign holds at every possible interior c. We did not choose a special pair x, y. Different pairs may use different points c.</div>
+    </div>
+    <div class="evidence">
+      <div class="mini-label">The main proof in short</div>
+      <p>Choose any x &lt; y in I. Our interval conditions let us apply MVT on [x, y]. It gives</p>
+      <div class="math-block">\[f(y)-f(x)=f'(c)(y-x).\]</div>
+      <p>The gap y − x is positive. If f′ ≥ 0 throughout the interior, the height change is nonnegative. If f′ &gt; 0, the change is positive.</p>
+      <p>This works for every pair, so f is nondecreasing or strictly increasing, respectively. Negative derivative signs give the corresponding decreasing results.</p>
+    </div>
+    <div class="table-wrap">
+      <table aria-label="The key conclusions of the case file">
+        <thead><tr><th>Information about derivatives</th><th>Conclusion on the interval</th></tr></thead>
+        <tbody>
+          <tr><td>\(f'\ge0\)</td><td>Equivalent to f being nondecreasing.</td></tr>
+          <tr><td>\(f'&gt;0\)</td><td>Enough for strict increase, but not needed in every case.</td></tr>
+          <tr><td>\(f'=0\) throughout</td><td>f is constant.</td></tr>
+          <tr><td>\(F'=G'\)</td><td>\(F-G=C\).</td></tr>
+          <tr><td>\(|f'|\le M\)</td><td>\(|f(y)-f(x)|\le M|y-x|\).</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small-note">All rows use the interval conditions from Act 1, for each function involved. Derivative conditions are at interior points; included endpoints need continuity.</p>
+    <div class="notes-box">
+      <label for="notes3">Your final explanation: Choose one consequence—zero derivatives, equal derivatives, or a derivative bound—and show how it follows from the MVT bridge. Explain why one interval is needed.</label>
+      <textarea id="notes3" class="field-notes" placeholder="I chose … MVT gives … The derivative information tells us … We need an interval because …"></textarea>
+    </div>
+  </section>
+  <footer>
+    <div id="overall-feedback" role="status" aria-live="polite">Awaiting your findings: 8 clues to check. Written notes are for discussion, not an automatic score.</div>
+    <button id="submit-findings" type="button" class="primary-button">Submit Findings</button>
+    <button id="print-case" type="button" class="print-button">Print Case File</button>
+  </footer>
+</main>
+<script>
+  const proofSchema = {
+    hole1: { validAnswer: 'mvt' },
+    hole2: { validAnswer: 'possible' },
+    hole3: { validAnswer: 'nonnegative' },
+    hole4: { validAnswer: 'constant' },
+    hole5: { validAnswer: 'no_interval' },
+    hole6: { validAnswer: 'constant_gap' },
+    hole7: { validAnswer: 'bounded' },
+    hole8: { validAnswer: 'arbitrary_pair' }
+  };
+  let findingsChecked = false;
+  function evaluateProof() {
+    let correct = 0;
+    let unanswered = 0;
+    Object.entries(proofSchema).forEach(function(entry) {
+      const id = entry[0];
+      const field = document.getElementById(id);
+      const n = id.replace('hole', '');
+      const empty = field.value === '';
+      const right = field.value === entry[1].validAnswer;
+      field.classList.toggle('correct', right);
+      field.classList.toggle('incorrect', !empty && !right);
+      field.setAttribute('aria-invalid', String(!empty && !right));
+      document.getElementById('feedback' + n).textContent = empty ? '' : (right ? '✓' : '✗');
+      document.getElementById('hint' + n).hidden = empty || right;
+      if (right) correct++;
+      if (empty) unanswered++;
+    });
+    const notes = Array.from(document.querySelectorAll('.field-notes'));
+    const filled = notes.filter(function(note) { return note.value.trim().length > 0; }).length;
+    let message = correct + ' of 8 clues correct.';
+    if (correct === 8) message += ' Case closed! Check that your explanations use an arbitrary pair and a valid interval.';
+    else if (unanswered) message += ' ' + unanswered + ' still unanswered. Try those and use the hints beside wrong answers.';
+    else message += ' Read the hints and try the marked clues again.';
+    message += ' Written notes: ' + filled + ' of 3 spaces filled. These are for discussion, not an automatic score.';
+    document.getElementById('overall-feedback').textContent = message;
+    findingsChecked = true;
+  }
+  function curvePath(fn, from, to, mapX, mapY, steps) {
+    const parts = [];
+    for (let i = 0; i <= steps; i++) {
+      const t = from + (to - from) * i / steps;
+      parts.push((i === 0 ? 'M' : 'L') + mapX(t).toFixed(3) + ' ' + mapY(fn(t)).toFixed(3));
+    }
+    return parts.join(' ');
+  }
+  function put(id, attrs) {
+    const node = document.getElementById(id);
+    Object.keys(attrs).forEach(function(key) { node.setAttribute(key, attrs[key]); });
+  }
+  function textAt(id, value) { document.getElementById(id).textContent = value; }
+  function formatNumber(value) {
+    const rounded = Math.abs(value) < 0.00000005 ? 0 : Number(value.toFixed(6));
+    return String(rounded).replace('-', '−');
+  }
+  function colorSign(id, value) {
+    const node = document.getElementById(id);
+    node.classList.toggle('positive-value', value > 0.000000001);
+    node.classList.toggle('negative-value', value < -0.000000001);
+    node.classList.toggle('zero-value', Math.abs(value) <= 0.000000001);
+  }
+  function clamp(value, from, to) { return Math.max(from, Math.min(to, value)); }
+
+  const bridgeFunctions = {
+    cubic: {
+      fn: function(t) { return t * t * t; },
+      derivative: function(t) { return 3 * t * t; },
+      formula: 'f(t) = t³',
+      caption: 'The derivative is nonnegative everywhere and zero at 0. This particular function is still strictly increasing. A single zero derivative does not make a flat interval.'
+    },
+    positive: {
+      fn: function(t) { return t * t * t + t; },
+      derivative: function(t) { return 3 * t * t + 1; },
+      formula: 'f(t) = t³ + t',
+      caption: 'The derivative is strictly positive everywhere. Every pair x < y gives f(y) > f(x), so the function is strictly increasing.'
+    },
+    flat: {
+      fn: function() { return 1; },
+      derivative: function() { return 0; },
+      formula: 'f(t) = 1',
+      caption: 'The derivative is zero everywhere. Every height is 1. The function is nondecreasing and nonincreasing, but not strictly increasing or strictly decreasing.'
+    },
+    decreasing: {
+      fn: function(t) { return -t * t * t; },
+      derivative: function(t) { return -3 * t * t; },
+      formula: 'f(t) = −t³',
+      caption: 'The derivative is nonpositive everywhere and zero at 0. This particular function is strictly decreasing. The MVT sign argument also works for negative changes.'
+    }
+  };
+  let currentFunction = 'cubic';
+  function normalizedPair(moved) {
+    const minimum = -1.25;
+    const maximum = 1.25;
+    const gap = 0.1;
+    let x = clamp(Number(document.getElementById('left-input').value), minimum, maximum);
+    let y = clamp(Number(document.getElementById('right-input').value), minimum, maximum);
+    if (y - x < gap - 0.000000001) {
+      if (moved === 'y') {
+        x = y - gap;
+        if (x < minimum) { x = minimum; y = minimum + gap; }
+      } else {
+        y = x + gap;
+        if (y > maximum) { y = maximum; x = maximum - gap; }
+      }
+    }
+    x = Math.round(x * 20) / 20;
+    y = Math.round(y * 20) / 20;
+    document.getElementById('left-input').value = String(x);
+    document.getElementById('right-input').value = String(y);
+    return { x: x, y: y };
+  }
+  function bridgeData(key, x, y) {
+    const item = bridgeFunctions[key];
+    const gap = y - x;
+    const change = item.fn(y) - item.fn(x);
+    const average = change / gap;
+    let c;
+    if (key === 'flat') c = (x + y) / 2;
+    else {
+      const root = Math.sqrt((x * x + x * y + y * y) / 3);
+      c = [root, -root].find(function(candidate) { return candidate > x && candidate < y; });
+    }
+    if (!Number.isFinite(c)) throw new Error('No interior matching point for this example.');
+    return { x: x, y: y, c: c, gap: gap, change: change, slope: item.derivative(c), average: average };
+  }
+  function updateBridge(moved) {
+    const pair = normalizedPair(moved);
+    const item = bridgeFunctions[currentFunction];
+    const data = bridgeData(currentFunction, pair.x, pair.y);
+    const mapX = function(t) { return 400 + 240 * t; };
+    const mapY = function(height) { return 230 - 48 * height; };
+    const xa = mapX(data.x);
+    const xb = mapX(data.y);
+    const ya = mapY(item.fn(data.x));
+    const yb = mapY(item.fn(data.y));
+    const xc = mapX(data.c);
+    const yc = mapY(item.fn(data.c));
+    put('bridge-curve', { d: curvePath(item.fn, -1.3, 1.3, mapX, mapY, 240) });
+    put('bridge-secant', { d: 'M' + xa + ' ' + ya + ' L' + xb + ' ' + yb });
+    put('bridge-step', { d: 'M' + xa + ' ' + ya + ' H' + xb + ' V' + yb });
+    put('bridge-tangent', { d: curvePath(function(t) { return item.fn(data.c) + data.slope * (t - data.c); }, Math.max(-1.3, data.c - 0.25), Math.min(1.3, data.c + 0.25), mapX, mapY, 1) });
+    put('bridge-project-x', { d: 'M' + xa + ' ' + ya + ' V421' });
+    put('bridge-project-y', { d: 'M' + xb + ' ' + yb + ' V421' });
+    put('bridge-point-x', { cx: xa, cy: ya });
+    put('bridge-point-y', { cx: xb, cy: yb });
+    put('bridge-point-c', { cx: xc, cy: yc });
+    put('bridge-x-label', { x: xa });
+    put('bridge-y-label', { x: xb });
+    let labelX = xc + (data.slope >= 0 ? -22 : 22);
+    if (Math.abs(labelX - 400) < 24) labelX = 436;
+    put('bridge-c-label', { x: labelX, y: yc - 25 });
+    put('bridge-c-bg', { x: labelX - 16, y: yc - 45 });
+    textAt('bridge-formula', item.formula);
+    textAt('left-value', formatNumber(data.x));
+    textAt('right-value', formatNumber(data.y));
+    textAt('read-input-gap', formatNumber(data.gap));
+    textAt('read-interior-slope', formatNumber(data.slope));
+    textAt('read-height-change', formatNumber(data.change));
+    colorSign('read-interior-slope', data.slope);
+    colorSign('read-height-change', data.change);
+    textAt('bridge-caption', item.caption);
+    const identity = formatNumber(data.change) + ' = ' + formatNumber(data.slope) + ' × ' + formatNumber(data.gap) + '.';
+    textAt('bridge-message', 'MVT point c ≈ ' + formatNumber(data.c) + '. Total change = interior slope × positive input gap: ' + identity + ' Displayed numbers are rounded; the identity is exact.');
+    textAt('bridge-desc', item.formula + '. The inputs are ' + formatNumber(data.x) + ' and ' + formatNumber(data.y) + '. The secant slope and green tangent slope are both ' + formatNumber(data.slope) + '. The height change is ' + formatNumber(data.change) + '.');
+    document.querySelectorAll('[data-function]').forEach(function(button) {
+      button.setAttribute('aria-pressed', String(button.dataset.function === currentFunction));
+    });
+    return data;
+  }
+  function showFunction(key) {
+    if (!bridgeFunctions[key]) return;
+    currentFunction = key;
+    updateBridge('x');
+  }
+  document.querySelectorAll('[data-function]').forEach(function(button) {
+    button.addEventListener('click', function() { showFunction(button.dataset.function); });
+  });
+  document.getElementById('left-input').addEventListener('input', function() { updateBridge('x'); });
+  document.getElementById('right-input').addEventListener('input', function() { updateBridge('y'); });
+  document.getElementById('reset-pair').addEventListener('click', function() {
+    document.getElementById('left-input').value = '-1';
+    document.getElementById('right-input').value = '1';
+    updateBridge('x');
+  });
+
+  function updateConstant() {
+    const C = clamp(Number(document.getElementById('constant-slider').value), -2, 2);
+    const mapX = function(t) { return 250 + 105 * t; };
+    const mapY = function(height) { return 270 - 48 * height; };
+    const G = function(t) { return t * t; };
+    const F = function(t) { return t * t + C; };
+    const px = mapX(1);
+    put('shift-g-curve', { d: curvePath(G, -1.5, 1.5, mapX, mapY, 200) });
+    put('shift-f-curve', { d: curvePath(F, -1.5, 1.5, mapX, mapY, 200) });
+    put('shift-g-tangent', { d: curvePath(function(t) { return 1 + 2 * (t - 1); }, 0.75, 1.25, mapX, mapY, 1) });
+    put('shift-f-tangent', { d: curvePath(function(t) { return 1 + C + 2 * (t - 1); }, 0.75, 1.25, mapX, mapY, 1) });
+    put('shift-gap', { d: 'M' + px + ' ' + mapY(G(1)) + ' V' + mapY(F(1)) });
+    put('shift-g-point', { cx: px, cy: mapY(G(1)) });
+    put('shift-f-point', { cx: px, cy: mapY(F(1)) });
+    put('flat-gap-curve', { d: curvePath(function() { return C; }, -1.5, 1.5, mapX, mapY, 1) });
+    put('flat-gap-tangent', { d: curvePath(function() { return C; }, 0.6, 1.4, mapX, mapY, 1) });
+    put('flat-gap-point', { cx: px, cy: mapY(C) });
+    textAt('constant-value', formatNumber(C));
+    const shiftText = C === 0 ? '' : (C > 0 ? ' + ' : ' − ') + formatNumber(Math.abs(C));
+    textAt('shift-formula', 'F(t) = t²' + shiftText + ', G(t) = t²');
+    textAt('flat-gap-formula', 'F(t) − G(t) = ' + formatNumber(C));
+    let message = 'F′ = G′ = 2t, while F − G = ' + formatNumber(C) + ' at every input in the interval.';
+    if (C === 0) message += ' C = 0: the two functions coincide.';
+    else message += ' Equal derivatives do not force equal heights.';
+    textAt('constant-message', message);
+    textAt('shift-desc', 'The two parabolas differ by ' + formatNumber(C) + ' in height. Their tangents at input 1 both have slope 2.');
+    textAt('flat-gap-desc', 'F minus G is constant at height ' + formatNumber(C) + '. Its derivative is zero throughout the interval.');
+    return C;
+  }
+  document.getElementById('constant-slider').addEventListener('input', updateConstant);
+  document.getElementById('zero-constant').addEventListener('click', function() {
+    document.getElementById('constant-slider').value = '0';
+    updateConstant();
+  });
+
+  let boundSign = 1;
+  function updateBound() {
+    const d = clamp(Number(document.getElementById('distance-slider').value), 0.2, 3);
+    const fn = function(t) { return boundSign * Math.sin(t); };
+    const mapX = function(t) { return 80 + 130 * t; };
+    const mapY = function(height) { return 230 - 50 * height; };
+    const px = mapX(d);
+    const change = fn(d);
+    const magnitude = Math.abs(change);
+    put('bound-curve', { d: curvePath(fn, 0, 3, mapX, mapY, 240) });
+    put('bound-range', { d: 'M' + px + ' ' + mapY(d) + ' V' + mapY(-d) });
+    put('bound-change', { d: 'M' + px + ' 230 V' + mapY(change) });
+    put('bound-point', { cx: px, cy: mapY(change) });
+    put('bound-upper', { cx: px, cy: mapY(d) });
+    put('bound-lower', { cx: px, cy: mapY(-d) });
+    put('bound-y-label', { x: px + (d < 0.4 ? 24 : 0) });
+    textAt('bound-formula', 'f(t) = ' + (boundSign === 1 ? '' : '−') + 'sin t, M = 1');
+    textAt('distance-value', formatNumber(d));
+    textAt('bound-read-gap', formatNumber(d));
+    textAt('bound-read-change', formatNumber(change));
+    textAt('bound-read-magnitude', formatNumber(magnitude));
+    textAt('bound-read-limit', formatNumber(d));
+    colorSign('bound-read-change', change);
+    textAt('bound-message', 'Actual magnitude ' + formatNumber(magnitude) + ' ≤ upper bound ' + formatNumber(d) + ' = 1 × ' + formatNumber(d) + '. A rate bound limits the total change; it does not force equality.');
+    textAt('bound-desc', 'At input gap ' + formatNumber(d) + ', the signed change is ' + formatNumber(change) + '. Its magnitude is at most ' + formatNumber(d) + '. The sine graph remains inside the allowed region.');
+    document.querySelectorAll('[data-bound-sign]').forEach(function(button) {
+      button.setAttribute('aria-pressed', String(Number(button.dataset.boundSign) === boundSign));
+    });
+    return { d: d, change: change, magnitude: magnitude, limit: d };
+  }
+  function showBoundSign(value) {
+    const sign = Number(value);
+    if (sign !== 1 && sign !== -1) return;
+    boundSign = sign;
+    updateBound();
+  }
+  document.querySelectorAll('[data-bound-sign]').forEach(function(button) {
+    button.addEventListener('click', function() { showBoundSign(button.dataset.boundSign); });
+  });
+  document.getElementById('distance-slider').addEventListener('input', updateBound);
+
+  Object.keys(proofSchema).forEach(function(id) {
+    document.getElementById(id).addEventListener('change', function() {
+      if (findingsChecked) evaluateProof();
+    });
+  });
+  document.querySelectorAll('.field-notes').forEach(function(note) {
+    note.addEventListener('input', function() {
+      if (findingsChecked) evaluateProof();
+    });
+  });
+  document.getElementById('submit-findings').addEventListener('click', evaluateProof);
+  document.getElementById('print-case').addEventListener('click', function() { window.print(); });
+  put('strict-curve', { d: curvePath(
+    function(t) { return t * t * t; }, -1.2, 1.2,
+    function(t) { return 280 + 150 * t; },
+    function(height) { return 175 - 70 * height; }, 200
+  ) });
+  updateBridge('x');
+  updateConstant();
+  updateBound();
+</script>
+</body>
+</html>

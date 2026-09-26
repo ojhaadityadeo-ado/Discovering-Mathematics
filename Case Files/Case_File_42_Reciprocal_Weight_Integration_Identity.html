@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 42 — Reciprocal-Weight Identity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;background-image:radial-gradient(#cbd5e1 1px,transparent 1px);background-size:20px 20px;font-family:Inter,Arial,sans-serif}
+    .case-file{max-width:896px;margin:12px auto;position:relative;overflow:hidden;border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;font:17px/1.8 "Courier Prime",monospace}
+    .stamp{position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);opacity:.2;pointer-events:none}
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}.mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:750px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}.briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}.act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}.evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}.success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}[hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}.notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .math-block{overflow-x:auto;padding:3px 0}.table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}.graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}.graph-head .mini-label{display:block;margin-bottom:4px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}.control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}.control-row label{min-width:210px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .credit-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:1px;background:#e2e8f0}.credit-box{background:#fff;padding:18px}.credit-box:first-child{border-top:4px solid #4f46e5}.credit-box:last-child{border-top:4px solid #16a34a}.credit-box h3{margin:0 0 10px}.big-count{font:700 23px/1.45 Inter,Arial,sans-serif;color:#312e81}.credit-person{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;margin:7px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;font:13px/1.6 Inter,Arial,sans-serif}.credit-person strong{color:#166534}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}.count-strip{padding:14px 20px;background:#eef2ff;font:600 16px/1.8 Inter,Arial,sans-serif;text-align:center}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    .micro{background:#fffbeb;border-left:4px solid #eab308;padding:12px 16px;margin:16px 0}.micro>p{margin:0}.micro summary{font:600 14px/1.8 Inter,Arial,sans-serif;color:#854d0e;cursor:pointer}.micro details p{font:15px/1.85 Inter,Arial,sans-serif}
+    fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}.choice{display:flex!important;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}.choice:has(input:checked){background:#eef2ff;border-color:#6366f1}.choice input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}.clue-feedback:empty{display:none}.clue-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+    .reason{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 24px;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}.reason summary{color:#3730a3;font-weight:600;cursor:pointer}
+    .step-box{margin:16px 0;padding:16px 18px;background:#fff;border:1px solid #cbd5e1;border-left:4px solid #4f46e5;border-radius:4px;font:15px/1.85 Inter,Arial,sans-serif}.step-box.green{border-left-color:#16a34a}.step-box strong{color:#312e81}.why{margin-top:9px;padding:10px 12px;background:#f8fafc;border-left:3px solid #94a3b8;font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}.actions button{padding:12px 16px;font:600 14px Inter,Arial,sans-serif;border:1px solid #475569;border-radius:4px;cursor:pointer}.actions .primary{background:#1e293b;color:white}.score{font:600 14px/1.8 Inter,Arial,sans-serif}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}.stamp{display:none}header,.briefing,.act,.report,footer{padding:23px 19px}.lead-question{font-size:17px}.control-row label{min-width:100%}.credit-grid{grid-template-columns:1fr}}
+    @media print{body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}.lab-controls,.actions{display:none}.graph-card,.question-card,.step-box,.notes-box{break-inside:avoid}.field-notes{min-height:80px}details>summary{display:none}.reason{break-inside:auto}.clue-feedback,.detective-hint{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style>
+</head>
+<body><main class="case-file">
+<div class="stamp" aria-hidden="true">CASE FILE</div>
+<header>
+  <h1>MATH DETECTIVE: CASE FILE #42</h1>
+  <p class="subject">Subject: The Reciprocal-Weight / Integration Identity</p>
+  <p class="mission"><strong>Mission:</strong> Interpret a non-integer binomial sum as shared voting credit. Compute Alice's credit directly, compute the total credit globally, use symmetry to compare them, and then verify the identity by both factorial algebra and integration.</p>
+</header>
+<div class="briefing"><p><strong>The case:</strong> There are n+1 students, one of whom is Alice. Every nonempty committee receives one unit of voting credit and divides it equally among its members. Across all nonempty committees, how much total credit does Alice receive?</p></div>
+<p class="small-note" style="padding:10px 30px">Follow 7 clues and the small-step questions. Try each clue before opening its reasoning. The weighted-credit lab works offline; equation formatting and display fonts use an internet connection.</p>
+<noscript><div class="evidence warning-evidence">JavaScript is needed for the weighted-credit lab and answer checking. The written proofs and expandable answers still work.</div></noscript>
+
+<section class="act" aria-labelledby="act1"><h2 id="act1">Act 1: This sum is a weight, not an ordinary count</h2>
+<p>Our target is</p>
+<div class="math-block">\[\boxed{\sum_{r=0}^{n}\frac{\binom nr}{r+1}=\frac{2^{n+1}-1}{n+1}}.\]</div>
+<p>The left side is often not an integer. For example, when n=1 it equals</p>
+<div class="math-block">\[\binom10+\frac{\binom11}{2}=1+\frac12=\frac32.\]</div>
+<p class="lead-question">So what kind of interpretation should we look for?</p>
+<div class="question-card"><fieldset><legend>Clue 1 · What is the safest interpretation of the left side?</legend>
+<label class="choice"><input type="radio" name="q1" value="0"><span>A. It must count ordinary committees, even though the answer can be fractional.</span></label>
+<label class="choice"><input type="radio" name="q1" value="1"><span>B. It can represent a total weight or share accumulated across committees.</span></label>
+<label class="choice"><input type="radio" name="q1" value="2"><span>C. Fractions mean the identity has no combinatorial meaning.</span></label>
+</fieldset><p class="clue-feedback" id="feedback1" aria-live="polite"></p><div class="detective-hint" id="hint1" hidden><strong>Follow this clue:</strong> A single committee is allowed to contribute a fractional amount to one student.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>A fractional total cannot be the number of ordinary discrete objects. But it can naturally be a sum of fractional credits. Here each committee contributes one unit altogether, divided among its members.</p></details>
+<div class="micro"><p><strong>Small step 1.</strong> If a committee has 5 members, how much of its one unit does each member receive?</p><details><summary>Open the answer</summary><p>Each member receives \(1/5\). The five equal shares add back to the committee's full one unit.</p></details></div>
+</section>
+
+<section class="act white" aria-labelledby="act2"><h2 id="act2">Act 2: Compute Alice's credit directly</h2>
+<p>Only committees containing Alice contribute to Alice's personal total. Suppose such a committee contains Alice and exactly r other students.</p>
+<div class="table-wrap"><table><thead><tr><th>Part of the decision</th><th>Amount</th></tr></thead><tbody>
+<tr><td>Choose the r other committee members from the n students besides Alice.</td><td>\(\binom nr\) committees</td></tr>
+<tr><td>Each resulting committee has size r+1.</td><td>Alice's share is \(\dfrac1{r+1}\)</td></tr>
+<tr><td>Total Alice-credit from this size class.</td><td>\(\dfrac{\binom nr}{r+1}\)</td></tr>
+</tbody></table></div>
+<div class="question-card"><fieldset><legend>Clue 2 · If Alice has exactly r companions, why is the contribution \(\binom nr/(r+1)\)?</legend>
+<label class="choice"><input type="radio" name="q2" value="0"><span>A. There are \(\binom nr\) such committees, and each gives Alice \(1/(r+1)\).</span></label>
+<label class="choice"><input type="radio" name="q2" value="1"><span>B. There are r+1 committees, and each gives Alice \(\binom nr\) units.</span></label>
+<label class="choice"><input type="radio" name="q2" value="2"><span>C. We divide by r+1 because committee order has been overcounted.</span></label>
+</fieldset><p class="clue-feedback" id="feedback2" aria-live="polite"></p><div class="detective-hint" id="hint2" hidden><strong>Follow this clue:</strong> Separate “how many committees?” from “how much credit from each committee?”</div></div>
+<p>Summing over every possible number of companions gives Alice's total credit:</p>
+<div class="math-block">\[\boxed{\text{Alice's credit}=\sum_{r=0}^{n}\frac{\binom nr}{r+1}}.\]</div>
+<div class="micro"><p><strong>Small step 2.</strong> What does r=0 represent?</p><details><summary>Open the answer</summary><p>The committee contains Alice and nobody else. There is \(\binom n0=1\) such committee, its size is 1, and Alice receives its full one unit.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act3"><h2 id="act3">Act 3: Count all the credit before assigning it to people</h2>
+<p>Every nonempty committee distributes exactly one unit in total, no matter how many people share it.</p>
+<div class="question-card"><fieldset><legend>Clue 3 · How much credit do all nonempty committees distribute altogether?</legend>
+<label class="choice"><input type="radio" name="q3" value="0"><span>A. \(2^{n+1}-1\), because there are that many nonempty committees and each distributes one unit.</span></label>
+<label class="choice"><input type="radio" name="q3" value="1"><span>B. \(2^{n+1}\), because the empty committee also distributes one unit.</span></label>
+<label class="choice"><input type="radio" name="q3" value="2"><span>C. \(n+1\), because there are n+1 students.</span></label>
+</fieldset><p class="clue-feedback" id="feedback3" aria-live="polite"></p><div class="detective-hint" id="hint3" hidden><strong>Follow this clue:</strong> Start with all subsets of n+1 students, then remove the empty one.</div></div>
+<p>There are \(2^{n+1}\) subsets of the student set. One is empty, so the number of nonempty committees is</p>
+<div class="math-block">\[2^{n+1}-1.\]</div>
+<p>Since every nonempty committee contributes one full unit across its members,</p>
+<div class="math-block">\[\text{total credit distributed}=2^{n+1}-1.\]</div>
+<div class="micro"><p><strong>Small step 3.</strong> Why does a 2-person committee and a 7-person committee each contribute exactly one unit to the global total?</p><details><summary>Open the answer</summary><p>The 2-person committee gives two shares of \(1/2\); the 7-person committee gives seven shares of \(1/7\). In either case the shares sum to 1.</p></details></div>
+</section>
+
+<section class="act white" aria-labelledby="act4"><h2 id="act4">Act 4: Use symmetry to isolate Alice's share</h2>
+<p>No student has a special role in the collection of all nonempty committees. Swapping Alice's name with Bob's gives a size-preserving bijection between committees containing Alice and committees containing Bob. Corresponding committees therefore give equal-sized credit shares.</p>
+<div class="question-card"><fieldset><legend>Clue 4 · What does this symmetry prove?</legend>
+<label class="choice"><input type="radio" name="q4" value="0"><span>A. Alice belongs to every committee.</span></label>
+<label class="choice"><input type="radio" name="q4" value="1"><span>B. Every one of the n+1 students receives the same total credit.</span></label>
+<label class="choice"><input type="radio" name="q4" value="2"><span>C. Every committee has the same size.</span></label>
+</fieldset><p class="clue-feedback" id="feedback4" aria-live="polite"></p><div class="detective-hint" id="hint4" hidden><strong>Follow this clue:</strong> Relabeling students changes names, not committee sizes or share sizes.</div></div>
+<p>Therefore the total credit \(2^{n+1}-1\) is split equally among n+1 students:</p>
+<div class="math-block">\[\text{Alice's credit}=\frac{2^{n+1}-1}{n+1}.\]</div>
+<p>Comparing this with the expression from Act 2 gives the identity.</p>
+<div class="math-block">\[\boxed{\sum_{r=0}^{n}\frac{\binom nr}{r+1}=\frac{2^{n+1}-1}{n+1}}.\]</div>
+
+<div class="graph-card" id="visual-lab">
+  <div class="graph-head"><span class="mini-label">Weighted-credit lab · one unit per nonempty committee</span>Track Alice by committee size, then check every student's total</div>
+  <div class="lab-controls"><div class="control-row"><label for="n">Other students n: <output id="n-value">3</output></label><input type="range" id="n" min="0" max="7" value="3" step="1"></div></div>
+  <div class="formula-live" id="formula-live"></div>
+  <div class="credit-grid">
+    <div class="credit-box"><h3>Alice's credit by number of companions</h3><div class="table-wrap"><table><thead><tr><th>r</th><th>committees</th><th>Alice gets each</th><th>subtotal</th></tr></thead><tbody id="alice-rows"></tbody></table></div><div class="big-count" id="alice-total"></div></div>
+    <div class="credit-box"><h3>Independent symmetry check</h3><p class="small-note">Enumerate every nonempty committee and split its one unit equally among its members.</p><div id="student-credits"></div></div>
+  </div>
+  <div class="count-strip" id="count-strip"></div>
+  <p class="lab-message" id="lab-status"></p>
+</div>
+<div class="micro"><p><strong>Small step 4.</strong> Why is “everyone gets the same total” stronger than merely saying everyone appears in the same number of committees?</p><details><summary>Open the answer</summary><p>The contribution from a committee depends on its size. The relabeling argument preserves committee size as well as membership structure, so it preserves the actual weight \(1/|S|\), not just the number of committees.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act5"><h2 id="act5">Act 5: The factor n+1 and the boundary case</h2>
+<div class="question-card"><fieldset><legend>Clue 5 · Where does the factor n+1 come from?</legend>
+<label class="choice"><input type="radio" name="q5" value="0"><span>A. It is the number of possible committee sizes.</span></label>
+<label class="choice"><input type="radio" name="q5" value="1"><span>B. It is the number of students sharing the global credit symmetrically.</span></label>
+<label class="choice"><input type="radio" name="q5" value="2"><span>C. It appears only because of factorial cancellation.</span></label>
+</fieldset><p class="clue-feedback" id="feedback5" aria-live="polite"></p><div class="detective-hint" id="hint5" hidden><strong>Follow this clue:</strong> Multiply Alice's total by the number of students receiving equal totals.</div></div>
+<div class="evidence warning-evidence"><strong>Important qualification:</strong> the original sum is not the number of all nonempty subsets. Rather,
+<div class="math-block">\[(n+1)\sum_{r=0}^{n}\frac{\binom nr}{r+1}=2^{n+1}-1.\]</div>
+Multiplying one student's weighted share by the n+1 symmetric students recovers the ordinary count of nonempty committees.</div>
+<h3>Stress-test: n = 0</h3>
+<p>Only Alice exists. The only nonempty committee is \(\{\text{Alice}\}\), so Alice receives one unit.</p>
+<div class="math-block">\[\sum_{r=0}^{0}\frac{\binom0r}{r+1}=\frac{\binom00}{1}=1,\qquad \frac{2^{1}-1}{1}=1.\]</div>
+<div class="micro"><p><strong>Small step 5.</strong> Do we need n≥1 for this identity?</p><details><summary>Open the answer</summary><p>No. Unlike the toggle-Alice parity identity or the president-first story, this identity also works at n=0. Alice herself supplies the distinguished student, and the one nonempty committee gives her one unit.</p></details></div>
+</section>
+
+<section class="act white" aria-labelledby="act6"><h2 id="act6">Act 6: Factorial and reindexing proof, one step at a time</h2>
+<p>The weighted argument already proves the identity. Now transform each summand into a shifted binomial coefficient.</p>
+
+<div class="step-box"><strong>Step 1 · Expand the binomial coefficient.</strong>
+<div class="math-block">\[\frac{\binom nr}{r+1}=\frac1{r+1}\cdot\frac{n!}{r!(n-r)!}.\]</div>
+<div class="why"><strong>Why?</strong> Use \(\binom nr=n!/[r!(n-r)!]\), then keep the extra factor \(1/(r+1)\) visible.</div></div>
+
+<div class="micro"><p><strong>Small step 6.</strong> Which factorial can absorb the factor r+1?</p><details><summary>Open the answer</summary><p>Since \((r+1)!=(r+1)r!\), the product \((r+1)r!\) in the denominator becomes \((r+1)!\).</p></details></div>
+
+<div class="step-box"><strong>Step 2 · Combine r+1 with r!.</strong>
+<div class="math-block">\[
+\frac1{r+1}\cdot\frac{n!}{r!(n-r)!}
+=\frac{n!}{(r+1)!(n-r)!}.
+\]</div>
+<div class="why"><strong>Why?</strong> The denominator \((r+1)r!(n-r)!\) is exactly \((r+1)!(n-r)!\).</div></div>
+
+<div class="micro"><p><strong>Small step 7.</strong> What factor should we introduce if we want the numerator to become \((n+1)!\)?</p><details><summary>Open the answer</summary><p>We need a factor n+1, because \((n+1)!=(n+1)n!\). To keep the value unchanged, multiply by \((n+1)/(n+1)\).</p></details></div>
+
+<div class="step-box"><strong>Step 3 · Create the factorial of n+1.</strong>
+<div class="math-block">\[
+\frac{n!}{(r+1)!(n-r)!}
+=\frac1{n+1}\cdot\frac{(n+1)n!}{(r+1)!(n-r)!}
+=\frac1{n+1}\cdot\frac{(n+1)!}{(r+1)!(n-r)!}.
+\]</div>
+<div class="why"><strong>Why is the outside factor \(1/(n+1)\) necessary?</strong> We inserted n+1 into the numerator, so dividing by n+1 compensates for it.</div></div>
+
+<div class="micro"><p><strong>Small step 8.</strong> For a binomial coefficient \(\binom{n+1}{r+1}\), what should the second factorial in the denominator be?</p><details><summary>Open the answer</summary><p>It should be \([(n+1)-(r+1)]!=(n-r)!\), exactly the factorial already present.</p></details></div>
+
+<div class="step-box"><strong>Step 4 · Recognize the shifted binomial coefficient.</strong>
+<div class="math-block">\[
+\frac{\binom nr}{r+1}
+=\frac1{n+1}\frac{(n+1)!}{(r+1)!\,[(n+1)-(r+1)]!}
+=\frac1{n+1}\binom{n+1}{r+1}.
+\]</div>
+<p>So term by term,</p>
+<div class="math-block">\[\boxed{\frac{\binom nr}{r+1}=\frac1{n+1}\binom{n+1}{r+1}}.\]</div></div>
+
+<div class="step-box"><strong>Step 5 · Substitute this into the whole sum.</strong>
+<div class="math-block">\[
+\sum_{r=0}^{n}\frac{\binom nr}{r+1}
+=\frac1{n+1}\sum_{r=0}^{n}\binom{n+1}{r+1}.
+\]</div>
+<div class="why"><strong>Why can \(1/(n+1)\) move outside?</strong> It is constant with respect to the summation index r.</div></div>
+
+<div class="micro"><p><strong>Small step 9.</strong> If we set j=r+1, what are the new lower and upper limits?</p><details><summary>Open the answer</summary><p>When r=0, j=1. When r=n, j=n+1. Therefore j runs from 1 through n+1.</p></details></div>
+
+<div class="step-box"><strong>Step 6 · Reindex with j=r+1.</strong>
+<div class="math-block">\[
+\frac1{n+1}\sum_{r=0}^{n}\binom{n+1}{r+1}
+=\frac1{n+1}\sum_{j=1}^{n+1}\binom{n+1}{j}.
+\]</div>
+<div class="why"><strong>What changed?</strong> Only the label of the running index and its limits. The actual list of terms is the same.</div></div>
+
+<div class="micro"><p><strong>Small step 10.</strong> What binomial-theorem sum do we know if the missing j=0 term is restored?</p><details><summary>Open the answer</summary><p>\(\sum_{j=0}^{n+1}\binom{n+1}{j}=2^{n+1}\). The omitted j=0 term is \(\binom{n+1}{0}=1\).</p></details></div>
+
+<div class="step-box"><strong>Step 7 · Remove the missing empty-subset term.</strong>
+<div class="math-block">\[
+\sum_{j=1}^{n+1}\binom{n+1}{j}
+=\sum_{j=0}^{n+1}\binom{n+1}{j}-\binom{n+1}{0}
+=2^{n+1}-1.
+\]</div>
+<p>Hence</p>
+<div class="math-block">\[
+\boxed{\sum_{r=0}^{n}\frac{\binom nr}{r+1}
+=\frac{2^{n+1}-1}{n+1}}.
+\]</div></div>
+
+<h3>Full factorial proof in one continuous chain</h3>
+<div class="math-block">\[
+\begin{aligned}
+\sum_{r=0}^{n}\frac{\binom nr}{r+1}
+&=\sum_{r=0}^{n}\frac{n!}{(r+1)!(n-r)!}\\[4pt]
+&=\frac1{n+1}\sum_{r=0}^{n}\frac{(n+1)!}{(r+1)!(n-r)!}\\[4pt]
+&=\frac1{n+1}\sum_{r=0}^{n}\binom{n+1}{r+1}\\[4pt]
+&=\frac1{n+1}\sum_{j=1}^{n+1}\binom{n+1}{j}\\[4pt]
+&=\frac1{n+1}\left(2^{n+1}-1\right).
+\end{aligned}
+\]</div>
+</section>
+
+<section class="act" aria-labelledby="act7"><h2 id="act7">Act 7: Integration proof, one step at a time</h2>
+<p>The denominator r+1 also appears naturally when we integrate a power \(t^r\). Start again from the binomial theorem.</p>
+
+<div class="step-box green"><strong>Step 1 · Write the binomial theorem with a variable t.</strong>
+<div class="math-block">\[(1+t)^n=\sum_{r=0}^{n}\binom nr t^r.\]</div>
+<div class="why"><strong>Why use t?</strong> Integrating \(t^r\) creates the factor \(1/(r+1)\) that appears in the target sum.</div></div>
+
+<div class="micro"><p><strong>Small step 11.</strong> What is \(\int t^r\,dt\) for r≥0?</p><details><summary>Open the answer</summary><p>\(\int t^r\,dt=t^{r+1}/(r+1)+C\). The denominator r+1 is exactly the reciprocal weight in our identity.</p></details></div>
+
+<div class="step-box green"><strong>Step 2 · Integrate both sides from 0 to 1.</strong>
+<div class="math-block">\[
+\int_0^1(1+t)^n\,dt
+=\int_0^1\sum_{r=0}^{n}\binom nr t^r\,dt.
+\]</div>
+<p>Because the sum is finite, integrate term by term:</p>
+<div class="math-block">\[
+\int_0^1(1+t)^n\,dt
+=\sum_{r=0}^{n}\binom nr\int_0^1t^r\,dt.
+\]</div>
+<div class="why"><strong>Why is term-by-term integration valid here?</strong> There are only n+1 terms, so ordinary linearity of integration is enough; no infinite-series issue arises.</div></div>
+
+<div class="micro"><p><strong>Small step 12.</strong> What does \(\int_0^1 t^r\,dt\) equal?</p><details><summary>Open the answer</summary><p>\(\left[t^{r+1}/(r+1)\right]_0^1=(1-0)/(r+1)=1/(r+1)\).</p></details></div>
+
+<div class="step-box green"><strong>Step 3 · Evaluate the right side.</strong>
+<div class="math-block">\[
+\sum_{r=0}^{n}\binom nr\int_0^1t^r\,dt
+=\sum_{r=0}^{n}\binom nr\frac1{r+1}
+=\sum_{r=0}^{n}\frac{\binom nr}{r+1}.
+\]</div>
+<div class="why"><strong>What did integration do?</strong> It converted each factor \(t^r\) into the weight \(1/(r+1)\) after evaluation from 0 to 1.</div></div>
+
+<div class="micro"><p><strong>Small step 13.</strong> What antiderivative should we use for \((1+t)^n\)?</p><details><summary>Open the answer</summary><p>\(\dfrac{(1+t)^{n+1}}{n+1}\), because differentiating it gives \((1+t)^n\).</p></details></div>
+
+<div class="step-box green"><strong>Step 4 · Evaluate the left side.</strong>
+<div class="math-block">\[
+\begin{aligned}
+\int_0^1(1+t)^n\,dt
+&=\left[\frac{(1+t)^{n+1}}{n+1}\right]_{0}^{1}\\[4pt]
+&=\frac{(1+1)^{n+1}-(1+0)^{n+1}}{n+1}\\[4pt]
+&=\frac{2^{n+1}-1}{n+1}.
+\end{aligned}
+\]</div>
+<div class="why"><strong>Where does the “−1” come from?</strong> It is the lower endpoint: \((1+0)^{n+1}=1\).</div></div>
+
+<div class="question-card"><fieldset><legend>Clue 6 · In the integration proof, which operation creates the reciprocal factor \(1/(r+1)\)?</legend>
+<label class="choice"><input type="radio" name="q6" value="0"><span>A. Differentiating \(t^r\).</span></label>
+<label class="choice"><input type="radio" name="q6" value="1"><span>B. Integrating \(t^r\) from 0 to 1.</span></label>
+<label class="choice"><input type="radio" name="q6" value="2"><span>C. Replacing t by −1.</span></label>
+</fieldset><p class="clue-feedback" id="feedback6" aria-live="polite"></p><div class="detective-hint" id="hint6" hidden><strong>Follow this clue:</strong> The power rule for integration increases the exponent and divides by the new exponent.</div></div>
+
+<h3>Full integration proof in one continuous chain</h3>
+<div class="math-block">\[
+\begin{aligned}
+\sum_{r=0}^{n}\frac{\binom nr}{r+1}
+&=\sum_{r=0}^{n}\binom nr\int_0^1t^r\,dt\\[4pt]
+&=\int_0^1\sum_{r=0}^{n}\binom nr t^r\,dt\\[4pt]
+&=\int_0^1(1+t)^n\,dt\\[4pt]
+&=\left[\frac{(1+t)^{n+1}}{n+1}\right]_0^1\\[4pt]
+&=\frac{2^{n+1}-1}{n+1}.
+\end{aligned}
+\]</div>
+</section>
+
+<section class="act white" aria-labelledby="act8"><h2 id="act8">Act 8: Connect the three viewpoints</h2>
+<div class="table-wrap"><table><thead><tr><th>Viewpoint</th><th>Meaning of \(1/(r+1)\)</th><th>Meaning of the final expression</th></tr></thead><tbody>
+<tr><td>Weighted committees</td><td>Alice's equal share in a committee of size r+1.</td><td>One student's symmetric share of all nonempty-committee credit.</td></tr>
+<tr><td>Factorial/reindexing</td><td>Turns \(\binom nr\) into \(\frac1{n+1}\binom{n+1}{r+1}\).</td><td>One over n+1 times the number of nonempty subsets.</td></tr>
+<tr><td>Integration</td><td>\(\int_0^1t^r\,dt=1/(r+1)\).</td><td>The endpoint evaluation of \(\int_0^1(1+t)^n\,dt\).</td></tr>
+</tbody></table></div>
+<div class="question-card"><fieldset><legend>Clue 7 · Which statement correctly connects all three proofs?</legend>
+<label class="choice"><input type="radio" name="q7" value="0"><span>A. The sum directly counts nonempty committees without weights.</span></label>
+<label class="choice"><input type="radio" name="q7" value="1"><span>B. The same reciprocal weight appears as a member's share, as a shifted-binomial normalization, and as an integral of \(t^r\).</span></label>
+<label class="choice"><input type="radio" name="q7" value="2"><span>C. The three methods work only when the final answer is an integer.</span></label>
+</fieldset><p class="clue-feedback" id="feedback7" aria-live="polite"></p><div class="detective-hint" id="hint7" hidden><strong>Follow this clue:</strong> Track the role of the single factor \(1/(r+1)\) in each proof.</div></div>
+<div class="notes-box"><label for="notes">Your detective note · Explain why the left side is a weighted total rather than an ordinary count. Then explain one algebraic reason and one calculus reason for the factor \(1/(r+1)\).</label><textarea class="field-notes" id="notes" placeholder="Weighted story: a committee of size r+1 gives Alice... Factorial proof: (r+1)r! becomes... Integration proof: the integral of t^r..."></textarea></div>
+</section>
+
+<section class="report" aria-labelledby="report"><h2 id="report">Final case report</h2>
+<div class="evidence success-evidence">
+<p>For every nonnegative integer n,</p>
+<div class="math-block">\[\boxed{\sum_{r=0}^{n}\frac{\binom nr}{r+1}=\frac{2^{n+1}-1}{n+1}}.\]</div>
+<p><strong>Weighted meaning:</strong> the left side is Alice's total voting credit over all nonempty committees.</p>
+<p><strong>Global count:</strong> the committees distribute \(2^{n+1}-1\) total units.</p>
+<p><strong>Symmetry:</strong> all n+1 students receive equal totals, so Alice receives \((2^{n+1}-1)/(n+1)\).</p>
+<p><strong>Factorial mechanism:</strong> \(\binom nr/(r+1)=\frac1{n+1}\binom{n+1}{r+1}\), and summing the shifted coefficients counts all nonempty subsets.</p>
+<p><strong>Integration mechanism:</strong> \(\int_0^1t^r\,dt=1/(r+1)\), so integrating the binomial theorem produces the weighted sum automatically.</p>
+</div>
+<div class="actions"><button class="primary" id="check" type="button">Check my clues</button><button id="show-reasons" type="button">Open all explanations</button><button id="print" type="button">Print / Save as PDF</button></div>
+<p class="score" id="score" aria-live="polite">Choose an answer to each of the 7 clues, then check your reasoning.</p>
+</section>
+<footer><span>CASE FILE #42 · ONE UNIT PER COMMITTEE, SHARED EQUALLY</span></footer>
+</main>
+<script>
+'use strict';
+const answerKeys=[1,0,0,1,1,1,1];
+const answerReasons=[
+  'A fractional sum can naturally represent accumulated shares or weights. It need not count ordinary discrete objects.',
+  'There are C(n,r) ways to choose Alice’s r companions, and each committee of size r+1 gives Alice 1/(r+1).',
+  'There are 2^(n+1) subsets in all; remove the empty one, and each remaining committee distributes exactly one unit.',
+  'Relabeling any two students preserves committee sizes and share amounts, so every student has the same total credit.',
+  'There are n+1 students, and symmetry says the global credit is divided equally among their total accumulated credits.',
+  'Integrating t^r from 0 to 1 produces 1/(r+1).',
+  'The reciprocal factor has three matching roles: equal share, shifted-binomial normalization, and the integral of a monomial.'
+];
+const byId=id=>document.getElementById(id);
+function choose(n,r){
+  if(!Number.isInteger(n)||!Number.isInteger(r)||n<0||r<0||r>n)return 0;
+  r=Math.min(r,n-r);let c=1;
+  for(let i=1;i<=r;i++)c=c*(n-i+1)/i;
+  return Math.round(c);
+}
+function formatNum(x){
+  if(Math.abs(x-Math.round(x))<1e-10)return String(Math.round(x));
+  return x.toFixed(6).replace(/0+$/,'').replace(/\.$/,'');
+}
+function enumerateNonempty(m){
+  const out=[];
+  for(let mask=1;mask<(1<<m);mask++){
+    const members=[];
+    for(let i=0;i<m;i++)if(mask&(1<<i))members.push(i);
+    out.push(members);
+  }
+  return out;
+}
+function updateLab(){
+  const n=Number(byId('n').value),m=n+1;
+  byId('n-value').textContent=n;
+  let alice=0,rows='';
+  for(let r=0;r<=n;r++){
+    const count=choose(n,r),share=1/(r+1),subtotal=count*share;
+    alice+=subtotal;
+    rows+='<tr><td>'+r+'</td><td>'+count+'</td><td>1/'+(r+1)+'</td><td>'+formatNum(subtotal)+'</td></tr>';
+  }
+  byId('alice-rows').innerHTML=rows;
+  const totalCommittees=Math.pow(2,m)-1;
+  const expected=totalCommittees/m;
+  byId('alice-total').textContent='Alice total = '+formatNum(alice);
+  byId('formula-live').textContent='Σ C('+n+',r)/(r+1) = ('+totalCommittees+')/'+m+' = '+formatNum(expected);
+
+  const credits=Array(m).fill(0);
+  const committees=enumerateNonempty(m);
+  committees.forEach(g=>{const w=1/g.length;g.forEach(i=>credits[i]+=w);});
+  const names=['Alice',...Array.from({length:n},(_,i)=>String.fromCharCode(66+i))];
+  byId('student-credits').innerHTML=credits.map((v,i)=>'<div class="credit-person"><span>'+names[i]+'</span><strong>'+formatNum(v)+'</strong></div>').join('');
+  const spread=Math.max(...credits)-Math.min(...credits);
+  byId('count-strip').textContent=totalCommittees+' nonempty committees distribute '+totalCommittees+' total units across '+m+' students.';
+  byId('lab-status').textContent='Direct Alice sum = '+formatNum(alice)+'. Symmetry target = '+formatNum(expected)+'. Enumerating every committee gives equal student totals'+(spread<1e-9?' exactly (up to displayed rounding).':'.');
+}
+function checkClues(){
+  let correct=0,unanswered=0;
+  answerKeys.forEach((key,i)=>{
+    const q=i+1,chosen=document.querySelector('input[name="q'+q+'"]:checked'),out=byId('feedback'+q),hint=byId('hint'+q);
+    if(!chosen){unanswered++;out.textContent='Choose an option, then check again.';out.style.color='#92400e';hint.hidden=true;}
+    else if(Number(chosen.value)===key){correct++;out.textContent='Correct. '+answerReasons[i];out.style.color='#15803d';hint.hidden=true;}
+    else{out.textContent='Not yet. Use the clue below and try again.';out.style.color='#b91c1c';hint.hidden=false;}
+  });
+  byId('score').textContent=correct+' / 7 correct. '+(unanswered?unanswered+' still unanswered. ':'')+(correct===7?'Case solved: you have checked the weighted interpretation, symmetry, factorial proof, and integration proof.':'Review the clues and check again whenever you are ready.');
+}
+byId('n').addEventListener('input',updateLab);
+byId('check').addEventListener('click',checkClues);
+byId('show-reasons').addEventListener('click',()=>document.querySelectorAll('.reason,.micro details').forEach(d=>d.open=true));
+byId('print').addEventListener('click',()=>window.print());
+let printStates=[];
+window.addEventListener('beforeprint',()=>{printStates=Array.from(document.querySelectorAll('details'),d=>[d,d.open]);document.querySelectorAll('.reason,.micro details').forEach(d=>d.open=true);});
+window.addEventListener('afterprint',()=>printStates.forEach(([d,open])=>d.open=open));
+updateLab();
+</script>
+</body></html>

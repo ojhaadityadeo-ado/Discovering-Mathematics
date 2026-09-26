@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 17 — Rolle's Theorem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 32px 16px; color: #1e293b; background: #e2e8f0;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 20px 20px; font-family: Inter, Arial, sans-serif;
+    }
+    .case-file {
+      max-width: 896px; margin: 12px auto; position: relative; border-radius: 4px;
+      overflow: hidden; background: #fdfbf7; box-shadow: 0 10px 25px #0000001a;
+      font: 17px/1.8 "Courier Prime", monospace;
+    }
+    .stamp {
+      position: absolute; top: 20px; right: 20px; border: 4px solid #dc2626;
+      color: #dc2626; font-size: 22px; font-weight: bold; padding: 4px 16px;
+      transform: rotate(-15deg); opacity: .2; pointer-events: none;
+    }
+    header { padding: 28px 32px; background: #1e293b; color: #f1f5f9; border-bottom: 4px solid #0f172a; }
+    h1 { margin: 0; font: 700 clamp(23px, 4.5vw, 31px)/1.35 Inter, Arial, sans-serif; letter-spacing: 1px; }
+    .subject { color: #cbd5e1; margin: 10px 0 7px; }
+    .mission { font: 14px/1.75 Inter, Arial, sans-serif; margin: 0; max-width: 710px; }
+    .briefing { background: #312e81; color: #e0e7ff; padding: 18px 32px; font: 14px/1.75 Inter, Arial, sans-serif; }
+    .briefing p { margin: 0; }
+    .act, .report { padding: 32px 40px; border-bottom: 1px solid #e2e8f0; }
+    .act.white { background: white; }
+    .report { background: #f8fafc; }
+    h2 { margin: 0 0 20px; font: 700 21px/1.5 Inter, Arial, sans-serif; text-transform: uppercase; letter-spacing: .7px; }
+    h3 { font: 700 17px/1.6 Inter, Arial, sans-serif; margin: 24px 0 10px; }
+    p { margin: 13px 0; }
+    .lead-question { font-weight: bold; font-size: 19px; }
+    .mini-label { font: 700 11px/1.6 Inter, Arial, sans-serif; letter-spacing: 1px; text-transform: uppercase; color: #64748b; }
+    .evidence { padding: 17px 20px; margin: 18px 0; background: #eef2ff; border-left: 4px solid #6366f1; font: 15px/1.85 Inter, Arial, sans-serif; }
+    .evidence p:first-child { margin-top: 0; }
+    .evidence p:last-child { margin-bottom: 0; }
+    .warning-evidence { background: #fff7ed; border-left-color: #f97316; }
+    .success-evidence { background: #f0fdf4; border-left-color: #22c55e; }
+    .question-card { background: white; border: 1px solid #e2e8f0; padding: 17px; margin: 18px 0; border-radius: 4px; }
+    .question-card label { display: block; font-weight: bold; margin-bottom: 9px; }
+    .answer-line { display: flex; align-items: center; gap: 8px; }
+    .hole {
+      min-width: 0; width: 100%; padding: 9px 10px; font: 14px Inter, Arial, sans-serif;
+      border: 2px dashed #94a3b8; border-radius: 4px; background: #f1f5f9;
+      color: #1e293b; cursor: pointer;
+    }
+    .hole:focus { outline: 3px solid #c7d2fe; border-color: #4f46e5; background: white; }
+    .hole.correct { border: 2px solid #16a34a; background: #f0fdf4; color: #15803d; }
+    .hole.incorrect { border: 2px solid #dc2626; background: #fef2f2; color: #b91c1c; }
+    .feedback-icon { width: 25px; flex-shrink: 0; font: 20px Inter, Arial, sans-serif; }
+    .detective-hint { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 10px 13px; margin-top: 12px; font: 14px/1.7 Inter, Arial, sans-serif; color: #92400e; }
+    [hidden] { display: none !important; }
+    .notes-box { background: #eef2ff; border-left: 4px solid #818cf8; padding: 13px 16px; margin: 23px 0 5px; }
+    .notes-box label { display: block; font: 600 14px/1.75 Inter, Arial, sans-serif; color: #312e81; }
+    .field-notes {
+      display: block; width: 100%; min-height: 100px; padding: 12px; margin: 9px 0 0;
+      background: #fefce8; border: 1px solid #fde047; border-left: 4px solid #eab308;
+      border-radius: 4px; font: 16px/1.7 "Courier Prime", monospace; color: #3f3f46; resize: vertical;
+    }
+    .field-notes:focus { outline: 3px solid #fde68a; }
+    .field-notes::placeholder { color: #737373; }
+    .condition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 0; }
+    .condition { background: white; border: 1px solid #cbd5e1; border-top: 4px solid #6366f1; padding: 13px; font: 14px/1.75 Inter, Arial, sans-serif; }
+    .condition strong { display: block; margin-bottom: 6px; }
+    .math-block { overflow-x: auto; padding: 3px 0; }
+    .graph-card { margin: 20px 0; border: 1px solid #cbd5e1; border-radius: 5px; overflow: hidden; background: white; }
+    .graph-head { padding: 13px 18px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; font: 600 14px/1.7 Inter, Arial, sans-serif; }
+    .graph-head .mini-label { display: block; margin-bottom: 4px; }
+    .case-buttons { display: flex; gap: 8px; flex-wrap: wrap; padding: 13px 18px; border-bottom: 1px solid #e2e8f0; }
+    .case-buttons button { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; background: #f8fafc; color: #334155; font: 600 13px Inter, Arial, sans-serif; cursor: pointer; }
+    .case-buttons button[aria-pressed="true"] { background: #4338ca; color: white; border-color: #4338ca; }
+    button:focus-visible { outline: 3px solid #a5b4fc; outline-offset: 3px; }
+    svg { display: block; width: 100%; height: auto; background: white; }
+    svg text { font: 14px Inter, Arial, sans-serif; fill: #475569; }
+    svg .plot-label { font-size: 16px; font-weight: 600; fill: #1e293b; }
+    .axis { stroke: #94a3b8; stroke-width: 1.4; }
+    .level-line { stroke: #818cf8; stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .curve { fill: none; stroke: #4f46e5; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+    .orange-curve { stroke: #ea580c; }
+    .tangent { stroke: #16a34a; stroke-width: 3.5; }
+    .point { fill: #4f46e5; stroke: white; stroke-width: 2; }
+    figcaption { padding: 13px 18px; border-top: 1px solid #e2e8f0; font: 14px/1.8 Inter, Arial, sans-serif; background: #f8fafc; }
+    figure { margin: 0; }
+    .small-note { font: 13px/1.8 Inter, Arial, sans-serif; color: #64748b; }
+    .table-wrap { overflow-x: auto; margin: 17px 0; }
+    table { width: 100%; border-collapse: collapse; font: 14px/1.75 Inter, Arial, sans-serif; }
+    th, td { text-align: left; padding: 10px 12px; border: 1px solid #e2e8f0; vertical-align: top; }
+    th { background: #f1f5f9; font-weight: 600; }
+    details { margin-top: 17px; font: 14px/1.8 Inter, Arial, sans-serif; }
+    summary { cursor: pointer; font-weight: 600; color: #4338ca; }
+    footer { background: #e2e8f0; border-top: 4px solid #cbd5e1; padding: 23px 32px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; font-family: Inter, Arial, sans-serif; }
+    #overall-feedback { flex: 1; min-width: 210px; font-size: 14px; line-height: 1.8; }
+    .primary-button { padding: 12px 18px; border: 2px solid #0f172a; background: #1e293b; color: white; border-radius: 4px; font: 700 13px Inter, Arial, sans-serif; cursor: pointer; }
+    .primary-button:hover { background: #4338ca; }
+    .print-button { padding: 12px 15px; background: white; color: #334155; border: 1px solid #94a3b8; border-radius: 4px; font: 600 13px Inter, Arial, sans-serif; cursor: pointer; }
+    mjx-container[display="true"] { margin: 15px 0 !important; }
+    @media (max-width: 650px) {
+      body { padding: 10px 7px; } .case-file { font-size: 16px; margin-top: 4px; }
+      header, .briefing, .act, .report, footer { padding: 23px 19px; }
+      .stamp { display: none; } h2 { font-size: 19px; }
+      .condition-grid { grid-template-columns: 1fr; }
+      .evidence, .question-card { padding: 14px; }
+      .lead-question { font-size: 17px; }
+    }
+    @media print {
+      body { padding: 0; background: white; }
+      .case-file { max-width: none; margin: 0; box-shadow: none; font-size: 12px; }
+      header, .briefing, .act, .report, footer { padding: 18px 23px; }
+      h1 { font-size: 24px; } h2 { font-size: 17px; }
+      .case-buttons, footer button { display: none; }
+      .graph-card, .question-card, .notes-box { break-inside: avoid; }
+      .graph-card svg { max-height: 230px; }
+      .field-notes { min-height: 80px; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+<main class="case-file">
+  <div class="stamp" aria-hidden="true">CASE FILE</div>
+  <header>
+    <h1>MATH DETECTIVE: CASE FILE #17</h1>
+    <p class="subject">Subject: Rolle’s Theorem</p>
+    <p class="mission"><strong>Mission:</strong> Explain why a graph that starts and ends at the same height must have a horizontal tangent somewhere between the ends, when Rolle’s conditions hold.</p>
+  </header>
+  <div class="briefing">
+    <p><strong>Detective Briefing:</strong> Do not just remember the statement. Find the job of each condition: why a highest or lowest value exists, why it is reached inside the interval, and why the slope there is zero.</p>
+  </div>
+
+  <section class="act" aria-labelledby="act1">
+    <h2 id="act1">Act 1: The Same Starting and Ending Height</h2>
+    <p>Let \(f\) be a real-valued function on \([a,b]\), where \(a&lt;b\). We are given three conditions:</p>
+    <div class="condition-grid">
+      <div class="condition"><strong>1. Continuous on \([a,b]\)</strong>No breaks on the whole interval, including the endpoints.</div>
+      <div class="condition"><strong>2. Differentiable on \((a,b)\)</strong>A finite derivative exists at every point strictly between the endpoints.</div>
+      <div class="condition"><strong>3. \(f(a)=f(b)\)</strong>The graph starts and ends at the same height.</div>
+    </div>
+    <div class="evidence">
+      <div class="mini-label">The statement to explain</div>
+      There is at least one point \(c\) strictly between \(a\) and \(b\) such that
+      <div class="math-block">\[\boxed{f'(c)=0,\qquad a&lt;c&lt;b.}\]</div>
+      A zero derivative means that the tangent is horizontal.
+    </div>
+    <p class="lead-question">If the graph starts and ends at height \(H\), what can happen in between?</p>
+    <div class="question-card">
+      <label for="hole1">Choose a statement that covers every possibility.</label>
+      <div class="answer-line">
+        <select id="hole1" class="hole" aria-describedby="hint1">
+          <option value="">[Choose your finding]</option>
+          <option value="above">It must go above the endpoint height.</option>
+          <option value="flat_or_move">It stays flat, or takes a value above or below H.</option>
+          <option value="below">It must go below the endpoint height.</option>
+        </select>
+        <span id="feedback1" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint1" class="detective-hint" hidden><strong>Detective’s Note:</strong> If every value equals H, the graph is flat. Otherwise, some value differs from H. Is that value above H or below H?</div>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head"><span class="mini-label">Try the three simple examples</span><span id="journey-formula">f(x) = 4 − x² on [−2, 2]</span></div>
+      <div class="case-buttons" role="group" aria-label="Choose an equal-height graph">
+        <button type="button" data-journey="flat" aria-pressed="false">Stays flat</button>
+        <button type="button" data-journey="hill" aria-pressed="true">Goes above</button>
+        <button type="button" data-journey="valley" aria-pressed="false">Goes below</button>
+      </div>
+      <figure>
+        <svg viewBox="0 0 800 390" role="img" aria-labelledby="journey-title journey-desc">
+          <title id="journey-title">A smooth graph with equal endpoint heights</title>
+          <desc id="journey-desc">The example 4 minus x squared has equal endpoint values at minus 2 and 2, and a horizontal tangent at its interior maximum at 0.</desc>
+          <path d="M80 190 H730 M400 30 V346" class="axis"/>
+          <text x="741" y="195">x</text><text x="414" y="27">y</text>
+          <path d="M144 190 H656" class="level-line"/>
+          <text x="88" y="174">H = 0</text>
+          <path id="journey-curve" class="curve"/>
+          <path id="journey-guide" d="M400 70 V190" stroke="#94a3b8" stroke-dasharray="4 4" fill="none"/>
+          <path id="journey-tangent" d="M330 70 H470" class="tangent"/>
+          <circle cx="144" cy="190" r="6" class="point"/>
+          <circle cx="656" cy="190" r="6" class="point"/>
+          <circle id="journey-point" cx="400" cy="70" r="6" fill="#16a34a" stroke="white" stroke-width="2"/>
+          <text id="journey-a-label" x="144" y="217" text-anchor="middle">a = −2</text>
+          <text id="journey-b-label" x="656" y="217" text-anchor="middle">b = 2</text>
+          <rect id="journey-label-background" x="265" y="33" width="270" height="27" rx="4" fill="white" fill-opacity="0.94"/>
+          <text id="journey-point-label" x="400" y="53" text-anchor="middle" class="plot-label">Interior maximum</text>
+          <text x="400" y="372" text-anchor="middle">Green line: a horizontal tangent at c = 0</text>
+        </svg>
+        <figcaption id="journey-explanation" aria-live="polite">The graph takes values above H. Its highest point is inside the interval, not at either endpoint.</figcaption>
+      </figure>
+    </div>
+    <div class="evidence">
+      <p><strong>The flat case is already solved.</strong> If \(f(x)=H\) throughout \([a,b]\), then \(f'(x)=0\) at every interior point.</p>
+      <p><strong>Otherwise,</strong> some value is above H or below H. A graph may do both. Either one is enough for the next step of the proof.</p>
+    </div>
+    <p class="small-note">These are examples, not all possible graph shapes. A graph can have many hills and valleys. Rolle’s theorem promises at least one horizontal tangent, not exactly one.</p>
+  </section>
+
+  <section class="act white" aria-labelledby="act2">
+    <h2 id="act2">Act 2: Find a Point Inside the Interval</h2>
+    <p>Suppose there is a point \(u\in(a,b)\) with \(f(u)&gt;H\), where \(H=f(a)=f(b)\).</p>
+    <p class="lead-question">Could the highest value on \([a,b]\) be reached at an endpoint?</p>
+    <div class="question-card">
+      <label for="hole2">Use the fact that an interior value is already higher than both endpoints.</label>
+      <div class="answer-line">
+        <select id="hole2" class="hole" aria-describedby="hint2">
+          <option value="">[Decide, then explain why]</option>
+          <option value="endpoints">Yes. Equal endpoints must be highest.</option>
+          <option value="inside">No. The highest value must be reached inside.</option>
+          <option value="none">There cannot be a highest value.</option>
+        </select>
+        <span id="feedback2" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint2" class="detective-hint" hidden><strong>Detective’s Note:</strong> Both endpoint values are H, but f(u) is greater than H. Also, continuity on the closed interval guarantees that a highest value is reached.</div>
+    </div>
+    <div class="evidence">
+      <div class="mini-label">Clue 1: The Extreme Value Theorem (EVT)</div>
+      <p>A continuous function on a closed, bounded interval \([a,b]\) reaches both a highest value and a lowest value. It does not merely get close to them.</p>
+      <p>Let a highest value occur at \(c\). Then</p>
+      <div class="math-block">\[f(c)\ge f(u)&gt;H=f(a)=f(b).\]</div>
+      <p>So \(c\) is neither \(a\) nor \(b\). It lies strictly inside the interval.</p>
+      <p>If a value lies <strong>below</strong> H instead, use the lowest value. It also cannot occur at either endpoint.</p>
+    </div>
+    <h3>Why is the slope at that interior point zero?</h3>
+    <p>At a highest point \(c\), nearby values cannot be larger than \(f(c)\). So \(f(c+h)-f(c)\le0\) for small steps in either direction.</p>
+    <div class="table-wrap">
+      <table aria-label="The signs of difference quotients at an interior maximum">
+        <thead><tr><th>Step from c</th><th>Change in height</th><th>Change ÷ step</th></tr></thead>
+        <tbody>
+          <tr><td>\(h&gt;0\): step right</td><td>\(f(c+h)-f(c)\le0\)</td><td>\(\dfrac{f(c+h)-f(c)}h\le0\)</td></tr>
+          <tr><td>\(h&lt;0\): step left</td><td>\(f(c+h)-f(c)\le0\)</td><td>\(\dfrac{f(c+h)-f(c)}h\ge0\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="question-card">
+      <label for="hole3">If the derivative exists, it must be the same limit from both sides. What value can fit both signs?</label>
+      <div class="answer-line">
+        <select id="hole3" class="hole" aria-describedby="hint3">
+          <option value="">[Find the slope]</option>
+          <option value="positive">A positive value</option>
+          <option value="negative">A negative value</option>
+          <option value="zero">Zero</option>
+        </select>
+        <span id="feedback3" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint3" class="detective-hint" hidden><strong>Detective’s Note:</strong> The derivative must be at most zero from the right and at least zero from the left. The two limits agree because the derivative exists.</div>
+    </div>
+    <div class="evidence success-evidence">
+      <div class="mini-label">Clue 2: Fermat’s Theorem</div>
+      <p>At an interior local maximum or minimum, <strong>if the derivative exists</strong>, it is zero.</p>
+      <div class="math-block">\[f'(c)\le0\quad\text{and}\quad f'(c)\ge0
+        \quad\Longrightarrow\quad \boxed{f'(c)=0}.\]</div>
+      <p>For a lowest point, the two signs reverse, but the conclusion is the same.</p>
+      <p><strong>Why inside matters:</strong> We can take small steps to both the left and the right while staying in the interval.</p>
+    </div>
+    <div class="notes-box">
+      <label for="notes1">Field notes: Rebuild the non-flat case in three steps. Explain the job of EVT, the equal endpoint heights, and the derivative at the interior highest or lowest point.</label>
+      <textarea id="notes1" class="field-notes" placeholder="EVT gives … The equal endpoint heights show … Differentiability lets us …"></textarea>
+    </div>
+  </section>
+
+  <section class="act" aria-labelledby="act3">
+    <h2 id="act3">Act 3: What If a Condition Is Missing?</h2>
+    <p class="lead-question">Is continuity alone enough, even when the endpoint heights agree?</p>
+    <div class="question-card">
+      <label for="hole4">Must there still be an interior point with derivative zero?</label>
+      <div class="answer-line">
+        <select id="hole4" class="hole" aria-describedby="hint4">
+          <option value="">[Decide]</option>
+          <option value="yes">Yes. A continuous graph always turns smoothly.</option>
+          <option value="corner">No. A highest or lowest point may be a corner.</option>
+        </select>
+        <span id="feedback4" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint4" class="detective-hint" hidden><strong>Detective’s Note:</strong> Look at |x| on [−1, 1]. Its lowest point is inside, but do the slopes from the two sides agree there?</div>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head"><span class="mini-label">Example 1: A corner</span>\(f(x)=|x|\) on \([-1,1]\)</div>
+      <figure>
+        <svg viewBox="0 0 560 310" role="img" aria-labelledby="corner-title corner-desc">
+          <title id="corner-title">Equal endpoint heights, but a corner at the minimum</title>
+          <desc id="corner-desc">The graph of absolute value has endpoints at minus 1, 1 and 1, 1. Its interior minimum at 0 has slope minus 1 from the left and plus 1 from the right, so no derivative exists there.</desc>
+          <path d="M55 230 H510 M280 35 V267" class="axis"/>
+          <path d="M90 80 H470" class="level-line"/>
+          <path d="M90 80 L280 230 L470 80" class="curve orange-curve"/>
+          <circle cx="90" cy="80" r="5" class="point"/><circle cx="470" cy="80" r="5" class="point"/>
+          <circle cx="280" cy="230" r="6" fill="#ea580c" stroke="white" stroke-width="2"/>
+          <text x="90" y="57" text-anchor="middle">f(−1) = 1</text><text x="470" y="57" text-anchor="middle">f(1) = 1</text>
+          <text x="114" y="197" class="plot-label">Slope = −1</text><text x="348" y="197" class="plot-label">Slope = +1</text>
+          <text x="280" y="256" text-anchor="middle">0: a corner, not a horizontal tangent</text>
+          <text x="90" y="252" text-anchor="middle">−1</text><text x="470" y="252" text-anchor="middle">1</text>
+        </svg>
+        <figcaption>Continuity gives an interior lowest point in this example. But the derivative does not exist at that point, so Fermat’s theorem cannot give a horizontal tangent.</figcaption>
+      </figure>
+    </div>
+    <div class="evidence warning-evidence">
+      <div class="math-block">\[
+        f'(x)=\begin{cases}-1,&x&lt;0,\\1,&x&gt;0.\end{cases}
+      \]</div>
+      <p>At 0, the left and right slopes disagree. Elsewhere inside the interval, the slope is either −1 or 1. There is <strong>no</strong> interior point where the derivative is zero.</p>
+    </div>
+
+    <h3>Now keep differentiability inside, but allow an endpoint gap.</h3>
+    <p class="lead-question">Can we ignore continuity at the endpoints?</p>
+    <div class="question-card">
+      <label for="hole5">Are equal endpoint values and differentiability inside enough?</label>
+      <div class="answer-line">
+        <select id="hole5" class="hole" aria-describedby="hint5">
+          <option value="">[Decide]</option>
+          <option value="yes">Yes. The endpoint values alone are enough.</option>
+          <option value="no">No. The graph must also be continuous at the ends.</option>
+        </select>
+        <span id="feedback5" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint5" class="detective-hint" hidden><strong>Detective’s Note:</strong> In the next example, both endpoint values are 1, but every interior slope is 1. The value at 0 does not match the values approaching 0 from the right.</div>
+    </div>
+    <div class="evidence">
+      <div class="mini-label">Example 2: An endpoint gap</div>
+      On \([0,1]\), define
+      <div class="math-block">\[
+        f(x)=\begin{cases}1,&x=0,\\x,&0&lt;x\le1.\end{cases}
+      \]</div>
+      <p>Then \(f(0)=f(1)=1\), but \(f'(x)=1\) throughout \((0,1)\).</p>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head">Same endpoint values, but the left endpoint is not joined to the line.</div>
+      <figure>
+        <svg viewBox="0 0 560 310" role="img" aria-labelledby="gap-title gap-desc">
+          <title id="gap-title">An endpoint gap defeats the conclusion</title>
+          <desc id="gap-desc">The line y equals x runs from an open dot at 0, 0 to a filled dot at 1, 1. A separate filled dot at 0, 1 gives equal endpoint values. Every interior slope is 1.</desc>
+          <path d="M60 230 H505 M90 35 V272" class="axis"/>
+          <path d="M90 80 H450" class="level-line"/>
+          <path d="M90 230 L450 80" class="curve orange-curve"/>
+          <circle cx="90" cy="230" r="7" fill="white" stroke="#ea580c" stroke-width="3"/>
+          <circle cx="90" cy="80" r="6" class="point"/><circle cx="450" cy="80" r="6" class="point"/>
+          <rect x="32" y="35" width="116" height="28" rx="4" fill="white" fill-opacity="0.94"/>
+          <text x="90" y="57" text-anchor="middle">f(0) = 1</text><text x="450" y="57" text-anchor="middle">f(1) = 1</text>
+          <text x="288" y="198" class="plot-label">Slope = 1</text>
+          <text x="111" y="258">Open dot: (0, 0) is not included.</text>
+          <text x="75" y="251">0</text><text x="450" y="253" text-anchor="middle">1</text>
+        </svg>
+        <figcaption>As x approaches 0 from the right, f(x) approaches 0, but f(0) is 1. This breaks continuity at the endpoint.</figcaption>
+      </figure>
+    </div>
+    <div class="evidence warning-evidence">
+      <p><strong>See exactly where the proof stops.</strong> Interior values are below the endpoint height 1. But there is no lowest value on the whole interval: values get close to 0 without reaching 0.</p>
+      <p>We cannot use EVT to guarantee a lowest value here, because the function is not continuous on \([0,1]\). Continuity only inside the interval is not enough.</p>
+    </div>
+    <div class="notes-box">
+      <label for="notes2">Field notes: Pick one of these two examples. Name the missing condition and explain which step of our proof can no longer be used.</label>
+      <textarea id="notes2" class="field-notes" placeholder="I chose … The missing condition is … The proof stops at … because …"></textarea>
+    </div>
+  </section>
+
+  <section class="act white" aria-labelledby="act4">
+    <h2 id="act4">Act 4: Why Only Differentiate Inside?</h2>
+    <p class="lead-question">Do derivatives at the endpoints need to exist?</p>
+    <div class="question-card">
+      <label for="hole6">Think about where the proof finds the highest or lowest point.</label>
+      <div class="answer-line">
+        <select id="hole6" class="hole" aria-describedby="hint6">
+          <option value="">[Decide, then explain why]</option>
+          <option value="both">Yes. Both endpoint derivatives must exist.</option>
+          <option value="zero">Yes. Both endpoint derivatives must be zero.</option>
+          <option value="inside_only">No. We use a derivative at an interior point.</option>
+        </select>
+        <span id="feedback6" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint6" class="detective-hint" hidden><strong>Detective’s Note:</strong> Equal endpoint heights put the needed highest or lowest point strictly inside. Endpoint derivatives play no part in Fermat’s step.</div>
+    </div>
+    <div class="evidence">
+      <div class="mini-label">An example that meets all three conditions</div>
+      <div class="math-block">\[f(x)=\sqrt{1-x^2}\quad\text{on }[-1,1].\]</div>
+      <p>The graph is continuous on the whole interval. Its endpoint values are both 0. For \(-1&lt;x&lt;1\),</p>
+      <div class="math-block">\[
+        f'(x)=\frac{-x}{\sqrt{1-x^2}},\qquad f'(0)=0.
+      \]</div>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head">The upper half of a circle: steep at the ends, horizontal at the top.</div>
+      <figure>
+        <svg viewBox="0 0 560 300" role="img" aria-labelledby="circle-title circle-desc">
+          <title id="circle-title">A semicircle satisfies Rolle's conditions</title>
+          <desc id="circle-desc">The upper semicircle has equal endpoint heights at minus 1 and 1. The tangent at its top at x equals 0 is horizontal. Finite one-sided derivatives at the endpoints do not exist.</desc>
+          <path d="M60 230 H505 M280 28 V268" class="axis"/>
+          <path d="M110 230 H450" class="level-line"/>
+          <path id="circle-curve" class="curve"/>
+          <path d="M210 60 H350" class="tangent"/>
+          <path d="M110 185 V242 M450 185 V242" stroke="#f97316" stroke-width="2" stroke-dasharray="5 4"/>
+          <circle cx="110" cy="230" r="5" class="point"/><circle cx="450" cy="230" r="5" class="point"/>
+          <circle cx="280" cy="60" r="6" fill="#16a34a" stroke="white" stroke-width="2"/>
+          <rect x="224" y="23" width="112" height="27" rx="4" fill="white" fill-opacity="0.94"/>
+          <text x="280" y="44" text-anchor="middle" class="plot-label">f′(0) = 0</text>
+          <text x="110" y="258" text-anchor="middle">−1</text><text x="450" y="258" text-anchor="middle">1</text>
+          <text x="280" y="281" text-anchor="middle">No finite endpoint slopes are needed.</text>
+        </svg>
+        <figcaption>Rolle’s theorem applies even though finite one-sided derivatives at the endpoints are unavailable. The proof uses the derivative at c = 0, strictly inside.</figcaption>
+      </figure>
+    </div>
+    <details>
+      <summary>See why the slope at the right endpoint is not finite</summary>
+      <p>Step left from 1 by a positive amount \(t\). Since \(f(1)=0\), the quotient is</p>
+      <div class="math-block">\[
+        \frac{f(1-t)-f(1)}{-t}
+        =-\frac{\sqrt{2t-t^2}}{t}
+        =-\sqrt{\frac{2-t}{t}}
+        \longrightarrow-\infty\quad(t\to0^+).
+      \]</div>
+      <p>So there is no finite left derivative at 1. At −1, the right quotient tends to \(+\infty\). Neither endpoint derivative is required by Rolle’s theorem.</p>
+    </details>
+    <p><strong>Keep the two requirements separate:</strong> continuity includes the endpoints; differentiability is required only strictly between them.</p>
+  </section>
+
+  <section class="act" aria-labelledby="act5">
+    <h2 id="act5">Act 5: A Guarantee Is Not a Requirement</h2>
+    <p class="lead-question">Must the endpoint heights agree for a horizontal tangent to occur somewhere inside?</p>
+    <div class="question-card">
+      <label for="hole7">If the endpoint heights differ, is an interior zero derivative impossible?</label>
+      <div class="answer-line">
+        <select id="hole7" class="hole" aria-describedby="hint7">
+          <option value="">[Decide]</option>
+          <option value="impossible">Yes. Different endpoint heights make it impossible.</option>
+          <option value="possible">No. A zero derivative can still occur.</option>
+        </select>
+        <span id="feedback7" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint7" class="detective-hint" hidden><strong>Detective’s Note:</strong> Try x² on [−1, 2]. Its endpoint values are 1 and 4, but what is its derivative at 0?</div>
+    </div>
+    <div class="evidence">
+      Take \(f(x)=x^2\) on \([-1,2]\). Then
+      <div class="math-block">\[
+        f(-1)=1,\qquad f(2)=4,\qquad
+        f'(x)=2x,\qquad f'(0)=0.
+      \]</div>
+      <p>The endpoint heights differ, but 0 is inside the interval and has a horizontal tangent.</p>
+    </div>
+    <div class="graph-card">
+      <div class="graph-head">Unequal endpoint heights, but an interior horizontal tangent.</div>
+      <figure>
+        <svg viewBox="0 0 560 320" role="img" aria-labelledby="unequal-title unequal-desc">
+          <title id="unequal-title">Equal endpoint values are not necessary for a zero derivative</title>
+          <desc id="unequal-desc">The parabola x squared on minus 1 to 2 starts at height 1 and ends at height 4. It has a horizontal tangent at its minimum at 0.</desc>
+          <path d="M55 260 H505 M210 30 V287" class="axis"/>
+          <path id="unequal-curve" class="curve"/>
+          <path d="M150 260 H270" class="tangent"/>
+          <circle cx="90" cy="215" r="5" class="point"/><circle cx="450" cy="80" r="5" class="point"/>
+          <circle cx="210" cy="260" r="6" fill="#16a34a" stroke="white" stroke-width="2"/>
+          <text x="91" y="190" text-anchor="middle">f(−1) = 1</text><text x="450" y="55" text-anchor="middle">f(2) = 4</text>
+          <text x="90" y="283" text-anchor="middle">−1</text><text x="450" y="283" text-anchor="middle">2</text>
+          <text x="210" y="306" text-anchor="middle" class="plot-label">c = 0, f′(0) = 0</text>
+        </svg>
+        <figcaption>We cannot apply Rolle’s theorem on this interval, because the endpoint values are unequal. But we can find a zero derivative directly.</figcaption>
+      </figure>
+    </div>
+    <div class="evidence success-evidence">
+      <p><strong>What the theorem says:</strong> If all three conditions hold, an interior zero derivative is guaranteed.</p>
+      <p><strong>What it does not say:</strong> If a condition is missing, an interior zero derivative is impossible.</p>
+      <p>Without all the conditions, the result may happen or may fail. The guarantee is gone.</p>
+    </div>
+  </section>
+
+  <section class="report" aria-labelledby="report">
+    <h2 id="report">Final Report: Close the Case</h2>
+    <div class="table-wrap">
+      <table aria-label="The job of each condition in Rolle's proof">
+        <thead><tr><th>Condition</th><th>Its job in the proof</th></tr></thead>
+        <tbody>
+          <tr><td>Continuous on \([a,b]\)</td><td>EVT guarantees that a highest and a lowest value are reached.</td></tr>
+          <tr><td>\(f(a)=f(b)\)</td><td>Unless the graph is flat, a highest or lowest value lies strictly inside.</td></tr>
+          <tr><td>Differentiable on \((a,b)\)</td><td>Fermat’s theorem makes the derivative at that interior point zero.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="question-card">
+      <label for="hole8">What exactly does Rolle’s theorem promise?</label>
+      <div class="answer-line">
+        <select id="hole8" class="hole" aria-describedby="hint8">
+          <option value="">[Choose the final conclusion]</option>
+          <option value="unique">Exactly one point has derivative zero.</option>
+          <option value="end">A zero derivative occurs at an endpoint.</option>
+          <option value="at_least_one">At least one c in (a, b) satisfies f′(c) = 0.</option>
+          <option value="all">Every point inside has derivative zero.</option>
+        </select>
+        <span id="feedback8" class="feedback-icon" aria-hidden="true"></span>
+      </div>
+      <div id="hint8" class="detective-hint" hidden><strong>Detective’s Note:</strong> The point is strictly between the ends. A flat graph gives many possible points, so the theorem cannot promise exactly one.</div>
+    </div>
+    <div class="evidence">
+      <div class="mini-label">The complete proof in short</div>
+      <p>If \(f\) is constant, every interior derivative is zero.</p>
+      <p>If it is not constant, some value is above or below the common endpoint height. By EVT, a highest or lowest value is reached. It cannot be at an endpoint, so it occurs at an interior point \(c\).</p>
+      <p>Since \(f\) is differentiable there, Fermat’s theorem gives \(f'(c)=0\).</p>
+      <div class="math-block">\[\boxed{\text{There exists }c\in(a,b)\text{ such that }f'(c)=0.}\]</div>
+    </div>
+    <div class="notes-box">
+      <label for="notes3">Your proof in simple words: Explain both the flat case and the non-flat case. Say where each condition is used.</label>
+      <textarea id="notes3" class="field-notes" placeholder="If the graph stays flat … Otherwise … Continuity gives … Equal endpoint heights show … Differentiability gives …"></textarea>
+    </div>
+    <p class="small-note">A horizontal tangent means a zero slope at that point. It does not mean that the whole graph is flat.</p>
+  </section>
+
+  <footer>
+    <div id="overall-feedback" role="status" aria-live="polite">Awaiting your findings: 8 clues to check. Written notes are for discussion, not an automatic score.</div>
+    <button id="submit-findings" type="button" class="primary-button">Submit Findings</button>
+    <button id="print-case" type="button" class="print-button">Print Case File</button>
+  </footer>
+</main>
+
+<script>
+  const proofSchema = {
+    hole1: { validAnswer: 'flat_or_move' },
+    hole2: { validAnswer: 'inside' },
+    hole3: { validAnswer: 'zero' },
+    hole4: { validAnswer: 'corner' },
+    hole5: { validAnswer: 'no' },
+    hole6: { validAnswer: 'inside_only' },
+    hole7: { validAnswer: 'possible' },
+    hole8: { validAnswer: 'at_least_one' }
+  };
+  let findingsChecked = false;
+
+  function evaluateProof() {
+    let correct = 0;
+    let unanswered = 0;
+    Object.entries(proofSchema).forEach(function(entry) {
+      const id = entry[0];
+      const rules = entry[1];
+      const field = document.getElementById(id);
+      const number = id.replace('hole', '');
+      const empty = field.value === '';
+      const right = field.value === rules.validAnswer;
+      field.classList.toggle('correct', right);
+      field.classList.toggle('incorrect', !empty && !right);
+      field.setAttribute('aria-invalid', String(!empty && !right));
+      document.getElementById('feedback' + number).textContent = empty ? '' : (right ? '✓' : '✗');
+      document.getElementById('hint' + number).hidden = empty || right;
+      if (right) correct++;
+      if (empty) unanswered++;
+    });
+    const notes = Array.from(document.querySelectorAll('.field-notes'));
+    const filled = notes.filter(function(note) { return note.value.trim().length > 0; }).length;
+    let message = correct + ' of 8 clues correct.';
+    if (correct === 8) {
+      message += ' Case closed! Now check that your written proof explains all three conditions.';
+    } else if (unanswered) {
+      message += ' ' + unanswered + ' still unanswered. Try those and use any hints beside wrong answers.';
+    } else {
+      message += ' Read the hints and try the marked clues again.';
+    }
+    message += ' Written notes: ' + filled + ' of 3 spaces filled. These are for discussion, not an automatic score.';
+    document.getElementById('overall-feedback').textContent = message;
+    findingsChecked = true;
+  }
+
+  function curvePath(fn, from, to, mapX, mapY, steps) {
+    const parts = [];
+    for (let i = 0; i <= steps; i++) {
+      const x = from + (to - from) * i / steps;
+      const y = fn(x);
+      parts.push((i === 0 ? 'M' : 'L') + mapX(x).toFixed(2) + ' ' + mapY(y).toFixed(2));
+    }
+    return parts.join(' ');
+  }
+
+  const journeys = {
+    flat: {
+      fn: function() { return 0; },
+      formula: 'f(x) = 0 on [−2, 2]',
+      pointLabel: 'Every interior point works',
+      explanation: 'The function stays at H. Every interior derivative is zero. The green line shows one possible horizontal tangent, at c = 0.',
+      description: 'A constant graph at height 0 has equal endpoint values. Every point strictly between minus 2 and 2 has a horizontal tangent.'
+    },
+    hill: {
+      fn: function(x) { return 4 - x * x; },
+      formula: 'f(x) = 4 − x² on [−2, 2]',
+      pointLabel: 'Interior maximum',
+      explanation: 'The graph takes values above H. Its highest point is inside the interval, not at either endpoint. The tangent there is horizontal.',
+      description: 'The smooth graph 4 minus x squared has endpoints at height 0 and an interior maximum at x equals 0, where its tangent is horizontal.'
+    },
+    valley: {
+      fn: function(x) { return x * x - 4; },
+      formula: 'f(x) = x² − 4 on [−2, 2]',
+      pointLabel: 'Interior minimum',
+      explanation: 'The graph takes values below H. Its lowest point is inside the interval, not at either endpoint. The tangent there is horizontal.',
+      description: 'The smooth graph x squared minus 4 has endpoints at height 0 and an interior minimum at x equals 0, where its tangent is horizontal.'
+    }
+  };
+
+  function showJourney(key) {
+    const item = journeys[key];
+    if (!item) return;
+    const mapX = function(x) { return 400 + 128 * x; };
+    const mapY = function(y) { return 190 - 30 * y; };
+    const pointY = mapY(item.fn(0));
+    document.getElementById('journey-curve').setAttribute('d', curvePath(item.fn, -2, 2, mapX, mapY, 160));
+    document.getElementById('journey-tangent').setAttribute('d', 'M330 ' + pointY + ' H470');
+    document.getElementById('journey-guide').setAttribute('d', 'M400 ' + pointY + ' V190');
+    document.getElementById('journey-point').setAttribute('cy', pointY);
+    document.getElementById('journey-a-label').setAttribute('x', key === 'valley' ? 114 : 144);
+    document.getElementById('journey-b-label').setAttribute('x', key === 'valley' ? 686 : 656);
+    const label = document.getElementById('journey-point-label');
+    label.textContent = item.pointLabel;
+    const labelY = key === 'valley' ? pointY + 28 : pointY - 17;
+    label.setAttribute('y', labelY);
+    document.getElementById('journey-label-background').setAttribute('y', labelY - 20);
+    document.getElementById('journey-formula').textContent = item.formula;
+    document.getElementById('journey-explanation').textContent = item.explanation;
+    document.getElementById('journey-desc').textContent = item.description;
+    document.querySelectorAll('[data-journey]').forEach(function(button) {
+      button.setAttribute('aria-pressed', String(button.dataset.journey === key));
+    });
+  }
+
+  document.querySelectorAll('[data-journey]').forEach(function(button) {
+    button.addEventListener('click', function() { showJourney(button.dataset.journey); });
+  });
+  Object.keys(proofSchema).forEach(function(id) {
+    document.getElementById(id).addEventListener('change', function() {
+      if (findingsChecked) evaluateProof();
+    });
+  });
+  document.querySelectorAll('.field-notes').forEach(function(note) {
+    note.addEventListener('input', function() {
+      if (findingsChecked) evaluateProof();
+    });
+  });
+  document.getElementById('submit-findings').addEventListener('click', evaluateProof);
+  document.getElementById('print-case').addEventListener('click', function() { window.print(); });
+  document.getElementById('circle-curve').setAttribute('d', curvePath(
+    function(x) { return Math.sqrt(Math.max(0, 1 - x * x)); },
+    -1, 1,
+    function(x) { return 280 + 170 * x; },
+    function(y) { return 230 - 170 * y; },
+    240
+  ));
+  document.getElementById('unequal-curve').setAttribute('d', curvePath(
+    function(x) { return x * x; },
+    -1, 2,
+    function(x) { return 210 + 120 * x; },
+    function(y) { return 260 - 45 * y; },
+    180
+  ));
+  showJourney('hill');
+</script>
+</body>
+</html>

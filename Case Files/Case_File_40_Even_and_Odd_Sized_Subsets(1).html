@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 40 — Even and Odd Sized Subsets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;background-image:radial-gradient(#cbd5e1 1px,transparent 1px);background-size:20px 20px;font-family:Inter,Arial,sans-serif}
+    .case-file{max-width:896px;margin:12px auto;position:relative;overflow:hidden;border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;font:17px/1.8 "Courier Prime",monospace}
+    .stamp{position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);opacity:.2;pointer-events:none}
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}.mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:725px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}.briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}.act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}.evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}.success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}[hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}.notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .math-block{overflow-x:auto;padding:3px 0}.table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}.graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}.graph-head .mini-label{display:block;margin-bottom:4px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}.control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}.control-row label{min-width:190px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}.control-row button{padding:8px 12px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;color:#4338ca;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .pair-grid{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:18px;background:#fff}.pair-box{padding:16px;background:#f8fafc;border:1px solid #cbd5e1;border-top:4px solid #6366f1;min-width:0}.pair-box.even{background:#eef2ff;border-top-color:#4f46e5}.pair-box.odd{background:#fff7ed;border-top-color:#ea580c}.pair-box h3{margin:0 0 10px}.pair-arrow{font-size:28px;text-align:center}.committee-token{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;margin:4px;border-radius:999px;background:#fff;border:1px solid #cbd5e1;font:600 12px/1.4 Inter,Arial,sans-serif}.committee-token.alice{background:#fce7f3;border-color:#f9a8d4;color:#9d174d}.parity-badge{display:inline-block;padding:5px 9px;border-radius:999px;font:700 11px Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}.parity-badge.even{background:#e0e7ff;color:#3730a3}.parity-badge.odd{background:#ffedd5;color:#9a3412}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}.count-strip{padding:14px 20px;background:#eef2ff;font:600 16px/1.8 Inter,Arial,sans-serif;text-align:center}
+    .pair-table{padding:0 18px 18px}.pair-table details summary{font:600 14px/1.8 Inter,Arial,sans-serif;color:#3730a3;cursor:pointer;padding:12px 0}.pair-table table{background:#fff}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    .micro{background:#fffbeb;border-left:4px solid #eab308;padding:12px 16px;margin:16px 0}.micro>p{margin:0}.micro summary{font:600 14px/1.8 Inter,Arial,sans-serif;color:#854d0e;cursor:pointer}.micro details p{font:15px/1.85 Inter,Arial,sans-serif}
+    fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}.choice{display:flex!important;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}.choice:has(input:checked){background:#eef2ff;border-color:#6366f1}.choice input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}.clue-feedback:empty{display:none}.clue-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+    .reason{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 24px;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}.reason summary{color:#3730a3;font-weight:600;cursor:pointer}
+    .step-box{margin:16px 0;padding:16px 18px;background:#fff;border:1px solid #cbd5e1;border-left:4px solid #4f46e5;border-radius:4px;font:15px/1.85 Inter,Arial,sans-serif}.step-box strong{color:#312e81}.why{margin-top:9px;padding:10px 12px;background:#f8fafc;border-left:3px solid #94a3b8;font-size:14px}
+    .parity-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.parity-card{padding:16px;background:#fff;border:1px solid #cbd5e1;border-radius:5px;text-align:center}.parity-card strong{display:block;font:700 24px/1.4 Inter,Arial,sans-serif;color:#312e81}.parity-card span{font:13px/1.6 Inter,Arial,sans-serif;color:#64748b}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}.actions button{padding:12px 16px;font:600 14px Inter,Arial,sans-serif;border:1px solid #475569;border-radius:4px;cursor:pointer}.actions .primary{background:#1e293b;color:white}.score{font:600 14px/1.8 Inter,Arial,sans-serif}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}.stamp{display:none}header,.briefing,.act,.report,footer{padding:23px 19px}.lead-question{font-size:17px}.control-row label{min-width:100%}.pair-grid{grid-template-columns:1fr}.pair-arrow{transform:rotate(90deg);line-height:1}.parity-summary{grid-template-columns:1fr}}
+    @media print{body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}.lab-controls,.actions{display:none}.graph-card,.question-card,.step-box,.notes-box,.parity-summary{break-inside:avoid}.field-notes{min-height:80px}details>summary{display:none}.reason{break-inside:auto}.clue-feedback,.detective-hint{display:none}.pair-grid{grid-template-columns:1fr auto 1fr}.pair-arrow{transform:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style>
+</head>
+<body><main class="case-file">
+<div class="stamp" aria-hidden="true">CASE FILE</div>
+<header>
+  <h1>MATH DETECTIVE: CASE FILE #40</h1>
+  <p class="subject">Subject: Even-Sized and Odd-Sized Subsets</p>
+  <p class="mission"><strong>Mission:</strong> Explain why a nonempty n-element set has exactly as many even-sized subsets as odd-sized subsets. Prove it by toggling one fixed element, calculate the number in each class, and then verify the alternating-sum identity with the binomial theorem.</p>
+</header>
+<div class="briefing"><p><strong>The case:</strong> A school permits every possible committee from n students, including the empty committee. Are there more committees of even size or odd size—or are the two numbers exactly equal?</p></div>
+<p class="small-note" style="padding:10px 30px">Follow 7 clues and the small-step questions. Try each clue before opening its reasoning. The parity-pairing lab works offline; equation formatting and display fonts use an internet connection.</p>
+<noscript><div class="evidence warning-evidence">JavaScript is needed for the parity lab and answer checking. The written proof and expandable answers still work.</div></noscript>
+
+<section class="act" aria-labelledby="act1"><h2 id="act1">Act 1: Decode the alternating sum</h2>
+<p>For an n-student set, \(\binom nr\) counts the committees with exactly r members. Consider</p>
+<div class="math-block">\[\sum_{r=0}^{n}(-1)^r\binom nr.\]</div>
+<p class="lead-question">What is the factor \((-1)^r\) doing?</p>
+<div class="question-card"><fieldset><legend>Clue 1 · Which terms are added, and which are subtracted?</legend>
+<label class="choice"><input type="radio" name="q1" value="0"><span>A. Even-r terms are positive and odd-r terms are negative.</span></label>
+<label class="choice"><input type="radio" name="q1" value="1"><span>B. Odd-r terms are positive and even-r terms are negative.</span></label>
+<label class="choice"><input type="radio" name="q1" value="2"><span>C. Every term is positive.</span></label>
+</fieldset><p class="clue-feedback" id="feedback1" aria-live="polite"></p><div class="detective-hint" id="hint1" hidden><strong>Follow this clue:</strong> Check \((-1)^0,(-1)^1,(-1)^2,(-1)^3\).</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>If r is even, \((-1)^r=1\). If r is odd, \((-1)^r=-1\). Therefore</p><div class="math-block">\[\sum_{r=0}^{n}(-1)^r\binom nr=\sum_{\substack{0\le r\le n\\r\text{ even}}}\binom nr-\sum_{\substack{0\le r\le n\\r\text{ odd}}}\binom nr.\]</div><p>So the alternating sum measures</p><div class="math-block">\[\text{number of even-sized committees}-\text{number of odd-sized committees}.\]</div></details>
+<div class="micro"><p><strong>Small step 1.</strong> Is the empty committee counted as even or odd?</p><details><summary>Open the answer</summary><p>Even. Its size is 0, and 0 is even. Thus the term \(\binom n0=1\) belongs to the even-sized side.</p></details></div>
+</section>
+
+<section class="act white" aria-labelledby="act2"><h2 id="act2">Act 2: Toggle one fixed student</h2>
+<p>Now assume \(n\ge1\), so there is at least one student. Choose one student and call her Alice.</p>
+<p class="lead-question">Given any committee, make exactly one change: reverse Alice's membership.</p>
+<div class="table-wrap"><table><thead><tr><th>If Alice is...</th><th>Do this</th><th>Size change</th></tr></thead><tbody>
+<tr><td>Absent</td><td>Add Alice.</td><td>Increase by 1.</td></tr>
+<tr><td>Present</td><td>Remove Alice.</td><td>Decrease by 1.</td></tr>
+</tbody></table></div>
+<div class="question-card"><fieldset><legend>Clue 2 · Why does toggling Alice always reverse parity?</legend>
+<label class="choice"><input type="radio" name="q2" value="0"><span>A. Because the committee size changes by exactly 1.</span></label>
+<label class="choice"><input type="radio" name="q2" value="1"><span>B. Because Alice is always the first student.</span></label>
+<label class="choice"><input type="radio" name="q2" value="2"><span>C. Because every committee has even size before the toggle.</span></label>
+</fieldset><p class="clue-feedback" id="feedback2" aria-live="polite"></p><div class="detective-hint" id="hint2" hidden><strong>Follow this clue:</strong> Consecutive integers always have opposite parity.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>Adding or removing Alice changes the size by exactly one. If the original committee has size k, the partner has size k+1 or k−1. Consecutive integers have opposite parity, so even becomes odd and odd becomes even.</p></details>
+<div class="micro"><p><strong>Small step 2.</strong> If a committee has 4 members and Alice is absent, what size does its partner have?</p><details><summary>Open the answer</summary><p>5 members. Adding Alice changes the size from even to odd.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act3"><h2 id="act3">Act 3: Check that the pairing is exact</h2>
+<p>Changing parity is not enough by itself. To prove equal counts, every committee must have exactly one partner, with no committees missed and no repeats.</p>
+<div class="question-card"><fieldset><legend>Clue 3 · What happens if we toggle Alice twice?</legend>
+<label class="choice"><input type="radio" name="q3" value="0"><span>A. We get a different third committee.</span></label>
+<label class="choice"><input type="radio" name="q3" value="1"><span>B. We return to the original committee.</span></label>
+<label class="choice"><input type="radio" name="q3" value="2"><span>C. Alice disappears from the student list.</span></label>
+</fieldset><p class="clue-feedback" id="feedback3" aria-live="polite"></p><div class="detective-hint" id="hint3" hidden><strong>Follow this clue:</strong> If you add Alice, the next toggle removes her; if you remove her, the next toggle adds her back.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>The operation is its own inverse. Toggling Alice twice restores her original membership status and leaves every other student unchanged. Thus each committee belongs to one reversible pair.</p><p>No committee can be paired with itself, because Alice's membership is different in the two partners.</p></details>
+
+<div class="graph-card" id="visual-lab">
+  <div class="graph-head"><span class="mini-label">Parity-pairing lab · toggle Alice</span>Every pair contains one even committee and one odd committee</div>
+  <div class="lab-controls">
+    <div class="control-row"><label for="n">Students n: <output id="n-value">4</output></label><input type="range" id="n" min="1" max="7" value="4" step="1"></div>
+    <div class="control-row"><button type="button" id="previous">Previous pair</button><button type="button" id="next">Next pair</button><button type="button" id="toggle">Toggle Alice</button></div>
+    <p class="small-note">Students are Alice, B, C, … . Each displayed pair differs only in whether Alice is included.</p>
+  </div>
+  <div class="formula-live" id="formula-live"></div>
+  <div class="pair-grid">
+    <div class="pair-box" id="left-box"><h3 id="left-title"></h3><div id="left-members"></div><p id="left-size"></p></div>
+    <div class="pair-arrow" aria-hidden="true">↔</div>
+    <div class="pair-box" id="right-box"><h3 id="right-title"></h3><div id="right-members"></div><p id="right-size"></p></div>
+  </div>
+  <div class="count-strip" id="count-strip"></div>
+  <p class="lab-message" id="lab-status"></p>
+  <div class="pair-table"><details><summary>See every pair for this value of n</summary><table><thead><tr><th>Committee without Alice</th><th>Committee with Alice</th><th>Parities</th></tr></thead><tbody id="pair-rows"></tbody></table></details></div>
+</div>
+<div class="micro"><p><strong>Small step 3.</strong> Why can no committee be its own partner?</p><details><summary>Open the answer</summary><p>The two partners disagree about whether Alice belongs to the committee. A committee cannot both contain Alice and not contain Alice.</p></details></div>
+</section>
+
+<section class="act white" aria-labelledby="act4"><h2 id="act4">Act 4: Count the two parity classes</h2>
+<p>Each reversible pair has exactly two committees: one even-sized and one odd-sized. Therefore the two parity classes contain the same number of committees.</p>
+<div class="math-block">\[E=O,\]</div>
+<p>where E is the number of even-sized committees and O is the number of odd-sized committees.</p>
+<div class="question-card"><fieldset><legend>Clue 4 · What does E = O tell us about the alternating sum?</legend>
+<label class="choice"><input type="radio" name="q4" value="0"><span>A. \(E-O=0\).</span></label>
+<label class="choice"><input type="radio" name="q4" value="1"><span>B. \(E-O=2^n\).</span></label>
+<label class="choice"><input type="radio" name="q4" value="2"><span>C. \(E-O=n\).</span></label>
+</fieldset><p class="clue-feedback" id="feedback4" aria-live="polite"></p><div class="detective-hint" id="hint4" hidden><strong>Follow this clue:</strong> Subtract a number from an equal number.</div></div>
+<p>There are \(2^n\) committees altogether. Since the two parity classes are equal,</p>
+<div class="math-block">\[E+O=2^n,\qquad E=O.\]</div>
+<p>Substitute O = E:</p>
+<div class="math-block">\[2E=2^n\quad\Longrightarrow\quad E=2^{n-1}.\]</div>
+<p>The same is true for O.</p>
+<div class="parity-summary"><div class="parity-card"><strong>\(2^{n-1}\)</strong><span>even-sized subsets</span></div><div class="parity-card"><strong>\(2^{n-1}\)</strong><span>odd-sized subsets</span></div></div>
+<div class="question-card"><fieldset><legend>Clue 5 · For n = 5, how many committees have each parity?</legend>
+<label class="choice"><input type="radio" name="q5" value="0"><span>A. 5 of each.</span></label>
+<label class="choice"><input type="radio" name="q5" value="1"><span>B. 16 of each.</span></label>
+<label class="choice"><input type="radio" name="q5" value="2"><span>C. 32 of each.</span></label>
+</fieldset><p class="clue-feedback" id="feedback5" aria-live="polite"></p><div class="detective-hint" id="hint5" hidden><strong>Follow this clue:</strong> Use \(2^{n-1}\) with n = 5.</div></div>
+<div class="micro"><p><strong>Small step 4.</strong> Why is the empty committee not a problem for equal parity counts?</p><details><summary>Open the answer</summary><p>The empty committee is even, but it is paired with the one-person committee {Alice}, which is odd. The pairing balances it just like every other committee.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act5"><h2 id="act5">Act 5: Stress-test n = 0</h2>
+<p class="lead-question">Why does the theorem require \(n\ge1\)?</p>
+<p>If n = 0, there is no student available to designate as Alice, so the toggle construction cannot even begin.</p>
+<p>More importantly, there is exactly one subset of the empty set:</p>
+<div class="math-block">\[\varnothing.\]</div>
+<p>Its size is 0, which is even. Thus</p>
+<div class="math-block">\[E=1,\qquad O=0,\qquad E-O=1.\]</div>
+<p>Indeed, the alternating sum is</p>
+<div class="math-block">\[\sum_{r=0}^{0}(-1)^r\binom0r=(-1)^0\binom00=1.\]</div>
+<div class="question-card"><fieldset><legend>Clue 6 · What exactly fails at n = 0?</legend>
+<label class="choice"><input type="radio" name="q6" value="0"><span>A. There are no subsets at all.</span></label>
+<label class="choice"><input type="radio" name="q6" value="1"><span>B. There is one even subset and no odd subset, and there is no element to toggle.</span></label>
+<label class="choice"><input type="radio" name="q6" value="2"><span>C. The empty subset becomes odd.</span></label>
+</fieldset><p class="clue-feedback" id="feedback6" aria-live="polite"></p><div class="detective-hint" id="hint6" hidden><strong>Follow this clue:</strong> The empty set still has one subset—namely itself.</div></div>
+</section>
+
+<section class="act white" aria-labelledby="act6"><h2 id="act6">Act 6: Follow the algebraic proof in detail</h2>
+<p>The pairing argument already proves the identity. Now verify the same result algebraically with the binomial theorem, assuming \(n\ge1\).</p>
+
+<div class="step-box"><strong>Step 1 · Start with the binomial theorem.</strong>
+<div class="math-block">\[(x+y)^n=\sum_{r=0}^{n}\binom nr x^{\,n-r}y^r.\]</div>
+<div class="why"><strong>What the index means:</strong> r runs from 0 to n, and the rth term carries the coefficient \(\binom nr\).</div></div>
+
+<div class="micro"><p><strong>Small step 5.</strong> Which choice of x and y will create the factor \((-1)^r\)?</p><details><summary>Open the answer</summary><p>Choose x = 1 and y = −1. Then the factor \(y^r\) becomes \((-1)^r\), producing the alternating signs.</p></details></div>
+
+<div class="step-box"><strong>Step 2 · Substitute x = 1 and y = −1.</strong>
+<div class="math-block">\[(1+(-1))^n=\sum_{r=0}^{n}\binom nr 1^{\,n-r}(-1)^r.\]</div>
+<p>Equivalently,</p>
+<div class="math-block">\[(1-1)^n=\sum_{r=0}^{n}\binom nr 1^{\,n-r}(-1)^r.\]</div>
+<div class="why"><strong>Why is substitution allowed?</strong> The binomial theorem is an identity in x and y, so it remains true after replacing x and y by specific values.</div></div>
+
+<div class="micro"><p><strong>Small step 6.</strong> What happens to the factor \(1^{n-r}\) in every term?</p><details><summary>Open the answer</summary><p>It becomes 1. Since \(0\le r\le n\), the exponent n−r is a nonnegative integer, and every such power of 1 equals 1.</p></details></div>
+
+<div class="step-box"><strong>Step 3 · Simplify the left-hand side.</strong>
+<p>Because \(n\ge1\),</p>
+<div class="math-block">\[(1-1)^n=0^n=0.\]</div>
+<div class="why"><strong>Why is the condition n ≥ 1 used here?</strong> For a positive exponent, \(0^n=0\). The n=0 case was separated earlier and gives the value 1 instead.</div></div>
+
+<div class="micro"><p><strong>Small step 7.</strong> Why should we not silently use the same conclusion at n = 0?</p><details><summary>Open the answer</summary><p>The polynomial \((x+y)^0\) is identically 1, so at x = 1 and y = −1 it still equals 1. The n=0 case therefore does not give a zero alternating sum.</p></details></div>
+
+<div class="step-box"><strong>Step 4 · Simplify the right-hand side.</strong>
+<p>Since \(1^{n-r}=1\), each term becomes</p>
+<div class="math-block">\[\binom nr 1^{\,n-r}(-1)^r=(-1)^r\binom nr.\]</div>
+<p>Therefore</p>
+<div class="math-block">\[\sum_{r=0}^{n}\binom nr 1^{\,n-r}(-1)^r=\sum_{r=0}^{n}(-1)^r\binom nr.\]</div>
+<div class="why"><strong>What remains?</strong> The powers of 1 disappear, while \((-1)^r\) stays and determines the sign of each binomial coefficient.</div></div>
+
+<div class="micro"><p><strong>Small step 8.</strong> Why does \((-1)^r\) turn the coefficient sum into “even minus odd”?</p><details><summary>Open the answer</summary><p>When r is even, \((-1)^r=1\), so \(\binom nr\) is added. When r is odd, \((-1)^r=-1\), so \(\binom nr\) is subtracted.</p></details></div>
+
+<div class="step-box"><strong>Step 5 · Put the simplified sides together.</strong>
+<p>The left side is 0, and the right side is the alternating sum. Hence</p>
+<div class="math-block">\[0=\sum_{r=0}^{n}(-1)^r\binom nr.\]</div>
+<p>Reversing the two sides gives</p>
+<div class="math-block">\[\boxed{\sum_{r=0}^{n}(-1)^r\binom nr=0},\qquad n\ge1.\]</div>
+</div>
+
+<div class="micro"><p><strong>Small step 9.</strong> How does this algebraic result match the pairing proof?</p><details><summary>Open the answer</summary><p>The alternating sum is E−O. The algebra says E−O=0, so E=O—the same conclusion obtained by pairing each committee with the one formed by toggling Alice.</p></details></div>
+
+<h3>Full algebra in one continuous chain</h3>
+<div class="math-block">\[
+\begin{aligned}
+(x+y)^n
+&=\sum_{r=0}^{n}\binom nr x^{\,n-r}y^r\\[4pt]
+(1-1)^n
+&=\sum_{r=0}^{n}\binom nr 1^{\,n-r}(-1)^r\\[4pt]
+0
+&=\sum_{r=0}^{n}(-1)^r\binom nr\\[4pt]
+\therefore\qquad
+\sum_{r=0}^{n}(-1)^r\binom nr
+&=0,\qquad n\ge1.
+\end{aligned}
+\]</div>
+</section>
+
+<section class="act" aria-labelledby="act7"><h2 id="act7">Act 7: Put the two proofs side by side</h2>
+<div class="table-wrap"><table><thead><tr><th>Proof</th><th>Key move</th><th>What it shows</th></tr></thead><tbody>
+<tr><td>Pairing proof</td><td>Toggle Alice in every committee.</td><td>Every even committee has exactly one odd partner, and vice versa.</td></tr>
+<tr><td>Algebraic proof</td><td>Set x = 1 and y = −1 in the binomial theorem.</td><td>The even-size contributions minus the odd-size contributions sum to 0.</td></tr>
+</tbody></table></div>
+<div class="question-card"><fieldset><legend>Clue 7 · What common statement are both proofs establishing?</legend>
+<label class="choice"><input type="radio" name="q7" value="0"><span>A. Every committee has even size.</span></label>
+<label class="choice"><input type="radio" name="q7" value="1"><span>B. For n ≥ 1, the numbers of even-sized and odd-sized subsets are equal.</span></label>
+<label class="choice"><input type="radio" name="q7" value="2"><span>C. The empty committee should be discarded.</span></label>
+</fieldset><p class="clue-feedback" id="feedback7" aria-live="polite"></p><div class="detective-hint" id="hint7" hidden><strong>Follow this clue:</strong> One proof says E and O can be paired; the other says E−O=0.</div></div>
+<div class="notes-box"><label for="notes">Your detective note · Explain the proof without algebra first. Then explain why x = 1 and y = −1 in the binomial theorem produces exactly the same even-minus-odd comparison.</label><textarea class="field-notes" id="notes" placeholder="Pairing proof: choose Alice and toggle... This changes the size by... Algebraically, (-1)^r is positive when r is... and negative when r is..."></textarea></div>
+</section>
+
+<section class="report" aria-labelledby="report"><h2 id="report">Final case report</h2>
+<div class="evidence success-evidence">
+<p>For every integer \(n\ge1\),</p>
+<div class="math-block">\[\boxed{\sum_{r=0}^{n}(-1)^r\binom nr=0}.\]</div>
+<p><strong>What the sum measures:</strong> even-sized subsets minus odd-sized subsets.</p>
+<p><strong>Why the counts are equal:</strong> toggling one fixed element changes the size by exactly one and gives a reversible pairing.</p>
+<p><strong>How many of each:</strong> since there are \(2^n\) subsets altogether, each parity class contains \(2^{n-1}\) subsets.</p>
+<p><strong>Why n ≥ 1 matters:</strong> when n=0, the empty set is the only subset; it has even size, so the alternating sum is 1.</p>
+<p><strong>Why the algebra works:</strong> setting x=1 and y=−1 in the binomial theorem makes the left side 0 for n≥1 and turns the right side into the alternating sum.</p>
+</div>
+<div class="actions"><button class="primary" id="check" type="button">Check my clues</button><button id="show-reasons" type="button">Open all explanations</button><button id="print" type="button">Print / Save as PDF</button></div>
+<p class="score" id="score" aria-live="polite">Choose an answer to each of the 7 clues, then check your reasoning.</p>
+</section>
+<footer><span>CASE FILE #40 · TOGGLE ONE STUDENT: EVEN PAIRS WITH ODD</span></footer>
+</main>
+<script>
+'use strict';
+const answerKeys=[0,0,1,0,1,1,1];
+const answerReasons=[
+  'For even r, (-1)^r=1; for odd r, (-1)^r=-1. So the sum is even-sized counts minus odd-sized counts.',
+  'Adding or removing exactly one student changes the committee size by 1, and consecutive integers have opposite parity.',
+  'The toggle is reversible: applying it twice restores Alice to her original membership status.',
+  'If E=O, then subtracting gives E−O=0.',
+  'For n=5, each parity class has 2^(5−1)=16 committees.',
+  'At n=0, the empty set is the one even subset, there are no odd subsets, and there is no student to toggle.',
+  'Both arguments establish that for n≥1, even-sized and odd-sized subsets occur in equal numbers.'
+];
+const byId=id=>document.getElementById(id);
+let pairIndex=0;
+let swapped=false;
+function choose(n,r){
+  if(!Number.isInteger(n)||!Number.isInteger(r)||n<0||r<0||r>n)return 0;
+  r=Math.min(r,n-r);let c=1;
+  for(let i=1;i<=r;i++)c=c*(n-i+1)/i;
+  return Math.round(c);
+}
+function subsetsWithoutAlice(n){
+  const m=n-1,result=[];
+  for(let mask=0;mask<(1<<m);mask++){
+    const s=[];
+    for(let i=0;i<m;i++) if(mask&(1<<i)) s.push(i+1);
+    result.push(s);
+  }
+  return result;
+}
+function labelSet(s,n){
+  const names=['Alice',...Array.from({length:n-1},(_,i)=>String.fromCharCode(66+i))];
+  return s.length?'{'+s.map(i=>names[i]).join(', ')+'}':'∅';
+}
+function renderMembers(s,n){
+  const names=['Alice',...Array.from({length:n-1},(_,i)=>String.fromCharCode(66+i))];
+  if(!s.length)return '<span class="committee-token">∅</span>';
+  return s.map(i=>'<span class="committee-token '+(i===0?'alice':'')+'">'+names[i]+'</span>').join('');
+}
+function parity(k){return k%2===0?'even':'odd';}
+function pairFor(base){return [base.slice(),[0,...base]];}
+function updateLab(message=''){
+  const n=Number(byId('n').value);
+  byId('n-value').textContent=n;
+  const bases=subsetsWithoutAlice(n);
+  pairIndex=Math.max(0,Math.min(pairIndex,bases.length-1));
+  const [without,withAlice]=pairFor(bases[pairIndex]);
+  let left=without,right=withAlice;
+  if(swapped){left=withAlice;right=without;}
+  const lp=parity(left.length),rp=parity(right.length);
+  const configure=(side,s,p)=>{
+    byId(side+'-box').className='pair-box '+p;
+    byId(side+'-title').innerHTML=(s.includes(0)?'Alice included':'Alice excluded')+' · <span class="parity-badge '+p+'">'+p+'</span>';
+    byId(side+'-members').innerHTML=renderMembers(s,n);
+    byId(side+'-size').textContent='Committee size: '+s.length;
+  };
+  configure('left',left,lp);configure('right',right,rp);
+  const even=2**(n-1),odd=2**(n-1);
+  byId('formula-live').textContent='Even − odd = '+even+' − '+odd+' = 0     |     Σ (-1)^r C('+n+',r) = 0';
+  byId('count-strip').textContent=even+' even-sized committees     =     '+odd+' odd-sized committees     =     2^'+(n-1)+' each';
+  byId('lab-status').textContent=(message?message+' ':'')+'Pair '+(pairIndex+1)+' of '+bases.length+'. Toggling Alice changes the size by exactly one, so the two partners have opposite parity.';
+  byId('previous').disabled=pairIndex===0;
+  byId('next').disabled=pairIndex===bases.length-1;
+  byId('pair-rows').innerHTML=bases.map(b=>{
+    const a=b.slice(),c=[0,...b];
+    return '<tr><td>'+labelSet(a,n)+' · size '+a.length+'</td><td>'+labelSet(c,n)+' · size '+c.length+'</td><td>'+parity(a.length)+' ↔ '+parity(c.length)+'</td></tr>';
+  }).join('');
+}
+function checkClues(){
+  let correct=0,unanswered=0;
+  answerKeys.forEach((key,i)=>{
+    const q=i+1,chosen=document.querySelector('input[name="q'+q+'"]:checked'),out=byId('feedback'+q),hint=byId('hint'+q);
+    if(!chosen){unanswered++;out.textContent='Choose an option, then check again.';out.style.color='#92400e';hint.hidden=true;}
+    else if(Number(chosen.value)===key){correct++;out.textContent='Correct. '+answerReasons[i];out.style.color='#15803d';hint.hidden=true;}
+    else{out.textContent='Not yet. Use the clue below and try again.';out.style.color='#b91c1c';hint.hidden=false;}
+  });
+  byId('score').textContent=correct+' / 7 correct. '+(unanswered?unanswered+' still unanswered. ':'')+(correct===7?'Case solved: you have checked the parity pairing, the edge case, and the binomial-theorem proof.':'Review the clues and check again whenever you are ready.');
+}
+byId('n').addEventListener('input',()=>{pairIndex=0;swapped=false;updateLab();});
+byId('previous').addEventListener('click',()=>{pairIndex--;swapped=false;updateLab();});
+byId('next').addEventListener('click',()=>{pairIndex++;swapped=false;updateLab();});
+byId('toggle').addEventListener('click',()=>{swapped=!swapped;updateLab('Alice was toggled: the same two committees have exchanged sides.');});
+byId('check').addEventListener('click',checkClues);
+byId('show-reasons').addEventListener('click',()=>document.querySelectorAll('.reason,.micro details').forEach(d=>d.open=true));
+byId('print').addEventListener('click',()=>window.print());
+let printStates=[];
+window.addEventListener('beforeprint',()=>{printStates=Array.from(document.querySelectorAll('details'),d=>[d,d.open]);document.querySelectorAll('.reason,.micro details').forEach(d=>d.open=true);});
+window.addEventListener('afterprint',()=>printStates.forEach(([d,open])=>d.open=open));
+updateLab();
+</script>
+</body></html>

@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="A student-friendly mathematics project featuring detective-style proofs, visual demonstrations, examples and counterexamples."
+  />
+  <title>Math Detective | Proofs, Visual Labs & Mathematical Ideas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+/* DESIGN TOKENS: edit these values to change the theme. */
+:root{--bg:#FAFAF9;--surface:#FFFFFF;--ink:#1C1917;--muted:#57534E;--primary:#1E3A8A;--secondary:#0F766E;--line:#E7E5E4;--serif:'Newsreader',Georgia,serif;--sans:'Inter',Arial,sans-serif;--max-width:1180px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 var(--sans)}button,input{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer;color:inherit}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--secondary);outline-offset:4px}button{border:0;background:none}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.15}p{color:var(--muted)}.container{width:min(100% - 88px,var(--max-width));margin:auto}.site-header{border-bottom:1px solid var(--line);background:var(--bg)}.nav-wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:92px}.brand{display:flex;gap:13px;align-items:center}.brand-mark{display:grid;place-items:center;color:var(--primary);border:1px solid var(--line);width:41px;height:45px;font:30px var(--serif)}.brand-text{font:500 27px var(--serif);letter-spacing:-.5px}.brand-text small{display:none}.top-nav{display:flex;align-self:stretch;gap:32px}.nav-btn{position:relative;padding:8px 0;font-size:14px;color:var(--muted)}.nav-btn.active{color:var(--primary)}.nav-btn.active:after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--primary)}.page{display:none}.page.active{display:block;animation:reveal .25s ease}@keyframes reveal{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}.hero{padding:76px 0 65px}.hero-grid{display:grid;grid-template-columns:minmax(0,1fr)}.hero-grid>div:first-child{max-width:860px}.eyebrow{display:flex;align-items:center;gap:12px;color:var(--primary);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:21px}.eyebrow:before{content:'';width:26px;height:1px;background:currentColor}.eyebrow-dot{display:none}h1{font-size:clamp(44px,6vw,76px);letter-spacing:-2px}.gradient-text{color:var(--primary);font-style:italic}.hero-copy{max-width:640px;margin-top:24px;line-height:1.9}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:22px;padding:12px 20px;min-height:48px;border:1px solid var(--line);font-size:13px;font-weight:500;background:var(--surface);transition:background .18s,transform .18s}.btn:hover{transform:translateY(-1px);background:#f0f2f6}.btn-primary{color:white;background:var(--primary);border-color:var(--primary)}.btn-primary:hover{background:#172d6e}.btn-secondary{color:var(--ink)}.section{padding:0 0 52px}.section-heading{border-top:1px solid var(--line);padding-top:36px;margin-bottom:25px;max-width:none}.section-heading h2{font-size:35px;letter-spacing:-.6px}.section-heading p:not(.eyebrow){max-width:700px;margin-top:12px;font-size:14px}.section-heading .eyebrow{margin-bottom:14px}.feature-grid,.note-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.feature-card{background:var(--surface);border:1px solid var(--line);padding:30px;box-shadow:0 1px 3px rgba(0,0,0,.025);transition:border-color .2s}.feature-card:hover{border-color:#b8c2d6}.feature-icon{color:var(--primary);font-size:28px;line-height:1;margin-bottom:22px}.feature-card.visual .feature-icon{color:var(--secondary)}.feature-card h3,.editable-note h3{font-size:29px;margin-bottom:12px}.feature-card p{font-size:14px;max-width:440px;line-height:1.85}.feature-link{color:var(--primary);font-size:13px;font-weight:500;padding:0;margin-top:24px}.feature-link:hover{text-decoration:underline}.editable-note{padding:25px 0 10px;border-top:1px solid var(--line)}.note-label{display:block;font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:var(--secondary);margin-bottom:17px}.editable-note p{font-size:14px;line-height:1.85;max-width:470px}.library-hero{padding:55px 0 70px}.library-banner{display:flex;align-items:center;justify-content:space-between;gap:32px;margin-bottom:36px}.library-banner h1{font-size:60px;margin-bottom:18px}.library-banner p:not(.eyebrow){max-width:660px;font-size:15px}.banner-symbol{color:var(--primary);font:64px var(--serif);border:1px solid var(--line);background:white;width:115px;height:115px;display:grid;place-items:center;flex-shrink:0}.banner-symbol.visual{color:var(--secondary)}.library-toolbar{display:flex;justify-content:space-between;align-items:center;gap:24px;margin:28px 0}.search-box{display:flex;align-items:center;gap:12px;border:1px solid var(--line);padding:10px 16px;background:var(--surface);width:min(100%,510px)}.search-icon{font-size:24px;color:var(--muted);line-height:1}.search-box input{width:100%;min-width:0;border:0;background:none;outline:none;color:var(--ink);font-size:14px}.search-box:focus-within{outline:2px solid var(--secondary);outline-offset:2px}.library-count{font-size:12px;color:var(--muted);white-space:nowrap}.topic-list{border-top:1px solid var(--line)}.topic-card{border-bottom:1px solid var(--line)}.topic-toggle{display:grid;grid-template-columns:34px minmax(0,1fr) auto 20px;align-items:center;gap:20px;padding:22px 0;width:100%;text-align:left}.topic-index{font:italic 16px var(--serif);color:var(--muted)}.topic-title strong{display:block;font:25px var(--serif);line-height:1.3}.topic-title>span{display:block;font-size:12px;color:var(--muted);margin-top:5px}.topic-badge{font-size:11px;padding:3px 9px;color:var(--secondary);background:#f1f6f4;border:1px solid #dde7e2}.chevron{transition:transform .2s;color:var(--muted)}.topic-card.open .chevron{transform:rotate(180deg)}.topic-content{display:none;padding:0 0 24px 54px}.topic-card.open .topic-content{display:block}.file-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.file-card{position:relative;display:block;padding:22px 35px 22px 22px;background:var(--surface);border:1px solid var(--line);transition:border-color .18s}.file-card:hover{border-color:var(--primary)}.file-number{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--primary);margin-bottom:11px}.file-card strong{display:block;font:23px/1.3 var(--serif)}.file-card small{display:block;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7}.file-arrow{position:absolute;right:14px;top:18px;color:var(--primary)}.empty-topic{font-size:13px;color:var(--muted);padding:12px 0}.no-results{display:none;padding:24px 0;color:var(--muted)}.no-results.show{display:block}.site-footer{margin-top:12px}.footer-inner{border-top:1px solid var(--line);padding-top:27px;padding-bottom:30px;display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px}.footer-inner strong{font:23px var(--serif);color:var(--ink)}[hidden]{display:none!important}
+@media(max-width:760px){.container{width:calc(100% - 44px)}.nav-wrap{flex-wrap:wrap;padding-top:21px;gap:16px}.brand-text{font-size:25px}.top-nav{width:100%;justify-content:space-between;gap:20px;height:47px}.nav-btn{font-size:13px}.hero{padding:43px 0}.hero h1{font-size:clamp(42px,8vw,60px);letter-spacing:-1.4px}.hero-copy{font-size:15px}.feature-grid,.note-grid,.file-grid{grid-template-columns:1fr}.section{padding-bottom:35px}.section-heading{padding-top:28px}.section-heading h2{font-size:31px}.feature-card{padding:25px}.library-hero{padding:38px 0}.library-banner h1{font-size:46px}.banner-symbol{display:none}.library-toolbar{align-items:start;flex-direction:column;gap:12px}.search-box{width:100%}.topic-toggle{grid-template-columns:22px minmax(0,1fr) 16px;gap:12px;padding:19px 0}.topic-title strong{font-size:23px}.topic-badge{display:none}.topic-content{padding-left:0}.footer-inner{flex-wrap:wrap}.eyebrow{font-size:10px;letter-spacing:1.6px}.btn{padding:12px 15px;gap:16px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+    .feature-card{display:flex;flex-direction:column;align-items:flex-start}.feature-card .feature-link{margin-top:auto;padding-top:24px}.feature-card.graphs .feature-icon{color:var(--secondary)}
+    @media(max-width:960px){.nav-wrap{flex-wrap:wrap;padding-top:20px;gap:12px}.top-nav{width:100%;height:auto;min-height:47px;flex-wrap:wrap;justify-content:space-between;gap:6px 16px}.nav-btn{min-height:44px}}
+    .graph-topic{border-top:1px solid var(--line);padding-top:28px}.graph-topic h2{font-size:35px;margin-bottom:24px}.graph-entry{min-width:0;background:var(--surface);border:1px solid var(--line);padding:24px}.graph-entry h3{font-size:28px;margin-bottom:20px}@media(max-width:760px){.graph-entry{padding:15px}.graph-topic h2{font-size:30px}}
+    .graph-topic+.graph-topic{margin-top:36px}.graph-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.graph-grid .graph-entry{display:flex;flex-direction:column;align-items:flex-start}.graph-grid .graph-entry .btn{margin-top:auto}.graph-entry .note-label{margin-bottom:12px}@media(max-width:760px){.graph-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#home" class="brand" data-route="home" aria-label="Go to home page">
+        <span class="brand-mark">∑</span>
+        <span class="brand-text">
+          Math Detective
+        </span>
+      </a>
+
+      <nav class="top-nav" aria-label="Main navigation">
+        <button class="nav-btn active" data-route="home">Home</button>
+        <button class="nav-btn" data-route="case-files">Case Files</button>
+        <button class="nav-btn" data-route="visual-labs">Visual Labs</button>
+        <button class="nav-btn" data-route="articles">Articles</button>
+        <button class="nav-btn" data-route="graphs">Graphs</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- =======================================================
+         HOME PAGE — EDITABLE TEMPLATE
+         Edit the heading, introduction, and project notes below.
+         Add your own sections inside page-home when needed.
+         Collection entries are edited in the EASY-UPDATE CONTENT AREA.
+         ======================================================= -->
+    <section id="page-home" class="page active">
+      <div class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">
+              <span class="eyebrow-dot"></span>
+              Explore • Investigate • Prove
+            </p>
+
+            <!-- EDIT: homepage heading -->
+            <h1>
+              Mathematics,<br />
+              treated like a <span class="gradient-text">mystery.</span>
+            </h1>
+
+            <!-- EDIT: homepage introduction -->
+            <p class="hero-copy">
+              A growing collection of important mathematics
+              results, reconstructed through detective-style proofs and visual
+              demonstrations so that every theorem feels discovered—not merely
+              memorised.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn btn-primary" data-route="case-files">
+                Explore Case Files <span aria-hidden="true">→</span>
+              </button>
+              <button class="btn btn-secondary" data-route="visual-labs">
+                Enter Visual Labs <span aria-hidden="true">◇</span>
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Collections</p>
+            <h2>Explore the collections.</h2>
+            <p>
+              Case Files, Visual Labs, Articles and Graphs.
+            </p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card case">
+              <div class="feature-icon" aria-hidden="true">⌕</div>
+              <h3>Case Files</h3>
+              <p>
+                Detective-style investigations of important results: clues,
+                reasoning, hidden assumptions and complete proofs.
+              </p>
+              <button class="feature-link" data-route="case-files">
+                Open the evidence room →
+              </button>
+            </article>
+
+            <article class="feature-card visual">
+              <div class="feature-icon" aria-hidden="true">◫</div>
+              <h3>Visual Labs</h3>
+              <p>
+                Interactive or visual demonstrations designed to make abstract
+                mathematical results easier to see, test and remember.
+              </p>
+              <button class="feature-link" data-route="visual-labs">
+                Enter the laboratory →
+              </button>
+            </article>
+
+            <!-- EDIT: add your own Articles description here when ready. -->
+            <article class="feature-card articles">
+              <div class="feature-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3h10l4 4v14H5V3Z M15 3v5h4 M8 12h8 M8 16h8"/></svg></div>
+              <h3>Articles</h3>
+              <button class="feature-link" data-route="articles">Open Articles →</button>
+            </article>
+
+            <!-- EDIT: add your own Graphs description here when ready. -->
+            <article class="feature-card graphs">
+              <div class="feature-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 3v17h17 M8 6v10 M12 6v10 M16 6v10 M7 8h12 M7 12h12 M7 16h12"/></svg></div>
+              <h3>Graphs</h3>
+              <button class="feature-link" data-route="graphs">Open Graphs →</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Your voice</p>
+            <h2>About this project</h2>
+            <p>
+              These spaces are intentionally left easy to edit, so you can add
+              your own story, motivation and views on mathematics.
+            </p>
+          </div>
+
+          <div class="note-grid">
+            <!-- EDIT THIS BLOCK: replace the heading and paragraph with your project story. -->
+            <article class="editable-note">
+              <span class="note-label">Project Note</span>
+              <h3>Why I built this project</h3>
+              <p>
+                Write your introduction here: what inspired you to collect these
+                results, why you chose the detective style, and what you want
+                students to gain from this project.
+              </p>
+            </article>
+
+            <!-- EDIT THIS BLOCK: replace the heading and paragraph with your personal view of mathematics. -->
+            <article class="editable-note">
+              <span class="note-label">Personal View</span>
+              <h3>What mathematics means to me</h3>
+              <p>
+                Write your own view of mathematics here—how you think about
+                proof, patterns, discovery, intuition, beauty, or problem
+                solving.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- =======================================================
+         CASE FILES PAGE
+         Content is generated from CASE_FILES_DATA in JavaScript.
+         ======================================================= -->
+    <section id="page-case-files" class="page">
+      <div class="library-hero">
+        <div class="container">
+          <div class="library-banner">
+            <div>
+              <p class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                Evidence Room
+              </p>
+              <h1>Case <span class="gradient-text">Files</span></h1>
+              <p>
+                Choose a chapter, examine the clues and follow each result from
+                first principles to conclusion. Every file opens as a separate
+                HTML page.
+              </p>
+            </div>
+            <div class="banner-symbol" aria-hidden="true">⌕</div>
+          </div>
+
+          <div class="library-toolbar">
+            <label class="search-box">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input
+                id="case-search"
+                type="search"
+                placeholder="Search topics or case files…"
+                autocomplete="off"
+              />
+            </label>
+            <div class="library-count" id="case-count"></div>
+          </div>
+
+          <div id="case-topic-list" class="topic-list"></div>
+          <div id="case-no-results" class="no-results">
+            No matching case file was found. Try another keyword.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         VISUAL LABS PAGE
+         Content is generated from VISUAL_LABS_DATA in JavaScript.
+         ======================================================= -->
+    <section id="page-visual-labs" class="page visual-theme">
+      <div class="library-hero">
+        <div class="container">
+          <div class="library-banner">
+            <div>
+              <p class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                Demonstration Room
+              </p>
+              <h1>Visual <span class="gradient-text">Labs</span></h1>
+              <p>
+                Explore mathematical ideas through diagrams, movement and visual
+                structure. Use the chapter list below to open each demonstration.
+              </p>
+            </div>
+            <div class="banner-symbol visual" aria-hidden="true">◫</div>
+          </div>
+
+          <div class="library-toolbar">
+            <label class="search-box">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input
+                id="visual-search"
+                type="search"
+                placeholder="Search topics or visual demonstrations…"
+                autocomplete="off"
+              />
+            </label>
+            <div class="library-count" id="visual-count"></div>
+          </div>
+
+          <div id="visual-topic-list" class="topic-list"></div>
+          <div id="visual-no-results" class="no-results">
+            No matching visual demonstration was found. Try another keyword.
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- EDIT: add your own Articles content inside the collection below. -->
+    <section id="page-articles" class="page">
+      <div class="library-hero">
+        <div class="container">
+          <div class="library-banner"><h1>Articles</h1></div>
+          <div id="articles-collection">
+            <!-- Add your articles links or content here. -->
+            <p class="empty-topic">No articles have been added yet.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- EDIT: add your own Graphs content inside the collection below. -->
+    <section id="page-graphs" class="page">
+      <div class="library-hero">
+        <div class="container">
+          <div class="library-banner"><h1>Graphs</h1></div>
+          <div id="graphs-collection">
+            <!-- EDIT: add more graph topics or embeds below. -->
+            <section class="graph-topic" aria-labelledby="quadratic-graphs-heading">
+              <h2 id="quadratic-graphs-heading">Quadratic Equations</h2>
+              <article class="graph-entry" aria-labelledby="nature-of-roots-heading">
+                <h3 id="nature-of-roots-heading">Nature of Roots</h3>
+                <a class="btn btn-primary" href="https://www.geogebra.org/calculator/pkwhmhh8" target="_blank" rel="noopener noreferrer" aria-label="Open Nature of Roots in GeoGebra (opens in a new tab)">Open Nature of Roots in GeoGebra <span aria-hidden="true">↗</span></a>
+              </article>
+            </section>
+
+            <section class="graph-topic" aria-labelledby="coordinate-geometry-graphs-heading">
+              <h2 id="coordinate-geometry-graphs-heading">Coordinate Geometry</h2>
+              <div class="graph-grid">
+                <article class="graph-entry" aria-labelledby="conic-sections-graph-title">
+                  <span class="note-label">Conic Sections</span>
+                  <h3 id="conic-sections-graph-title">Visualisation of Conic Sections</h3>
+                  <a class="btn btn-primary" href="https://www.geogebra.org/m/cajwamqp" target="_blank" rel="noopener noreferrer" aria-label="Open Visualisation of Conic Sections in GeoGebra (opens in a new tab)">Open in GeoGebra <span aria-hidden="true">↗</span></a>
+                </article>
+              </div>
+            </section>
+
+            <section class="graph-topic" aria-labelledby="trigonometry-graphs-heading">
+              <h2 id="trigonometry-graphs-heading">Trigonometry</h2>
+              <div class="graph-grid">
+                <article class="graph-entry" aria-labelledby="trigonometric-identities-graph-title">
+                  <span class="note-label">Trigonometric Identities</span>
+                  <h3 id="trigonometric-identities-graph-title">Trigonometric Identity Visualisation</h3>
+                  <a class="btn btn-primary" href="https://www.desmos.com/calculator/l08mhxeljt" target="_blank" rel="noopener noreferrer" aria-label="Open Trigonometric Identity Visualisation in Desmos (opens in a new tab)">Open in Desmos <span aria-hidden="true">↗</span></a>
+                </article>
+              </div>
+            </section>
+
+            <section class="graph-topic" aria-labelledby="calculus-graphs-heading">
+              <h2 id="calculus-graphs-heading">Calculus</h2>
+              <div class="graph-grid">
+                <article class="graph-entry" aria-labelledby="limits-graph-title">
+                  <span class="note-label">Limits</span>
+                  <h3 id="limits-graph-title">Understanding Limits</h3>
+                  <a class="btn btn-primary" href="https://www.geogebra.org/m/aayefap2" target="_blank" rel="noopener noreferrer" aria-label="Open Understanding Limits in GeoGebra (opens in a new tab)">Open in GeoGebra <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="graph-entry" aria-labelledby="continuity-graph-title">
+                  <span class="note-label">Continuity</span>
+                  <h3 id="continuity-graph-title">Intermediate Value Theorem Visualisation</h3>
+                  <a class="btn btn-primary" href="https://www.geogebra.org/m/hj7xdabp" target="_blank" rel="noopener noreferrer" aria-label="Open Intermediate Value Theorem Visualisation in GeoGebra (opens in a new tab)">Open in GeoGebra <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="graph-entry" aria-labelledby="derivatives-graph-title">
+                  <span class="note-label">Derivatives</span>
+                  <h3 id="derivatives-graph-title">Rate of Change</h3>
+                  <a class="btn btn-primary" href="https://www.geogebra.org/m/aa9ethxb" target="_blank" rel="noopener noreferrer" aria-label="Open Rate of Change in GeoGebra (opens in a new tab)">Open in GeoGebra <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="graph-entry" aria-labelledby="rolles-theorem-graph-title">
+                  <span class="note-label">Differential Calculus</span>
+                  <h3 id="rolles-theorem-graph-title">Rolle’s Theorem</h3>
+                  <a class="btn btn-primary" href="https://www.geogebra.org/m/yajgwf55" target="_blank" rel="noopener noreferrer" aria-label="Open Rolle’s Theorem in GeoGebra (opens in a new tab)">Open in GeoGebra <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="graph-entry" aria-labelledby="integration-graph-title">
+                  <span class="note-label">Integration</span>
+                  <h3 id="integration-graph-title">Riemann Integration</h3>
+                  <a class="btn btn-primary" href="https://www.desmos.com/calculator/xeju74voqa" target="_blank" rel="noopener noreferrer" aria-label="Open Riemann Integration in Desmos (opens in a new tab)">Open in Desmos <span aria-hidden="true">↗</span></a>
+                </article>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div><strong>Math Detective</strong></div>
+      <div>Proof • Visualise • Understand</div>
+    </div>
+  </footer>
+
+  <script>
+    /* =========================================================
+       EASY-UPDATE CONTENT AREA
+       ---------------------------------------------------------
+       To add a new file later:
+       1. Find its topic below.
+       2. Add one new object:
+          {
+            title: "Student-friendly title",
+            file: "Exact_Filename.html",
+            note: "Optional one-line description"
+          }
+
+       To add a completely new future SECTION to the website,
+       copy the same data-driven pattern used for Case Files
+       and Visual Labs.
+       ========================================================= */
+
+    const TOPICS = [
+  "Sets, Relations & Functions",
+  "Trigonometry",
+  "Mathematical Induction",
+  "Complex Numbers",
+  "Quadratic Equations",
+  "Inequalities",
+  "Permutations & Combinations",
+  "Binomial Theorem",
+  "Sequences & Series",
+  "Coordinate Geometry",
+  "Vectors & 3D Geometry",
+  "Inverse Trigonometry",
+  "Limits & Continuity",
+  "Differentiation",
+  "Applications of Derivatives",
+  "Integration",
+  "Matrices",
+  "Determinants"
+];
+
+    const CASE_FILES_DATA = {
+  "Sets, Relations & Functions": [
+    {
+      "title": "De Morgan's First Law",
+      "file": "Case_File_2_De_Morgans_First_Law.html"
+    },
+    {
+      "title": "De Morgan's Second Law",
+      "file": "Case_File_2_De_Morgans_Second_Law.html"
+    },
+    {
+      "title": "Distribute an Intersection",
+      "file": "Case_File_3_Distribute_an_Intersection.html"
+    },
+    {
+      "title": "Distribute a Union",
+      "file": "Case_File_4_Distribute_a_Union.html"
+    },
+    {
+      "title": "Difference as Intersection",
+      "file": "Case_File_5_Difference_as_Intersection.html"
+    },
+    {
+      "title": "Cardinality of a Union",
+      "file": "Case_File_6_Cardinality_of_a_Union.html"
+    },
+    {
+      "title": "Inclusion-Exclusion (Three Sets)",
+      "file": "Case_File_9_Inclusion_Exclusion_Three_Sets.html"
+    }
+  ],
+  "Binomial Theorem": [
+    {
+      "title": "Binomial Theorem From First Principles",
+      "file": "Case_File_7_Binomial_Theorem_From_First_Principles.html"
+    },
+    {
+      "title": "Largest Term in Binomial Expansion",
+      "file": "Case_File_36_Largest_Term_in_Binomial_Expansion.html"
+    },
+    {
+      "title": "Symmetry of Binomial Coefficients",
+      "file": "Case_File_37_Symmetry_of_Binomial_Coefficients.html"
+    },
+    {
+      "title": "Pascal's Identity",
+      "file": "Case_File_38_Pascals_Identity.html"
+    },
+    {
+      "title": "Vandermonde Identity",
+      "file": "Case_File_44_Vandermonde_Identity.html"
+    }
+  ],
+  "Mathematical Induction": [
+    {
+      "title": "PMI from Well-Ordering Principle",
+      "file": "Case_File_8_PMI_from_Well_Ordering_Principle.html"
+    }
+  ],
+  "Trigonometry": [
+    {
+      "title": "Trigonometric Identities",
+      "file": "Case_File_10_Trignometric_Identities.html"
+    },
+    {
+      "title": "Sine Compound Angle",
+      "file": "Case_File_11_Sine_Compound_Angle.html"
+    },
+    {
+      "title": "Difference of Angles",
+      "file": "Case_File_12_Difference_Angles.html"
+    },
+    {
+      "title": "Conversion Formulae",
+      "file": "Case_File_13_Conversion_Formulae.html"
+    }
+  ],
+  "Sequences & Series": [
+    {
+      "title": "Sum of Arithmetic Progression",
+      "file": "Case_File_14_Sum_of_Arithmetic_Progression.html"
+    },
+    {
+      "title": "Sum of Squares",
+      "file": "Case_File_43_Sum_of_Squares.html"
+    },
+    {
+      "title": "Finite and Infinite Geometric Progressions",
+      "file": "Case_File_Finite_and_Infinite_Geometric_Progressions.html"
+    }
+  ],
+  "Quadratic Equations": [
+    {
+      "title": "Quadratic Equations and Vieta's Theorem",
+      "file": "Case_File_15_Quadratic_Equations_and_Vietas_Theorem.html"
+    }
+  ],
+  "Differentiation": [
+    {
+      "title": "Product Rule",
+      "file": "Case_File_16_Product_Rule.html"
+    },
+    {
+      "title": "Darboux's Theorem",
+      "file": "Case_File_28_Darboux_Theorem.html"
+    },
+    {
+      "title": "Chain Rule and Fermat's Theorem",
+      "file": "Case_File_33_Chain_Rule_and_Fermats_Theorem.html"
+    }
+  ],
+  "Applications of Derivatives": [
+    {
+      "title": "Rolle's Theorem",
+      "file": "Case_File_17_Rolles_Theorem.html"
+    },
+    {
+      "title": "Lagrange's Mean Value Theorem",
+      "file": "Case_File_18_Lagranges_Mean_Value_Theorem.html"
+    },
+    {
+      "title": "Monotonicity and MVT Consequences",
+      "file": "Case_File_19_Monotonicity_and_MVT_Consequences.html"
+    },
+    {
+      "title": "Second Derivative Test (Copy 1)",
+      "file": "Case_File_27_Second_Derivative_Test(1).html"
+    },
+    {
+      "title": "Second Derivative Test",
+      "file": "Case_File_27_Second_Derivative_Test.html"
+    }
+  ],
+  "Integration": [
+    {
+      "title": "Fundamental Theorem of Calculus (Part II)",
+      "file": "Case_File_21_Fundamental_Theorem_of_Calculus_Part_II.html"
+    },
+    {
+      "title": "Reciprocal Weight Integration Identity",
+      "file": "Case_File_42_Reciprocal_Weight_Integration_Identity.html"
+    }
+  ],
+  "Coordinate Geometry": [
+    {
+      "title": "Distance from a Point to a Line",
+      "file": "Case_File_22_Distance_from_a_Point_to_a_Line(1).html"
+    },
+    {
+      "title": "Angle Bisectors of Two Intersecting Lines",
+      "file": "Case_File_23_Angle_Bisectors_of_Two_Intersecting_Lines(1).html"
+    },
+    {
+      "title": "Circle Tangent Perpendicular to Radius",
+      "file": "Case_File_24_Circle_Tangent_Perpendicular_to_Radius(1).html"
+    },
+    {
+      "title": "Classification of Second Degree Curves",
+      "file": "Case_File_25_Classification_of_Second_Degree_Curves.html"
+    },
+    {
+      "title": "Pencil of Lines",
+      "file": "Case_File_29_Pencil_of_Lines.html"
+    },
+    {
+      "title": "Triangle Medians and Centroid",
+      "file": "Case_File_31_Triangle_Medians_and_Centroid.html"
+    },
+    {
+      "title": "Centroid Coordinates and Squared Distances",
+      "file": "Case_File_32_Centroid_Coordinates_and_Squared_Distances.html"
+    }
+  ],
+  "Vectors & 3D Geometry": [
+    {
+      "title": "Normal Vector and Plane Equation",
+      "file": "Case_File_26_Normal_Vector_and_Plane_Equation.html"
+    },
+    {
+      "title": "Vector Equation of a Line",
+      "file": "Case_File_30_Vector_Equation_of_a_Line.html"
+    },
+    {
+      "title": "Distance from a Point to a Plane",
+      "file": "Case_File_34_Distance_from_a_Point_to_a_Plane.html"
+    },
+    {
+      "title": "Shortest Distance Between Skew Lines",
+      "file": "Case_File_35_Shortest_Distance_Between_Skew_Lines.html"
+    },
+    {
+      "title": "Volume of a Parallelepiped",
+      "file": "Case_File_45_Volume_of_a_Parallelepiped.html"
+    }
+  ],
+  "Permutations & Combinations": [
+    {
+      "title": "Total Number of Subsets",
+      "file": "Case_File_39_Total_Number_of_Subsets.html"
+    },
+    {
+      "title": "Even and Odd Sized Subsets",
+      "file": "Case_File_40_Even_and_Odd_Sized_Subsets(1).html"
+    },
+    {
+      "title": "Committees with a President",
+      "file": "Case_File_41_Committees_with_a_President(1).html"
+    },
+    {
+      "title": "Derangements Formula and Recurrence",
+      "file": "Case_File_Derangements_Formula_and_Recurrence.html"
+    },
+    {
+      "title": "Stars and Bars (Non-negative Integer Solutions)",
+      "file": "Case_File_Stars_and_Bars_Nonnegative_Integer_Solutions.html"
+    },
+    {
+      "title": "Stars and Bars (Positive Integer Solutions)",
+      "file": "Case_File_Stars_and_Bars_Positive_Integer_Solutions.html"
+    }
+  ],
+  "Inequalities": [
+    {
+      "title": "AM ≥ GM for Two Positive Numbers",
+      "file": "Case_File_AM_GE_GM_Two_Positive_Numbers.html"
+    },
+    {
+      "title": "Cauchy-Schwarz Inequality",
+      "file": "Case_File_Cauchy_Schwarz_Inequality.html"
+    },
+    {
+      "title": "GM ≥ HM for Two Positive Numbers",
+      "file": "Case_File_GM_GE_HM_Two_Positive_Numbers.html"
+    }
+  ],
+  "Complex Numbers": [
+    {
+      "title": "Complex Conjugate and Squared Modulus",
+      "file": "Case_File_Complex_Conjugate_and_Squared_Modulus.html"
+    },
+    {
+      "title": "Complex Equation of a Circle",
+      "file": "Case_File_Complex_Equation_of_a_Circle.html"
+    },
+    {
+      "title": "Cube Roots of Unity",
+      "file": "Case_File_Cube_Roots_of_Unity.html"
+    },
+    {
+      "title": "Parallelogram Identity (Complex Numbers)",
+      "file": "Case_File_Parallelogram_Identity_Complex_Numbers.html"
+    },
+    {
+      "title": "Triangle and Reverse Triangle Inequalities (Complex Numbers)",
+      "file": "Case_File_Triangle_and_Reverse_Triangle_Inequalities_Complex_Numbers.html"
+    }
+  ]
+};
+
+    const VISUAL_LABS_DATA = {
+  "Applications of Derivatives": [
+    {
+      "title": "Rolle's Theorem",
+      "file": "rolles_theorem_visual_lab.html"
+    }
+  ],
+  "Vectors & 3D Geometry": [
+    {
+      "title": "Vector Equation of a Plane",
+      "file": "vector_plane_visual_proof.html"
+    },
+    {
+      "title": "Equation of a Plane",
+      "file": "Visual_Lab_equation_of_a_plane.html"
+    },
+    {
+      "title": "Parallelepiped Volume",
+      "file": "Visual_Lab_parallelepiped-volume.html"
+    }
+  ],
+  "Sets, Relations & Functions": [
+    {
+      "title": "Inclusion-Exclusion (2 Sets)",
+      "file": "Visual Proof Inclusion Exclusion 2 sets.html"
+    },
+    {
+      "title": "Inclusion-Exclusion (Three Sets)",
+      "file": "Visual_Demonstration_Inclusion_Exclusion_Three_Sets.html"
+    },
+    {
+      "title": "De Morgan's First Law (Fixed)",
+      "file": "Visual_Proof_De_Morgan_First_Law_Fixed.html"
+    },
+    {
+      "title": "De Morgan's Second Law",
+      "file": "Visual_Proof_De_Morgan_Second_Law.html"
+    },
+    {
+      "title": "Difference as Intersection",
+      "file": "Visual_Proof_Difference_as_Intersection.html"
+    },
+    {
+      "title": "Distribute a Union",
+      "file": "Visual_Proof_Distribute_a_Union.html"
+    },
+    {
+      "title": "Distribute an Intersection",
+      "file": "Visual_Proof_Distribute_an_Intersection.html"
+    }
+  ],
+  "Quadratic Equations": [
+    {
+      "title": "Quadratic Equation Roots",
+      "file": "Visual_Lab_Quadratic_Equation_Roots.html"
+    }
+  ],
+  "Binomial Theorem": [
+    {
+      "title": "Binomial Theorem",
+      "file": "Visual_Lab_binomial_theorem.html"
+    }
+  ],
+  "Complex Numbers": [
+    {
+      "title": "Complex Multiplication",
+      "file": "Visual_Lab_complex-multiplication.html"
+    }
+  ],
+  "Trigonometry": [
+    {
+      "title": "Trigonometric Identity",
+      "file": "Visual_Lab_Tignometric_Identity.html"
+    },
+    {
+      "title": "Sine Angle Addition",
+      "file": "visual_proof_sine_angle_addition.html"
+    }
+  ],
+  "Sequences & Series": [
+    {
+      "title": "Sum of Arithmetic Progression",
+      "file": "Visual_Proof_Sum_of_Arithmetic_Progression.html"
+    }
+  ],
+  "Permutations & Combinations": [
+    {
+      "title": "Visual Understanding: Permutation",
+      "file": "Visual_Understanding_Permutation.html"
+    }
+  ]
+};
+
+    /* =========================================================
+       APP LOGIC
+       You usually do not need to edit anything below this line.
+       ========================================================= */
+
+    const routeButtons = document.querySelectorAll("[data-route]");
+    const pages = {
+      "home": document.getElementById("page-home"),
+      "case-files": document.getElementById("page-case-files"),
+      "visual-labs": document.getElementById("page-visual-labs"),
+      "articles": document.getElementById("page-articles"),
+      "graphs": document.getElementById("page-graphs")
+    };
+
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function getFriendlyNumber(file, fallbackIndex, label) {
+      const match = file.match(/Case_File_(\d+)/i);
+      if (match) return `${label} ${match[1]}`;
+      if (label === "Case File") return label;
+      return `${label} ${String(fallbackIndex + 1).padStart(2, "0")}`;
+    }
+
+    function renderLibrary({
+      targetId,
+      data,
+      itemLabel,
+      itemLabelSingular
+    }) {
+      const target = document.getElementById(targetId);
+
+      target.innerHTML = TOPICS.map((topic, topicIndex) => {
+        const files = data[topic] || [];
+        const countText = files.length
+          ? `${files.length} ${files.length === 1 ? itemLabelSingular : itemLabel}`
+          : "Coming soon";
+
+        const fileMarkup = files.length
+          ? `
+            <div class="file-grid">
+              ${files.map((item, itemIndex) => `
+                <a
+                  class="file-card"
+                  href="${escapeHTML(item.file)}"
+                  data-search-text="${escapeHTML(
+                    `${topic} ${item.title} ${item.note || ""}`
+                  ).toLowerCase()}"
+                >
+                  <div class="file-number">
+                    ${escapeHTML(
+                      getFriendlyNumber(
+                        item.file,
+                        itemIndex,
+                        targetId.startsWith("case") ? "Case File" : "Visual Lab"
+                      )
+                    )}
+                  </div>
+                  <strong>${escapeHTML(item.title)}</strong>
+                  ${item.note ? `<small>${escapeHTML(item.note)}</small>` : ""}
+                  <span class="file-arrow" aria-hidden="true">↗</span>
+                </a>
+              `).join("")}
+            </div>
+          `
+          : `
+            <div class="empty-topic">
+              No ${itemLabel.toLowerCase()} have been added here yet.
+              This topic is already prepared for future additions.
+            </div>
+          `;
+
+        return `
+          <article
+            class="topic-card"
+            data-topic-card
+            data-topic-name="${escapeHTML(topic).toLowerCase()}"
+          >
+            <button
+              class="topic-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="${targetId}-topic-${topicIndex}"
+            >
+              <span class="topic-index">${String(topicIndex + 1).padStart(2, "0")}</span>
+              <span class="topic-title">
+                <strong>${escapeHTML(topic)}</strong>
+                <span>${files.length ? "Open to view available files" : "Prepared for future content"}</span>
+              </span>
+              <span class="topic-badge">${escapeHTML(countText)}</span>
+              <span class="chevron" aria-hidden="true">⌄</span>
+            </button>
+
+            <div
+              class="topic-content"
+              id="${targetId}-topic-${topicIndex}"
+            >
+              ${fileMarkup}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      target.querySelectorAll(".topic-toggle").forEach(button => {
+        button.addEventListener("click", () => {
+          const card = button.closest(".topic-card");
+          const willOpen = !card.classList.contains("open");
+
+          card.classList.toggle("open", willOpen);
+          button.setAttribute("aria-expanded", String(willOpen));
+        });
+      });
+    }
+
+    function setupSearch({
+      inputId,
+      listId,
+      noResultsId,
+      countId,
+      data,
+      noun
+    }) {
+      const input = document.getElementById(inputId);
+      const list = document.getElementById(listId);
+      const noResults = document.getElementById(noResultsId);
+      const count = document.getElementById(countId);
+
+      const totalFiles = Object.values(data)
+        .flat()
+        .length;
+
+      count.textContent = `${totalFiles} ${totalFiles === 1 ? noun : noun + "s"} available`;
+
+      input.addEventListener("input", () => {
+        const query = input.value.trim().toLowerCase();
+        let visibleTopics = 0;
+
+        list.querySelectorAll("[data-topic-card]").forEach(card => {
+          const topicName = card.dataset.topicName;
+          const fileCards = [...card.querySelectorAll(".file-card")];
+
+          const topicMatches = !query || topicName.includes(query);
+          let matchingFiles = 0;
+
+          fileCards.forEach(fileCard => {
+            const matches =
+              !query ||
+              topicMatches ||
+              fileCard.dataset.searchText.includes(query);
+
+            fileCard.style.display = matches ? "" : "none";
+            if (matches) matchingFiles++;
+          });
+
+          const isEmptyTopic = fileCards.length === 0;
+          const shouldShow =
+            !query ||
+            topicMatches ||
+            matchingFiles > 0 ||
+            (isEmptyTopic && topicName.includes(query));
+
+          card.hidden = !shouldShow;
+
+          if (shouldShow) {
+            visibleTopics++;
+
+            if (query && (topicMatches || matchingFiles > 0) && fileCards.length) {
+              card.classList.add("open");
+              card.querySelector(".topic-toggle").setAttribute("aria-expanded", "true");
+            }
+          }
+        });
+
+        noResults.classList.toggle("show", visibleTopics === 0);
+      });
+    }
+
+    function navigate(route, updateHash = true) {
+      const safeRoute = pages[route] ? route : "home";
+
+      Object.entries(pages).forEach(([name, page]) => {
+        page.classList.toggle("active", name === safeRoute);
+      });
+
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.route === safeRoute);
+      });
+
+      if (updateHash) {
+        history.replaceState(null, "", `#${safeRoute}`);
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    renderLibrary({
+      targetId: "case-topic-list",
+      data: CASE_FILES_DATA,
+      itemLabel: "Case Files",
+      itemLabelSingular: "Case File"
+    });
+
+    renderLibrary({
+      targetId: "visual-topic-list",
+      data: VISUAL_LABS_DATA,
+      itemLabel: "Visual Labs",
+      itemLabelSingular: "Visual Lab"
+    });
+
+    setupSearch({
+      inputId: "case-search",
+      listId: "case-topic-list",
+      noResultsId: "case-no-results",
+      countId: "case-count",
+      data: CASE_FILES_DATA,
+      noun: "case file"
+    });
+
+    setupSearch({
+      inputId: "visual-search",
+      listId: "visual-topic-list",
+      noResultsId: "visual-no-results",
+      countId: "visual-count",
+      data: VISUAL_LABS_DATA,
+      noun: "visual lab"
+    });
+
+    routeButtons.forEach(element => {
+      element.addEventListener("click", event => {
+        const route = element.dataset.route;
+        if (!route) return;
+
+        if (element.tagName === "A") {
+          event.preventDefault();
+        }
+
+        navigate(route);
+      });
+    });
+
+    window.addEventListener("hashchange", () => {
+      navigate(location.hash.replace("#", ""), false);
+    });
+
+    navigate(location.hash.replace("#", "") || "home", false);
+  </script>
+</body>
+</html>

@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>Rolle's Theorem · Visual Proof Lab</title>
+<style>
+:root{
+  --ink:#192c3c;
+  --muted:#64747f;
+  --line:#dce4e6;
+  --paper:#f6f8f7;
+  --card:#ffffff;
+  --teal:#087d76;
+  --teal-bg:#e9f6f2;
+  --gold:#a66013;
+  --gold-bg:#fff5e4;
+  --purple:#7852b4;
+  --purple-bg:#f3eefb;
+  --green:#14865d;
+  --green-bg:#e8f7ef;
+  --red:#b94a48;
+  --red-bg:#fff0ef;
+  --blue:#2e6f9e;
+  --serif:Georgia,'Times New Roman',serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+body{font:15px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button,select,input[type="range"]{cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #197db5;outline-offset:3px}
+h1,h2,h3,p{margin:0}
+.wrap{width:min(1220px,calc(100% - 48px));margin:auto}
+.topbar{
+  height:76px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);gap:16px
+}
+.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:-.3px}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font:23px var(--serif)
+}
+.top-note{font-size:12px;color:var(--muted);letter-spacing:.08em}
+.hero{
+  padding:38px 0 25px;display:grid;grid-template-columns:1.15fr .85fr;
+  gap:34px;align-items:center
+}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase;color:var(--teal)}
+h1{font:normal clamp(38px,4.7vw,58px)/1.1 var(--serif);letter-spacing:-2px;margin:10px 0 14px}
+h1 em{font-style:normal;color:var(--teal)}
+.intro{color:var(--muted);max-width:660px;font-size:16px}
+.formula-card{
+  background:#fff;border:1px solid var(--line);padding:23px 26px;border-radius:20px;
+  box-shadow:0 8px 30px #203d4610
+}
+.formula{font:26px/1.45 var(--serif);margin:8px 0}
+.small{font-size:12px;color:var(--muted)}
+.lab{
+  background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;
+  box-shadow:0 12px 36px #203d4608;margin-bottom:28px
+}
+.lab-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:18px 22px;border-bottom:1px solid var(--line);background:#fbfcfc
+}
+.lab-title{font-weight:750}
+.badge{
+  padding:6px 10px;border-radius:999px;font-size:11px;font-weight:800;
+  background:var(--teal-bg);color:var(--teal);white-space:nowrap
+}
+.preset-row{
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:16px 20px;
+  border-bottom:1px solid var(--line)
+}
+.preset{
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  padding:9px 12px;border-radius:10px;font-size:12px;font-weight:700
+}
+.preset:hover{border-color:#9eafb4}
+.preset[aria-pressed="true"]{background:var(--teal-bg);border-color:var(--teal);color:#066b65}
+.select-wrap{margin-left:auto;display:flex;gap:8px;align-items:center}
+select{
+  border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);
+  padding:9px 34px 9px 11px;min-width:230px
+}
+.main-grid{
+  display:grid;grid-template-columns:minmax(0,1.72fr) minmax(310px,.9fr)
+}
+.stage{padding:20px;min-width:0}
+.canvas-wrap{
+  position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  background:linear-gradient(#ffffff,#fbfcfc)
+}
+canvas{
+  width:100%;height:500px;display:block;touch-action:none;cursor:crosshair
+}
+.canvas-hint{
+  position:absolute;left:14px;bottom:12px;background:#ffffffdd;border:1px solid var(--line);
+  border-radius:9px;padding:7px 10px;font-size:11px;color:var(--muted);backdrop-filter:blur(7px)
+}
+.legend{
+  display:flex;gap:16px;flex-wrap:wrap;margin:12px 3px 0;color:var(--muted);font-size:12px
+}
+.legend span{display:flex;align-items:center;gap:6px}
+.swatch{width:10px;height:10px;border-radius:50%;display:inline-block}
+.line-swatch{width:20px;height:0;border-top:2px dashed var(--gold)}
+.control-strip{
+  margin-top:16px;border-top:1px solid var(--line);padding-top:16px
+}
+.control-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:7px}
+.control-head label{font-weight:700;font-size:13px}
+.value-pill{
+  padding:4px 9px;border-radius:8px;background:#f1f4f4;border:1px solid var(--line);
+  font-variant-numeric:tabular-nums;font-size:12px
+}
+input[type="range"]{width:100%;accent-color:var(--teal)}
+.range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:10px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{
+  border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;
+  padding:9px 12px;font-weight:700;font-size:12px;min-height:39px
+}
+.btn:hover{filter:brightness(.98)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.side{
+  border-left:1px solid var(--line);padding:22px;background:#fbfcfc;
+  display:flex;flex-direction:column;gap:14px
+}
+.side h2{font:28px/1.15 var(--serif);letter-spacing:-.6px}
+.equation-chip{
+  background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 14px
+}
+.eq{font:19px/1.4 var(--serif);overflow-wrap:anywhere}
+.live-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.live{
+  background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px;
+  min-width:0
+}
+.live b{display:block;font:21px/1.1 var(--serif);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.checklist{
+  background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 14px
+}
+.check{
+  display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #edf1f1
+}
+.check:last-child{border-bottom:0}
+.icon{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  flex:none;font-size:12px;font-weight:900
+}
+.check.good .icon{background:var(--green-bg);color:var(--green)}
+.check.bad .icon{background:var(--red-bg);color:var(--red)}
+.check .txt{font-size:13px}
+.check .txt small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
+.finder{
+  border-radius:13px;padding:14px 15px;background:var(--green-bg);border:1px solid #bfe7d2;
+  color:#0d6d4b;display:none
+}
+.finder.show{display:block}
+.finder strong{display:block;margin-bottom:3px}
+.explainer{
+  border-radius:13px;padding:15px;background:var(--gold-bg);border:1px solid #ecd9bd
+}
+.explainer strong{display:block;margin-bottom:4px}
+.theorem-status{
+  border-radius:13px;padding:14px 15px;border:1px solid var(--line);background:#fff
+}
+.theorem-status.pass{background:var(--teal-bg);border-color:#c7e7df}
+.theorem-status.fail{background:var(--red-bg);border-color:#f1d1ce}
+.theorem-status.mvt{background:var(--purple-bg);border-color:#ddcff4}
+.theorem-status strong{display:block;margin-bottom:4px}
+.note{font-size:12px;color:var(--muted)}
+.footer{
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:0 0 30px;color:var(--muted);font-size:11px
+}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}.main-grid{grid-template-columns:1fr}
+  .side{border-left:0;border-top:1px solid var(--line)}
+  canvas{height:450px}.select-wrap{margin-left:0;width:100%}.select-wrap select{flex:1}
+}
+@media(max-width:620px){
+  .wrap{width:calc(100% - 28px)}.topbar{height:64px}.top-note{font-size:9px}
+  .hero{padding:28px 0 20px}h1{font-size:41px;letter-spacing:-1.4px}
+  .formula-card{padding:18px}.preset-row{padding:12px}
+  .preset{flex:1;min-width:125px}.stage{padding:12px}
+  canvas{height:365px}.canvas-hint{display:none}
+  .side{padding:18px}.live-grid{grid-template-columns:1fr 1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">R</span>Math Visual Lab</div>
+    <div class="top-note">CALCULUS &nbsp;/&nbsp; ROLLE'S THEOREM</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">See the tangent. Understand the theorem.</div>
+        <h1>Same height at both ends.<br><em>Somewhere, the slope is zero.</em></h1>
+        <p class="intro">Drag the test point along the curve. When the three hypotheses are satisfied, a horizontal tangent must appear somewhere inside the interval.</p>
+      </div>
+      <div class="formula-card">
+        <div class="eyebrow">Rolle's Theorem</div>
+        <div class="formula">f(a) = f(b) &nbsp;⇒&nbsp; ∃ c ∈ (a,b) with f′(c) = 0</div>
+        <p class="small">Provided f is continuous on [a,b] and differentiable on (a,b).</p>
+      </div>
+    </section>
+
+    <section class="lab" aria-label="Interactive Rolle's theorem visualizer">
+      <div class="lab-head">
+        <div>
+          <div class="eyebrow">Interactive proof intuition</div>
+          <div class="lab-title" id="scenarioTitle">Single stationary point</div>
+        </div>
+        <span class="badge" id="scenarioBadge">ROLLE APPLIES</span>
+      </div>
+
+      <div class="preset-row">
+        <button class="preset" data-preset="single" aria-pressed="true">Single stationary point</button>
+        <button class="preset" data-preset="multi" aria-pressed="false">Multiple stationary points</button>
+        <button class="preset" data-preset="constant" aria-pressed="false">Constant function</button>
+        <div class="select-wrap">
+          <label class="small" for="scenarioSelect">Scenario</label>
+          <select id="scenarioSelect" aria-label="Choose theorem or counterexample scenario">
+            <optgroup label="Rolle's theorem works">
+              <option value="single">Single stationary point</option>
+              <option value="multi">Multiple stationary points</option>
+              <option value="constant">Constant function</option>
+            </optgroup>
+            <optgroup label="Break a hypothesis">
+              <option value="corner">Corner / not differentiable</option>
+              <option value="jump">Discontinuous jump</option>
+              <option value="unequal">Unequal endpoints → MVT</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <div class="main-grid">
+        <div class="stage">
+          <div class="canvas-wrap">
+            <canvas id="plot" aria-label="Coordinate plane showing the selected function, endpoints, tangent line and stationary points"></canvas>
+            <div class="canvas-hint">Drag horizontally on the graph to move the tangent point.</div>
+          </div>
+
+          <div class="legend">
+            <span><i class="swatch" style="background:var(--teal)"></i>f(x)</span>
+            <span><i class="swatch" style="background:var(--purple)"></i>Test point & tangent</span>
+            <span><i class="swatch" style="background:var(--green)"></i>Stationary point C</span>
+            <span><i class="line-swatch"></i>Endpoint reference</span>
+          </div>
+
+          <div class="control-strip">
+            <div class="control-head">
+              <label for="xSlider">Move the test point x</label>
+              <output id="xOutput" class="value-pill">x = 2.000</output>
+            </div>
+            <input id="xSlider" type="range" min="1" max="3" step="0.001" value="1.35" />
+            <div class="range-labels"><span id="aLabel">a = 1</span><span>drag / slide</span><span id="bLabel">b = 3</span></div>
+            <div class="actions">
+              <button class="btn primary" id="findC">Find a horizontal tangent</button>
+              <button class="btn" id="play">▶ Sweep tangent</button>
+              <button class="btn" id="reset">Reset point</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="side">
+          <div>
+            <div class="eyebrow" id="modeEyebrow">THE THEOREM IN ACTION</div>
+            <h2 id="sideTitle">A smooth trip that returns to the same height.</h2>
+          </div>
+
+          <div class="equation-chip">
+            <div class="small">Current function</div>
+            <div class="eq" id="equationText">f(x) = −(x−1)(x−3), &nbsp; [1,3]</div>
+          </div>
+
+          <div class="live-grid" aria-label="Live function values">
+            <div class="live"><span class="small">x</span><b id="liveX">1.350</b></div>
+            <div class="live"><span class="small">f(x)</span><b id="liveY">—</b></div>
+            <div class="live"><span class="small">f′(x)</span><b id="liveD">—</b></div>
+          </div>
+
+          <div class="finder" id="finder" role="status" aria-live="polite">
+            <strong>Horizontal Tangent Found: f′(c) = 0</strong>
+            <span id="finderText">The tangent is momentarily flat.</span>
+          </div>
+
+          <div class="checklist">
+            <div class="eyebrow" style="margin-bottom:5px">Hypotheses check</div>
+            <div class="check good" id="checkContinuous">
+              <span class="icon">✓</span>
+              <div class="txt">Continuous on [a,b]<small id="continuousNote"></small></div>
+            </div>
+            <div class="check good" id="checkDifferentiable">
+              <span class="icon">✓</span>
+              <div class="txt">Differentiable on (a,b)<small id="differentiableNote"></small></div>
+            </div>
+            <div class="check good" id="checkEndpoints">
+              <span class="icon">✓</span>
+              <div class="txt">f(a) = f(b)<small id="endpointNote"></small></div>
+            </div>
+          </div>
+
+          <div class="theorem-status pass" id="theoremStatus">
+            <strong id="statusTitle">Rolle's theorem applies.</strong>
+            <span id="statusText">At least one interior point must have a horizontal tangent.</span>
+          </div>
+
+          <div class="explainer">
+            <strong>Think of altitude.</strong>
+            <span id="intuitionText">If you leave home and return to the exact same altitude without sharp teleports or spikes, at some point your climb/drop rate must have momentarily been zero.</span>
+          </div>
+
+          <p class="note" id="criticalSummary"></p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>MATH VISUAL LAB &nbsp;/&nbsp; Rolle's Theorem</span>
+    <span>Continuity · Differentiability · Equal endpoint values</span>
+  </footer>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const $ = id => document.getElementById(id);
+const canvas = $('plot');
+const ctx = canvas.getContext('2d');
+
+const COLORS = {
+  ink:'#192c3c', muted:'#64747f', grid:'#e7eded', axis:'#9aabb2',
+  teal:'#087d76', gold:'#a66013', purple:'#7852b4', green:'#14865d',
+  red:'#b94a48', blue:'#2e6f9e', paper:'#ffffff'
+};
+
+const scenarios = {
+  single:{
+    title:'Single stationary point',
+    badge:'ROLLE APPLIES',
+    a:1,b:3,
+    f:x=>-(x-1)*(x-3),
+    df:x=>-2*x+4,
+    equation:'f(x) = −(x−1)(x−3),   [1,3]',
+    continuous:true,differentiable:true,equal:true,
+    continuityNote:'Smooth on the whole closed interval.',
+    differentiableNote:'No corners or cusps inside (1,3).',
+    endpointNote:'f(1) = f(3) = 0.',
+    sideTitle:'One hill. One forced flat tangent.',
+    intuition:'You start and finish at the same altitude. A smooth highest point occurs between them, and at that top the tangent is horizontal.',
+    kind:'rolle'
+  },
+  multi:{
+    title:'Multiple stationary points',
+    badge:'ROLLE APPLIES',
+    a:0,b:6,
+    f:x=>Math.sin(Math.PI*x/2),
+    df:x=>(Math.PI/2)*Math.cos(Math.PI*x/2),
+    equation:'f(x) = sin(πx/2),   [0,6]',
+    continuous:true,differentiable:true,equal:true,
+    continuityNote:'Sine is continuous everywhere.',
+    differentiableNote:'Sine is differentiable everywhere.',
+    endpointNote:'f(0) = f(6) = 0.',
+    sideTitle:'The theorem promises at least one. You can have more.',
+    intuition:'Rolle guarantees existence, not uniqueness. This curve returns to the same height and becomes flat several times along the way.',
+    kind:'rolle'
+  },
+  constant:{
+    title:'Constant function',
+    badge:'ROLLE APPLIES EVERYWHERE',
+    a:-2,b:2,
+    f:x=>1.25,
+    df:x=>0,
+    equation:'f(x) = 1.25,   [−2,2]',
+    continuous:true,differentiable:true,equal:true,
+    continuityNote:'A constant function has no breaks.',
+    differentiableNote:'Its derivative exists and equals 0 everywhere.',
+    endpointNote:'Both endpoints have height 1.25.',
+    sideTitle:'Every interior point is a Rolle point.',
+    intuition:'You never climb or descend at all. The slope is zero for every interior x, so there are infinitely many choices for c.',
+    kind:'rolle',
+    constant:true
+  },
+  corner:{
+    title:'Corner / non-differentiable',
+    badge:'HYPOTHESIS BROKEN',
+    a:-1,b:1,
+    f:x=>1-Math.abs(x),
+    df:x=>Math.abs(x)<1e-9?NaN:(x<0?1:-1),
+    equation:'f(x) = 1 − |x|,   [−1,1]',
+    continuous:true,differentiable:false,equal:true,
+    continuityNote:'The two sides meet at x = 0.',
+    differentiableNote:'Fails at the sharp corner x = 0.',
+    endpointNote:'f(−1) = f(1) = 0.',
+    sideTitle:'Equal endpoints are not enough.',
+    intuition:'The path rises with slope +1 and immediately leaves with slope −1. At the sharp peak, the derivative does not exist—there is no horizontal tangent.',
+    kind:'broken',
+    singular:[0]
+  },
+  jump:{
+    title:'Discontinuous jump',
+    badge:'HYPOTHESIS BROKEN',
+    a:-1,b:1,
+    f:x=>x<0?x+1:x-1,
+    df:x=>Math.abs(x)<1e-9?NaN:1,
+    equation:'f(x) = x+1 (x<0),  x−1 (x≥0),   [−1,1]',
+    continuous:false,differentiable:false,equal:true,
+    continuityNote:'Fails at the jump x = 0.',
+    differentiableNote:'A derivative cannot exist at the jump.',
+    endpointNote:'f(−1) = f(1) = 0.',
+    sideTitle:'A teleport can skip the flat moment.',
+    intuition:'The graph climbs with slope +1, jumps downward, then keeps climbing with slope +1. Equal endpoint heights survive, but continuity does not.',
+    kind:'broken',
+    breaks:[0],
+    singular:[0]
+  },
+  unequal:{
+    title:'Unequal endpoints → Mean Value Theorem',
+    badge:'ROLLE CONDITION FAILS',
+    a:0,b:2,
+    f:x=>x*x,
+    df:x=>2*x,
+    equation:'f(x) = x²,   [0,2]',
+    continuous:true,differentiable:true,equal:false,
+    continuityNote:'Polynomial: continuous on [0,2].',
+    differentiableNote:'Polynomial: differentiable on (0,2).',
+    endpointNote:'f(0) = 0 while f(2) = 4.',
+    sideTitle:'The secant is not horizontal anymore.',
+    intuition:'When the endpoint heights differ, Rolle no longer asks for slope 0. The Mean Value Theorem instead matches a tangent slope to the secant slope.',
+    kind:'mvt'
+  }
+};
+
+let current = scenarios.single;
+let currentKey = 'single';
+let testX = 1.35;
+let stationary = [];
+let mvtPoints = [];
+let dragging = false;
+let anim = null;
+let bounds = {left:60,right:800,top:30,bottom:450};
+let view = {xmin:0,xmax:4,ymin:-1,ymax:2};
+
+const fmt = (v,d=3) => {
+  if (!Number.isFinite(v)) return 'undefined';
+  if (Math.abs(v) < 1e-10) v = 0;
+  return Number(v.toFixed(d)).toString().replace('-', '−');
+};
+
+function endpointValueEqual(s){
+  return Math.abs(s.f(s.a)-s.f(s.b)) < 1e-7;
+}
+
+function solveRoots(fn,a,b,target=0){
+  const roots=[];
+  const N=1600;
+  const eps=1e-5;
+  let px=a, py=fn(px)-target;
+
+  function addRoot(r){
+    if(r<=a+1e-4 || r>=b-1e-4) return;
+    if(!roots.some(v=>Math.abs(v-r)<1e-3)) roots.push(r);
+  }
+
+  for(let i=1;i<=N;i++){
+    const x=a+(b-a)*i/N;
+    const y=fn(x)-target;
+    if(Number.isFinite(y) && Math.abs(y)<eps) addRoot(x);
+
+    if(Number.isFinite(py) && Number.isFinite(y) && py*y<0){
+      let lo=px, hi=x, flo=py;
+      for(let k=0;k<45;k++){
+        const mid=(lo+hi)/2;
+        const fm=fn(mid)-target;
+        if(!Number.isFinite(fm)) break;
+        if(Math.abs(fm)<1e-10){lo=hi=mid;break;}
+        if(flo*fm<=0){hi=mid;}else{lo=mid;flo=fm;}
+      }
+      addRoot((lo+hi)/2);
+    }
+    px=x; py=y;
+  }
+  return roots.sort((x,y)=>x-y);
+}
+
+function analyzeScenario(){
+  if(current.constant){
+    stationary = [];
+  } else {
+    stationary = solveRoots(current.df,current.a,current.b,0);
+  }
+
+  if(current.kind==='mvt'){
+    const sec=(current.f(current.b)-current.f(current.a))/(current.b-current.a);
+    mvtPoints=solveRoots(current.df,current.a,current.b,sec);
+  } else {
+    mvtPoints=[];
+  }
+}
+
+function sampleRange(){
+  const xs=[];
+  const ys=[];
+  const padX=(current.b-current.a)*0.12 || 1;
+  const xmin=current.a-padX, xmax=current.b+padX;
+  for(let i=0;i<=700;i++){
+    const x=current.a+(current.b-current.a)*i/700;
+    const y=current.f(x);
+    if(Number.isFinite(y)){xs.push(x);ys.push(y);}
+  }
+  if(!ys.length){view={xmin,xmax,ymin:-2,ymax:2};return;}
+  let ymin=Math.min(...ys), ymax=Math.max(...ys);
+  if(Math.abs(ymax-ymin)<.3){ymin-=1;ymax+=1}
+  else{
+    const py=(ymax-ymin)*0.22;
+    ymin-=py;ymax+=py;
+  }
+  if(ymin>0)ymin=Math.min(0,ymin-.2);
+  if(ymax<0)ymax=Math.max(0,ymax+.2);
+  view={xmin,xmax,ymin,ymax};
+}
+
+function resizeCanvas(){
+  const rect=canvas.getBoundingClientRect();
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  canvas.width=Math.max(1,Math.round(rect.width*dpr));
+  canvas.height=Math.max(1,Math.round(rect.height*dpr));
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  bounds={left:58,right:rect.width-24,top:28,bottom:rect.height-42};
+  draw();
+}
+
+function X(x){
+  return bounds.left+(x-view.xmin)/(view.xmax-view.xmin)*(bounds.right-bounds.left);
+}
+function Y(y){
+  return bounds.bottom-(y-view.ymin)/(view.ymax-view.ymin)*(bounds.bottom-bounds.top);
+}
+function invX(px){
+  return view.xmin+(px-bounds.left)/(bounds.right-bounds.left)*(view.xmax-view.xmin);
+}
+
+function niceStep(span,target=7){
+  const raw=span/target;
+  const p=10**Math.floor(Math.log10(raw));
+  const n=raw/p;
+  const m=n<1.5?1:n<3?2:n<7?5:10;
+  return m*p;
+}
+
+function line(x1,y1,x2,y2,color,width=1,dash=[]){
+  ctx.save();
+  ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();
+}
+
+function text(t,x,y,color=COLORS.muted,align='center',font='11px system-ui'){
+  ctx.save();ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='middle';ctx.font=font;ctx.fillText(t,x,y);ctx.restore();
+}
+
+function circle(x,y,r,fill,glow=0){
+  ctx.save();
+  ctx.fillStyle=fill;
+  if(glow){ctx.shadowColor=fill;ctx.shadowBlur=glow;}
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+function drawGrid(){
+  const w=canvas.getBoundingClientRect().width;
+  const h=canvas.getBoundingClientRect().height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+
+  const sx=niceStep(view.xmax-view.xmin,8);
+  const sy=niceStep(view.ymax-view.ymin,7);
+  const x0=Math.ceil(view.xmin/sx)*sx;
+  const y0=Math.ceil(view.ymin/sy)*sy;
+
+  for(let x=x0;x<=view.xmax+1e-9;x+=sx){
+    const px=X(x);
+    line(px,bounds.top,px,bounds.bottom,COLORS.grid,1);
+    if(Math.abs(x)>1e-9) text(fmt(x,2),px,bounds.bottom+17,COLORS.muted,'center');
+  }
+  for(let y=y0;y<=view.ymax+1e-9;y+=sy){
+    const py=Y(y);
+    line(bounds.left,py,bounds.right,py,COLORS.grid,1);
+    if(Math.abs(y)>1e-9) text(fmt(y,2),bounds.left-8,py,COLORS.muted,'right');
+  }
+
+  if(view.ymin<=0 && view.ymax>=0){
+    line(bounds.left,Y(0),bounds.right,Y(0),COLORS.axis,1.4);
+    text('x',bounds.right+9,Y(0)-7,COLORS.ink,'center','italic 13px Georgia');
+  }
+  if(view.xmin<=0 && view.xmax>=0){
+    line(X(0),bounds.top,X(0),bounds.bottom,COLORS.axis,1.4);
+    text('y',X(0)+10,bounds.top-7,COLORS.ink,'center','italic 13px Georgia');
+  }
+}
+
+function drawReference(){
+  const ya=current.f(current.a), yb=current.f(current.b);
+  if(current.equal){
+    line(X(current.a),Y(ya),X(current.b),Y(ya),COLORS.gold,1.7,[7,6]);
+    text('f(a) = f(b)',(X(current.a)+X(current.b))/2,Y(ya)-14,COLORS.gold,'center','700 11px system-ui');
+  } else {
+    line(X(current.a),Y(ya),X(current.b),Y(yb),COLORS.gold,1.7,[7,6]);
+    const m=(yb-ya)/(current.b-current.a);
+    text('secant slope = '+fmt(m,2),(X(current.a)+X(current.b))/2,(Y(ya)+Y(yb))/2-14,COLORS.gold,'center','700 11px system-ui');
+  }
+}
+
+function crossesBreak(x1,x2){
+  return (current.breaks||[]).some(b=>x1<b && x2>=b);
+}
+
+function drawCurve(){
+  ctx.save();
+  ctx.strokeStyle=COLORS.teal;
+  ctx.lineWidth=3.2;
+  ctx.lineJoin='round';
+  ctx.lineCap='round';
+  ctx.beginPath();
+  let started=false;
+  let prevX=current.a;
+  for(let i=0;i<=1100;i++){
+    const x=current.a+(current.b-current.a)*i/1100;
+    const y=current.f(x);
+    if(!Number.isFinite(y) || (started && crossesBreak(prevX,x))){
+      started=false;
+      prevX=x;
+      continue;
+    }
+    const px=X(x),py=Y(y);
+    if(!started){ctx.moveTo(px,py);started=true;}
+    else ctx.lineTo(px,py);
+    prevX=x;
+  }
+  ctx.stroke();
+  ctx.restore();
+
+  // Open/closed markers at jump.
+  if(currentKey==='jump'){
+    const px=X(0);
+    circle(px,Y(1),5,'#fff');
+    ctx.save();ctx.strokeStyle=COLORS.teal;ctx.lineWidth=2;ctx.beginPath();ctx.arc(px,Y(1),5,0,Math.PI*2);ctx.stroke();ctx.restore();
+    circle(px,Y(-1),5,COLORS.teal);
+  }
+}
+
+function drawEndpoints(){
+  const ya=current.f(current.a),yb=current.f(current.b);
+  [[current.a,ya,'A'],[current.b,yb,'B']].forEach(([x,y,label])=>{
+    circle(X(x),Y(y),7,COLORS.gold,12);
+    circle(X(x),Y(y),3.2,'#fff');
+    text(label+'  ('+fmt(x,2)+', '+fmt(y,2)+')',X(x),Y(y)-19,COLORS.ink,'center','700 11px system-ui');
+  });
+}
+
+function drawStationary(){
+  if(current.constant){
+    ctx.save();
+    ctx.strokeStyle=COLORS.green;
+    ctx.lineWidth=6;ctx.globalAlpha=.18;
+    ctx.beginPath();ctx.moveTo(X(current.a),Y(current.f(current.a)));ctx.lineTo(X(current.b),Y(current.f(current.b)));ctx.stroke();
+    ctx.restore();
+    text('every interior point is a stationary point',(X(current.a)+X(current.b))/2,Y(current.f(current.a))-22,COLORS.green,'center','700 11px system-ui');
+    return;
+  }
+
+  stationary.forEach((c,i)=>{
+    const y=current.f(c);
+    circle(X(c),Y(y),6,COLORS.green,9);
+    circle(X(c),Y(y),2.7,'#fff');
+    text('C'+(stationary.length>1?String(i+1):'')+'  c='+fmt(c,3),X(c),Y(y)-18,COLORS.green,'center','700 11px system-ui');
+  });
+
+  if(current.kind==='mvt'){
+    mvtPoints.forEach(c=>{
+      const y=current.f(c);
+      circle(X(c),Y(y),6,COLORS.purple,8);
+      text('MVT point  c='+fmt(c,3),X(c),Y(y)-18,COLORS.purple,'center','700 11px system-ui');
+    });
+  }
+}
+
+function tangentState(){
+  const y=current.f(testX);
+  const d=current.df(testX);
+  const horizontal=Number.isFinite(d) && Math.abs(d)<0.02;
+  return {y,d,horizontal};
+}
+
+function drawTangent(){
+  const {y,d,horizontal}=tangentState();
+  if(!Number.isFinite(y))return;
+  const px=X(testX), py=Y(y);
+
+  // undefined derivative -> show point but not tangent
+  if(!Number.isFinite(d)){
+    circle(px,py,7,COLORS.red,10);
+    text('derivative undefined',px,py-23,COLORS.red,'center','700 11px system-ui');
+    return;
+  }
+
+  const color=horizontal?COLORS.green:COLORS.purple;
+  const span=(current.b-current.a)*.36;
+  const x1=testX-span,x2=testX+span;
+  const y1=y+d*(x1-testX),y2=y+d*(x2-testX);
+
+  ctx.save();
+  ctx.strokeStyle=color;ctx.lineWidth=horizontal?4:2.6;
+  ctx.shadowColor=horizontal?color:'transparent';ctx.shadowBlur=horizontal?10:0;
+  ctx.beginPath();ctx.moveTo(X(x1),Y(y1));ctx.lineTo(X(x2),Y(y2));ctx.stroke();
+  ctx.restore();
+
+  circle(px,py,7,color,horizontal?14:8);
+  circle(px,py,3,'#fff');
+  text('m = f′(x) = '+fmt(d,3),px+10,py-22,color,'left','700 11px system-ui');
+}
+
+function drawSingulars(){
+  (current.singular||[]).forEach(x=>{
+    const y=current.f(x);
+    line(X(x),bounds.top,X(x),bounds.bottom,'#d7b1af',1,[4,5]);
+    circle(X(x),Y(y),5,COLORS.red,6);
+  });
+}
+
+function draw(){
+  if(!canvas.width)return;
+  drawGrid();
+  drawReference();
+  drawCurve();
+  drawSingulars();
+  drawStationary();
+  drawTangent();
+  drawEndpoints();
+}
+
+function updateCheck(id,good,note){
+  const el=$(id);
+  el.className='check '+(good?'good':'bad');
+  el.querySelector('.icon').textContent=good?'✓':'×';
+  if(id==='checkContinuous')$('continuousNote').textContent=note;
+  if(id==='checkDifferentiable')$('differentiableNote').textContent=note;
+  if(id==='checkEndpoints')$('endpointNote').textContent=note;
+}
+
+function updateHUD(){
+  const {y,d,horizontal}=tangentState();
+  $('liveX').textContent=fmt(testX,3);
+  $('liveY').textContent=fmt(y,3);
+  $('liveD').textContent=fmt(d,3);
+  $('xOutput').textContent='x = '+fmt(testX,3);
+
+  updateCheck('checkContinuous',current.continuous,current.continuityNote);
+  updateCheck('checkDifferentiable',current.differentiable,current.differentiableNote);
+  updateCheck('checkEndpoints',current.equal,current.endpointNote);
+
+  $('scenarioTitle').textContent=current.title;
+  $('scenarioBadge').textContent=current.badge;
+  $('equationText').textContent=current.equation;
+  $('sideTitle').textContent=current.sideTitle;
+  $('intuitionText').textContent=current.intuition;
+
+  const finder=$('finder');
+  if(horizontal){
+    finder.classList.add('show');
+    $('finderText').textContent=current.constant
+      ? 'This whole graph is horizontal, so every interior point works.'
+      : 'The test point is at (or extremely near) a stationary point.';
+  }else{
+    finder.classList.remove('show');
+  }
+
+  const status=$('theoremStatus');
+  if(current.kind==='rolle'){
+    status.className='theorem-status pass';
+    $('statusTitle').textContent='Rolle’s theorem applies.';
+    $('statusText').textContent=current.constant
+      ? 'Every interior point satisfies f′(c) = 0.'
+      : 'At least one interior point must have a horizontal tangent.';
+    $('modeEyebrow').textContent='THE THEOREM IN ACTION';
+  }else if(current.kind==='mvt'){
+    status.className='theorem-status mvt';
+    $('statusTitle').textContent='Equal endpoints fail, so Rolle does not apply.';
+    const sec=(current.f(current.b)-current.f(current.a))/(current.b-current.a);
+    $('statusText').textContent='The Mean Value Theorem instead gives a point where f′(c) equals the secant slope '+fmt(sec,2)+'.';
+    $('modeEyebrow').textContent='FROM ROLLE TO THE MVT';
+  }else{
+    status.className='theorem-status fail';
+    $('statusTitle').textContent='A Rolle hypothesis is broken.';
+    $('statusText').textContent='The conclusion f′(c) = 0 is no longer guaranteed—and this example shows why.';
+    $('modeEyebrow').textContent='BREAK THE THEOREM';
+  }
+
+  if(current.constant){
+    $('criticalSummary').textContent='Stationary set: every c in ('+fmt(current.a)+', '+fmt(current.b)+').';
+  }else if(stationary.length){
+    $('criticalSummary').textContent='Detected stationary point'+(stationary.length>1?'s':'')+': '+stationary.map(c=>'c ≈ '+fmt(c,3)).join(', ')+'.';
+  }else if(current.kind==='mvt' && mvtPoints.length){
+    const sec=(current.f(current.b)-current.f(current.a))/(current.b-current.a);
+    $('criticalSummary').textContent='No interior horizontal tangent is required. MVT match: f′(c) = '+fmt(sec,2)+' at c ≈ '+mvtPoints.map(c=>fmt(c,3)).join(', ')+'.';
+  }else{
+    $('criticalSummary').textContent='No interior point with derivative 0 is detected in this preset.';
+  }
+
+  $('findC').disabled=current.kind==='broken';
+  $('findC').textContent=current.kind==='mvt'?'Find the MVT tangent':'Find a horizontal tangent';
+}
+
+function setTestX(x){
+  testX=Math.max(current.a,Math.min(current.b,x));
+  $('xSlider').value=testX;
+  updateHUD();
+  draw();
+}
+
+function setScenario(key){
+  stopAnimation();
+  currentKey=key;
+  current=scenarios[key];
+  analyzeScenario();
+  sampleRange();
+
+  testX=current.a+(current.b-current.a)*.28;
+  $('xSlider').min=current.a;
+  $('xSlider').max=current.b;
+  $('xSlider').step=(current.b-current.a)/2000;
+  $('xSlider').value=testX;
+  $('aLabel').textContent='a = '+fmt(current.a,2);
+  $('bLabel').textContent='b = '+fmt(current.b,2);
+  $('scenarioSelect').value=key;
+  document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===key)));
+  updateHUD();
+  resizeCanvas();
+}
+
+function stopAnimation(){
+  if(anim!==null)cancelAnimationFrame(anim);
+  anim=null;
+  $('play').textContent='▶ Sweep tangent';
+}
+
+function sweep(){
+  if(anim!==null){stopAnimation();return;}
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){setTestX((current.a+current.b)/2);return;}
+  const startX=current.a;
+  let startT=null;
+  $('play').textContent='Ⅱ Pause sweep';
+  const frame=t=>{
+    if(startT===null)startT=t;
+    const p=Math.min(1,(t-startT)/3600);
+    setTestX(startX+(current.b-current.a)*p);
+    if(p<1)anim=requestAnimationFrame(frame);
+    else stopAnimation();
+  };
+  anim=requestAnimationFrame(frame);
+}
+
+$('xSlider').addEventListener('input',()=>{stopAnimation();setTestX(Number($('xSlider').value));});
+$('scenarioSelect').addEventListener('change',()=>setScenario($('scenarioSelect').value));
+document.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.preset)));
+
+$('findC').addEventListener('click',()=>{
+  stopAnimation();
+  if(current.constant){setTestX((current.a+current.b)/2);return;}
+  if(current.kind==='mvt' && mvtPoints.length){setTestX(mvtPoints[0]);return;}
+  if(stationary.length){setTestX(stationary[0]);}
+});
+$('play').addEventListener('click',sweep);
+$('reset').addEventListener('click',()=>{stopAnimation();setTestX(current.a+(current.b-current.a)*.28);});
+
+function pointerToX(e){
+  const r=canvas.getBoundingClientRect();
+  const px=e.clientX-r.left;
+  return Math.max(current.a,Math.min(current.b,invX(px)));
+}
+canvas.addEventListener('pointerdown',e=>{
+  dragging=true;canvas.setPointerCapture(e.pointerId);stopAnimation();setTestX(pointerToX(e));
+});
+canvas.addEventListener('pointermove',e=>{if(dragging)setTestX(pointerToX(e));});
+['pointerup','pointercancel','lostpointercapture'].forEach(name=>canvas.addEventListener(name,()=>dragging=false));
+
+new ResizeObserver(resizeCanvas).observe(canvas);
+window.addEventListener('resize',resizeCanvas);
+
+setScenario('single');
+})();
+</script>
+</body>
+</html>

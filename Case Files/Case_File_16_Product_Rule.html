@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case File 16 — The Product Rule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  },
+  options: {
+    skipHtmlTags: [
+      'script', 'noscript', 'style', 'textarea', 'pre', 'code'
+    ]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+:root {
+  --ink: #172033;
+  --muted: #526078;
+  --paper: #fdfbf7;
+  --indigo: #4338ca;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 36px 18px;
+  background: #e2e8f0;
+  background-image: radial-gradient(#94a3b8 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--ink);
+  font-family: Inter, Arial, sans-serif;
+}
+.case-file {
+  max-width: 940px;
+  margin: auto;
+  background: var(--paper);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 22px 65px #0f172a24;
+  font-family: "Courier Prime", monospace;
+  line-height: 1.8;
+  font-size: 17px;
+}
+header {
+  position: relative;
+  background: #172033;
+  color: white;
+  padding: 38px 42px;
+}
+.kicker, .mini-label {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.kicker { color: #c7d2fe; }
+h1 {
+  margin: 12px 0;
+  font-family: Inter, Arial, sans-serif;
+  font-size: clamp(27px, 5vw, 40px);
+  line-height: 1.18;
+  letter-spacing: -1px;
+}
+header p {
+  margin: 7px 0;
+  max-width: 660px;
+  color: #e2e8f0;
+}
+.stamp {
+  position: absolute;
+  right: 26px;
+  top: 28px;
+  border: 3px solid #f87171;
+  color: #f87171;
+  padding: 4px 12px;
+  transform: rotate(12deg);
+  opacity: .45;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+.briefing {
+  padding: 25px 42px;
+  background: #eef2ff;
+  border-bottom: 1px solid #c7d2fe;
+}
+.briefing p { margin: 8px 0; }
+.act {
+  padding: 34px 42px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.act:nth-of-type(even) { background: #fff; }
+h2 {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 24px;
+  line-height: 1.35;
+  margin: 7px 0 18px;
+  letter-spacing: -.4px;
+}
+h3 {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+p { margin: 13px 0; }
+.mini-label { color: var(--indigo); }
+.evidence {
+  padding: 17px 22px;
+  margin: 19px 0;
+  background: #eef2ff;
+  border-left: 4px solid #818cf8;
+  border-radius: 0 8px 8px 0;
+}
+.evidence p:first-child { margin-top: 0; }
+.evidence p:last-child { margin-bottom: 0; }
+.question-card {
+  padding: 20px;
+  margin: 20px 0;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+}
+.question-card label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 9px;
+}
+.answer-line {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.hole {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 2px dashed #94a3b8;
+  background: #f8fafc;
+  border-radius: 5px;
+  font: 15px Inter, Arial, sans-serif;
+  color: var(--ink);
+}
+.hole:focus {
+  outline: 3px solid #c7d2fe;
+  outline-offset: 2px;
+}
+.hole.correct {
+  border-color: #15803d;
+  background: #f0fdf4;
+}
+.hole.incorrect {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+.feedback-icon {
+  min-width: 25px;
+  font: 20px Inter, Arial, sans-serif;
+}
+.detective-hint {
+  margin: 12px 0 0;
+  padding: 11px 14px;
+  background: #fff7ed;
+  border-left: 3px solid #fb923c;
+  font: 14px/1.6 Inter, Arial, sans-serif;
+  color: #9a3412;
+}
+[hidden] { display: none !important; }
+.note-label {
+  display: block;
+  margin: 20px 0 7px;
+  font-weight: bold;
+}
+.field-notes {
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  padding: 13px;
+  border: 1px dashed #d97706;
+  border-radius: 5px;
+  background: #fffbeb;
+  font: 16px/1.65 "Courier Prime", monospace;
+  resize: vertical;
+  color: var(--ink);
+}
+.field-notes:focus { outline: 3px solid #fde68a; }
+.visual {
+  margin: 24px 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8fafc;
+  font-family: Inter, Arial, sans-serif;
+}
+.visual-head {
+  padding: 18px 21px;
+  background: #172033;
+  color: #fff;
+}
+.visual-head h3 { margin-bottom: 4px; }
+.visual-head p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin: 0;
+}
+.controls {
+  padding: 17px 21px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.controls label {
+  font-size: 14px;
+  font-weight: 700;
+}
+.controls input {
+  flex: 1;
+  min-width: 140px;
+  accent-color: var(--indigo);
+}
+.chips { display: flex; gap: 6px; }
+.chips button {
+  padding: 5px 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background: white;
+  font: 12px Inter, Arial, sans-serif;
+  cursor: pointer;
+}
+.chips button:hover {
+  border-color: var(--indigo);
+  color: var(--indigo);
+}
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: white;
+}
+svg text {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 16px;
+  fill: #172033;
+}
+svg .small {
+  font-size: 12px;
+  fill: #526078;
+}
+figure { margin: 0; }
+figcaption {
+  padding: 12px 21px;
+  font-size: 13px;
+  line-height: 1.65;
+  border-top: 1px solid #e2e8f0;
+}
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 14px/1.6 Inter, Arial, sans-serif;
+}
+th, td {
+  text-align: left;
+  padding: 11px 16px;
+  border-top: 1px solid #e2e8f0;
+}
+th {
+  background: #f1f5f9;
+  font-size: 12px;
+}
+.swatch {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  margin-right: 6px;
+}
+.teal { background: #14b8a6; }
+.purple { background: #8b5cf6; }
+.gold { background: #fbbf24; }
+.total td {
+  font-weight: 700;
+  background: #eef2ff;
+}
+.math-block {
+  overflow-x: auto;
+  padding: 3px 0;
+}
+.rate-example {
+  margin: 20px 0;
+  padding: 17px 20px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 14px;
+}
+.rate-example strong { color: var(--indigo); }
+.small-note {
+  font: 13px/1.65 Inter, Arial, sans-serif;
+  color: var(--muted);
+}
+.report {
+  padding: 34px 42px;
+  background: #eef2ff;
+}
+footer {
+  padding: 23px 42px;
+  background: #f1f5f9;
+  border-top: 1px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  flex-wrap: wrap;
+  font-family: Inter, Arial, sans-serif;
+}
+#overallFeedback {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.7;
+  min-width: 210px;
+}
+button.primary {
+  border: 0;
+  border-radius: 7px;
+  background: var(--indigo);
+  color: white;
+  font: 700 14px Inter, Arial, sans-serif;
+  padding: 13px 18px;
+  cursor: pointer;
+}
+button.secondary {
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  color: #334155;
+  font: 600 13px Inter, Arial, sans-serif;
+  padding: 12px 15px;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: 3px solid #a5b4fc;
+  outline-offset: 3px;
+}
+mjx-container[display="true"] {
+  margin: 15px 0 !important;
+}
+@media (max-width: 600px) {
+  body { padding: 12px 8px; }
+  .case-file { font-size: 16px; border-radius: 9px; }
+  header, .briefing, .act, .report, footer {
+    padding: 25px 20px;
+  }
+  .stamp { display: none; }
+  .question-card { padding: 15px; }
+  .evidence { padding: 15px; }
+  .visual-head, .controls { padding: 15px; }
+  th, td { padding: 10px; font-size: 12px; }
+}
+@media print {
+  body { padding: 0; background: white; }
+  .case-file {
+    max-width: none;
+    box-shadow: none;
+    border-radius: 0;
+    font-size: 12px;
+  }
+  header, .briefing, .act, .report, footer {
+    padding: 18px 24px;
+  }
+  h1 { font-size: 26px; }
+  h2 { font-size: 19px; }
+  .controls, footer button { display: none; }
+  .question-card, .evidence, .visual {
+    break-inside: avoid;
+  }
+  .field-notes { min-height: 80px; }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="case-file">
+
+<header>
+  <div class="kicker">Math Detective · Case File #16</div>
+  <div class="stamp" aria-hidden="true">CASE FILE</div>
+  <h1>The Product Rule</h1>
+  <p><strong>Subject:</strong> The derivative of a product.</p>
+  <p>
+    <strong>Mission:</strong> Find what changes when both factors
+    change. Then find which parts remain in the rate.
+  </p>
+</header>
+
+<div class="briefing">
+  <div class="mini-label">Before we begin</div>
+  <p>
+    Let \(f\) and \(g\) be differentiable at \(a\).
+    This means that \(f'(a)\) and \(g'(a)\) both exist.
+  </p>
+  <p>When the input moves from \(a\) to \(a+h\), write</p>
+  <div class="math-block">
+    \[
+      \Delta f=f(a+h)-f(a),\qquad
+      \Delta g=g(a+h)-g(a).
+    \]
+  </div>
+  <p>
+    The symbol \(\Delta\) means “change”. A derivative tells us
+    the limiting rate of change, not just the change itself.
+  </p>
+  <p class="small-note">
+    Choose an answer before reading the next clue. Use the yellow
+    spaces to explain your thinking. The answer check gives hints;
+    written notes are for discussion.
+  </p>
+</div>
+
+<section class="act" aria-labelledby="act1">
+  <div class="mini-label">Act 1 · Look at the change</div>
+  <h2 id="act1">
+    If both factors change, what happens to their product?
+  </h2>
+
+  <p>
+    For a moment, let \(f=f(a)\) and \(g=g(a)\).
+    The old product is \(fg\). The new product is
+    \((f+\Delta f)(g+\Delta g)\).
+  </p>
+
+  <div class="question-card">
+    <label for="clue1">
+      Look for all the new pieces. Which ones make up the change
+      in the product?
+    </label>
+    <div class="answer-line">
+      <select id="clue1" class="hole" aria-describedby="hint1">
+        <option value="">Choose your finding…</option>
+        <option value="corner">Only the corner</option>
+        <option value="all">Both strips and the corner</option>
+        <option value="strips">Only the two strips</option>
+      </select>
+      <span id="icon1" class="feedback-icon" aria-hidden="true"></span>
+    </div>
+    <p id="hint1" class="detective-hint" hidden>
+      Expand the new product. After subtracting the old product,
+      there are three terms, not two.
+    </p>
+  </div>
+
+  <div class="evidence">
+    <div class="math-block">
+      \[
+        (f+\Delta f)(g+\Delta g)-fg
+        =\underbrace{g\,\Delta f}_{\text{first strip}}
+        +\underbrace{f\,\Delta g}_{\text{second strip}}
+        +\underbrace{\Delta f\,\Delta g}_{\text{corner}}.
+      \]
+    </div>
+    <p>
+      The first strip comes from changing the first factor.
+      The second comes from changing the second factor.
+      The corner comes from both changes together.
+    </p>
+  </div>
+
+  <div class="visual">
+    <div class="visual-head">
+      <h3>A rectangle you can change</h3>
+      <p>
+        Example: f(x) = x + 2, g(x) = x, at a = 2.
+        The old sides are 4 and 2. Each side increases by h.
+      </p>
+    </div>
+
+    <div class="controls">
+      <label for="stepSlider">
+        Step h =
+        <output id="stepValue" for="stepSlider">1</output>
+      </label>
+      <input
+        id="stepSlider"
+        type="range"
+        min="0.01"
+        max="1"
+        step="0.01"
+        value="1"
+        aria-label="Positive step h"
+      >
+      <div class="chips" aria-label="Try these steps">
+        <button type="button" data-step="1">1</button>
+        <button type="button" data-step="0.5">0.5</button>
+        <button type="button" data-step="0.1">0.1</button>
+        <button type="button" data-step="0.01">0.01</button>
+      </div>
+    </div>
+
+    <figure>
+      <svg
+        viewBox="0 0 660 395"
+        role="img"
+        aria-labelledby="rectTitle rectDesc"
+      >
+        <title id="rectTitle">
+          Two added strips and a small corner
+        </title>
+        <desc id="rectDesc">
+          The old rectangle has width 4 and height 2.
+          Increasing each side by h adds a teal strip of area 2h,
+          a purple strip of area 4h, and a yellow corner of area
+          h squared. The slider changes h.
+        </desc>
+
+        <defs>
+          <pattern
+            id="paperGrid"
+            width="20"
+            height="20"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 20 0 L 0 0 0 20"
+              fill="none"
+              stroke="#cbd5e1"
+              stroke-width="0.6"
+            />
+          </pattern>
+        </defs>
+
+        <rect
+          x="100" y="170" width="320" height="160"
+          fill="#e2e8f0"
+        />
+        <rect
+          x="100" y="170" width="320" height="160"
+          fill="url(#paperGrid)"
+        />
+
+        <rect
+          id="topStrip"
+          x="100" y="90" width="320" height="80"
+          fill="#8b5cf6" opacity="0.78"
+        />
+        <rect
+          id="rightStrip"
+          x="420" y="170" width="80" height="160"
+          fill="#14b8a6" opacity="0.8"
+        />
+        <rect
+          id="corner"
+          x="420" y="90" width="80" height="80"
+          fill="#fbbf24"
+        />
+
+        <rect
+          x="100" y="170" width="320" height="160"
+          fill="none" stroke="#64748b" stroke-width="1.5"
+        />
+        <rect
+          id="newOutline"
+          x="100" y="90" width="400" height="240"
+          fill="none" stroke="#172033" stroke-width="2"
+        />
+
+        <text
+          x="260" y="240"
+          text-anchor="middle"
+          font-weight="700"
+        >Old product = 8</text>
+        <text
+          x="260" y="264"
+          text-anchor="middle"
+          class="small"
+        >This part was already there.</text>
+
+        <path
+          d="M 100 344 V 355 H 420 V 344"
+          fill="none" stroke="#64748b"
+        />
+        <text x="260" y="381" text-anchor="middle">f = 4</text>
+
+        <path
+          d="M 85 170 H 74 V 330 H 85"
+          fill="none" stroke="#64748b"
+        />
+        <text x="43" y="255" text-anchor="middle">g = 2</text>
+
+        <text x="102" y="44" font-weight="600">
+          Height added = h
+        </text>
+        <path
+          id="topPointer"
+          d="M 220 52 L 220 90"
+          fill="none"
+          stroke="#7c3aed"
+          stroke-dasharray="4 4"
+        />
+
+        <text x="490" y="44" font-weight="600">
+          Corner = h²
+        </text>
+        <path
+          id="cornerPointer"
+          d="M 520 52 L 460 130"
+          fill="none"
+          stroke="#b45309"
+          stroke-dasharray="4 4"
+        />
+
+        <text x="528" y="239" class="small">Width added</text>
+        <text x="528" y="260" font-weight="600">= h</text>
+        <path
+          id="rightPointer"
+          d="M 522 269 L 460 269"
+          fill="none"
+          stroke="#0f766e"
+          stroke-dasharray="4 4"
+        />
+      </svg>
+
+      <figcaption>
+        Move the slider towards 0. Watch the two strips and the
+        corner shrink. The picture shows positive lengths and
+        positive increases. The algebra also works for decreases
+        and for negative function values.
+      </figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table aria-label="The three parts of the added area">
+        <thead>
+          <tr>
+            <th>New piece</th>
+            <th>Area</th>
+            <th>Current value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="swatch teal"></span>First strip</td>
+            <td>\(g\,\Delta f=2h\)</td>
+            <td id="areaRight">2</td>
+          </tr>
+          <tr>
+            <td><span class="swatch purple"></span>Second strip</td>
+            <td>\(f\,\Delta g=4h\)</td>
+            <td id="areaTop">4</td>
+          </tr>
+          <tr>
+            <td><span class="swatch gold"></span>Corner</td>
+            <td>\(\Delta f\,\Delta g=h^2\)</td>
+            <td id="areaCorner">1</td>
+          </tr>
+          <tr class="total">
+            <td>Total change</td>
+            <td>\(6h+h^2\)</td>
+            <td id="areaTotal">7</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <label class="note-label" for="notes1">
+    Field notes: Why is the first strip \(g\,\Delta f\), rather
+    than \(f\,\Delta f\)? Use its two side lengths to explain.
+  </label>
+  <textarea
+    id="notes1"
+    class="field-notes"
+    placeholder="The first strip has width … and height …"
+  ></textarea>
+</section>
+
+<section class="act" aria-labelledby="act2">
+  <div class="mini-label">Act 2 · From change to rate</div>
+  <h2 id="act2">
+    There are three pieces. Why does the derivative have only
+    two terms?
+  </h2>
+
+  <p>
+    Do not remove the corner yet. A small area is not the same
+    thing as a small rate. First divide the whole change by
+    \(h\), where \(h\ne0\).
+  </p>
+
+  <div class="math-block">
+    \[
+      \frac{f(a+h)g(a+h)-f(a)g(a)}{h}
+      =
+      g(a)\frac{\Delta f}{h}
+      +f(a)\frac{\Delta g}{h}
+      +\underbrace{\frac{\Delta f}{h}\,\Delta g}
+      _{\text{corner's contribution to the rate}}.
+    \]
+  </div>
+
+  <div class="question-card">
+    <label for="clue2">
+      What must happen to the corner's contribution as \(h\to0\)?
+    </label>
+    <div class="answer-line">
+      <select id="clue2" class="hole" aria-describedby="hint2">
+        <option value="">Choose your finding…</option>
+        <option value="ignore">We can ignore any small area</option>
+        <option value="alwayszero">
+          The corner area is zero for every h
+        </option>
+        <option value="limit">
+          The corner's contribution to the rate tends to zero
+        </option>
+      </select>
+      <span id="icon2" class="feedback-icon" aria-hidden="true"></span>
+    </div>
+    <p id="hint2" class="detective-hint" hidden>
+      Look at the corner area after division by h. We need its
+      limit, not its value at a single small step.
+    </p>
+  </div>
+
+  <div class="evidence">
+    <p>Because both derivatives exist,</p>
+    <div class="math-block">
+      \[
+        \frac{\Delta f}{h}\longrightarrow f'(a),
+        \qquad
+        \frac{\Delta g}{h}\longrightarrow g'(a).
+      \]
+    </div>
+
+    <p>
+      Also, differentiability of \(g\) gives continuity at \(a\).
+      So \(\Delta g\to0\). You can see this directly:
+    </p>
+    <div class="math-block">
+      \[
+        \Delta g=h\frac{\Delta g}{h}
+        \longrightarrow 0\cdot g'(a)=0.
+      \]
+    </div>
+
+    <p>Therefore the corner's contribution has limit</p>
+    <div class="math-block">
+      \[
+        \frac{\Delta f}{h}\,\Delta g
+        \longrightarrow f'(a)\cdot0=0.
+      \]
+    </div>
+
+    <p>
+      One factor approaches a finite number. The other approaches
+      zero. Their product approaches zero.
+    </p>
+  </div>
+
+  <div class="question-card">
+    <label for="clue3">
+      Which fact lets us say that
+      \(\Delta g=g(a+h)-g(a)\to0\)?
+    </label>
+    <div class="answer-line">
+      <select id="clue3" class="hole" aria-describedby="hint3">
+        <option value="">Choose your finding…</option>
+        <option value="zero">g(a) must be zero</option>
+        <option value="continuity">
+          g is continuous at a because it is differentiable there
+        </option>
+        <option value="constant">
+          g must be a constant function
+        </option>
+      </select>
+      <span id="icon3" class="feedback-icon" aria-hidden="true"></span>
+    </div>
+    <p id="hint3" class="detective-hint" hidden>
+      A differentiable function is continuous at that point.
+      Its nearby values approach its value at the point;
+      that value need not be zero.
+    </p>
+  </div>
+
+  <div
+    class="rate-example"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+    <strong>The same rectangle, now divided by h</strong>
+    <p>
+      First strip: \(2h/h=2\).
+      Second strip: \(4h/h=4\).
+    </p>
+    <p>
+      Corner: \(h^2/h=h\) =
+      <strong id="rateCorner">1</strong>.
+    </p>
+    <p>
+      Total rate for this step: \(6+h\) =
+      <strong id="rateTotal">7</strong>.
+    </p>
+    <p>
+      As h approaches 0, the strip rates stay at 2 and 4.
+      The corner rate approaches 0. The total approaches 6.
+    </p>
+  </div>
+
+  <div class="table-wrap">
+    <table
+      aria-label="How corner area and corner rate change as h shrinks"
+    >
+      <thead>
+        <tr>
+          <th>Step h</th>
+          <th>Corner area h²</th>
+          <th>Corner area ÷ h</th>
+          <th>Total rate 6 + h</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>1</td><td>1</td><td>7</td>
+        </tr>
+        <tr>
+          <td>0.1</td><td>0.01</td><td>0.1</td><td>6.1</td>
+        </tr>
+        <tr>
+          <td>0.01</td><td>0.0001</td><td>0.01</td><td>6.01</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    <strong>Important:</strong> The corner can be non-zero when
+    \(h\ne0\). We have not set it equal to zero. We have proved
+    that its contribution to the limiting rate is zero.
+  </p>
+
+  <label class="note-label" for="notes2">
+    Field notes: All three areas shrink. Why do the two strip
+    rates remain, while the corner rate goes to zero?
+  </label>
+  <textarea
+    id="notes2"
+    class="field-notes"
+    placeholder="After dividing by h, the strip terms … but the corner term …"
+  ></textarea>
+</section>
+
+<section class="act" aria-labelledby="act3">
+  <div class="mini-label">Act 3 · Test a tempting guess</div>
+  <h2 id="act3">Why isn't the rule simply \(f'g'\)?</h2>
+
+  <p>
+    Try \(f(x)=g(x)=x\). Both factors change at rate 1,
+    so \(f'(x)g'(x)=1\).
+  </p>
+  <p>But their product is \(x^2\). Its rate at \(a\) is</p>
+
+  <div class="math-block">
+    \[
+      \lim_{h\to0}\frac{(a+h)^2-a^2}{h}
+      =\lim_{h\to0}(2a+h)=2a.
+    \]
+  </div>
+
+  <p>
+    At \(a=3\), the product's rate is 6, not 1.
+    The two strips each contribute 3.
+  </p>
+
+  <div class="question-card">
+    <label for="clue4">What does the guess \(f'g'\) miss?</label>
+    <div class="answer-line">
+      <select id="clue4" class="hole" aria-describedby="hint4">
+        <option value="">Choose your finding…</option>
+        <option value="sizes">
+          The current sizes of the factors also matter
+        </option>
+        <option value="corner">
+          Only the corner matters in the limit
+        </option>
+        <option value="same">
+          The two factors must have the same rate
+        </option>
+      </select>
+      <span id="icon4" class="feedback-icon" aria-hidden="true"></span>
+    </div>
+    <p id="hint4" class="detective-hint" hidden>
+      A strip's area is its width times its height. A factor's
+      change is multiplied by the current size of the other factor.
+    </p>
+  </div>
+
+  <div class="evidence">
+    <p>
+      If the first factor changes, its rate is multiplied by the
+      current size \(g(a)\). This gives \(f'(a)g(a)\).
+    </p>
+    <p>
+      If the second factor changes, its rate is multiplied by the
+      current size \(f(a)\). This gives \(f(a)g'(a)\).
+    </p>
+    <p>
+      The product's rate depends on both the sizes and the rates
+      of its factors.
+    </p>
+  </div>
+</section>
+
+<section class="act" aria-labelledby="act4">
+  <div class="mini-label">Act 4 · Check the assumptions</div>
+  <h2 id="act4">
+    If a product has a derivative, must both factors have derivatives?
+  </h2>
+
+  <div class="question-card">
+    <label for="clue5">
+      Does a derivative of \(fg\) force both \(f'\) and \(g'\)
+      to exist at the same point?
+    </label>
+    <div class="answer-line">
+      <select id="clue5" class="hole" aria-describedby="hint5">
+        <option value="">Choose your finding…</option>
+        <option value="yes">
+          Yes, both factors must have derivatives
+        </option>
+        <option value="no">
+          No, a product can have a derivative without both factors having one
+        </option>
+      </select>
+      <span id="icon5" class="feedback-icon" aria-hidden="true"></span>
+    </div>
+    <p id="hint5" class="detective-hint" hidden>
+      Try f(x) = g(x) = |x| at 0. Compare the slopes of each
+      factor with the slope of their product.
+    </p>
+  </div>
+
+  <p>Take \(f(x)=g(x)=|x|\) and look at \(0\).</p>
+
+  <div class="evidence">
+    <p>For either factor, the difference quotient is</p>
+    <div class="math-block">
+      \[
+        \frac{|0+h|-|0|}{h}
+        =\frac{|h|}{h}
+        =\begin{cases}
+          1,&h>0,\\
+          -1,&h<0.
+        \end{cases}
+      \]
+    </div>
+
+    <p>
+      The slopes from the two sides do not agree.
+      Neither factor has a derivative at 0.
+    </p>
+
+    <p>Yet their product is \(|x|\,|x|=x^2\), and</p>
+    <div class="math-block">
+      \[
+        \lim_{h\to0}\frac{h^2-0}{h}
+        =\lim_{h\to0}h=0.
+      \]
+    </div>
+
+    <p>So the product does have a derivative at 0.</p>
+  </div>
+
+  <p>
+    The theorem says:
+    <strong>
+      if both factors have derivatives, the product rule applies.
+    </strong>
+    It does not say that every product with a derivative must
+    have two differentiable factors.
+  </p>
+
+  <p>
+    In this example, we cannot use the product rule at 0, because
+    \(f'(0)\) and \(g'(0)\) do not exist. We find the product's
+    derivative directly instead.
+  </p>
+</section>
+
+<section class="report" aria-labelledby="finalReport">
+  <div class="mini-label">Final report · Put the proof together</div>
+  <h2 id="finalReport">
+    Two changing factors. Two terms in the limiting rate.
+  </h2>
+
+  <p>
+    Start with all three parts of the change, divide by
+    \(h\ne0\), then take limits. The corner term has limit zero.
+    This leaves
+  </p>
+
+  <div class="math-block">
+    \[
+      \boxed{(fg)'(a)=f'(a)g(a)+f(a)g'(a).}
+    \]
+  </div>
+
+  <div class="question-card">
+    <label for="clue6">
+      Which formula records the two strip contributions?
+    </label>
+    <div class="answer-line">
+      <select id="clue6" class="hole" aria-describedby="hint6">
+        <option value="">Choose your final finding…</option>
+        <option value="multiply">f′(a) g′(a)</option>
+        <option value="add">f′(a) + g′(a)</option>
+        <option value="rule">f′(a) g(a) + f(a) g′(a)</option>
+      </select>
+      <span id="icon6" class="feedback-icon" aria-hidden="true"></span>
+    </div>
+    <p id="hint6" class="detective-hint" hidden>
+      Each factor's rate is multiplied by the current size of the
+      other factor. Then add the two contributions.
+    </p>
+  </div>
+
+  <div class="question-card">
+    <label for="clue7">
+      What do we check before applying this theorem at \(a\)?
+    </label>
+    <div class="answer-line">
+      <select id="clue7" class="hole" aria-describedby="hint7">
+        <option value="">Choose your final finding…</option>
+        <option value="product">
+          Only that the product has a derivative
+        </option>
+        <option value="both">
+          Both factors are differentiable at a
+        </option>
+        <option value="continuous">
+          Only that both factors are continuous at a
+        </option>
+      </select>
+      <span id="icon7" class="feedback-icon" aria-hidden="true"></span>
+    </div>
+    <p id="hint7" class="detective-hint" hidden>
+      The formula uses f′(a) and g′(a), so both must exist.
+      Continuity alone does not give us these derivatives.
+    </p>
+  </div>
+
+  <label class="note-label" for="notes3">
+    Your proof in simple words: Explain the two strips, the
+    corner, and why only two terms remain after taking the limit.
+  </label>
+  <textarea
+    id="notes3"
+    class="field-notes"
+    placeholder="When both factors change … After dividing by h … As h approaches 0 …"
+  ></textarea>
+
+  <p class="small-note">
+    Last check: “the corner is zero” and “the corner's
+    contribution tends to zero” are not the same statement.
+  </p>
+</section>
+
+<footer>
+  <div id="overallFeedback" role="status" aria-live="polite">
+    7 clues to check. Your written notes are not marked automatically.
+  </div>
+  <button id="checkButton" type="button" class="primary">
+    Submit Findings
+  </button>
+  <button id="printButton" type="button" class="secondary">
+    Print Case File
+  </button>
+</footer>
+
+</main>
+
+<script>
+const answers = {
+  clue1: 'all',
+  clue2: 'limit',
+  clue3: 'continuity',
+  clue4: 'sizes',
+  clue5: 'no',
+  clue6: 'rule',
+  clue7: 'both'
+};
+
+let hasChecked = false;
+
+function evaluateProof() {
+  let correct = 0;
+  let unanswered = 0;
+
+  Object.keys(answers).forEach(function(id) {
+    const field = document.getElementById(id);
+    const number = id.replace('clue', '');
+    const icon = document.getElementById('icon' + number);
+    const hint = document.getElementById('hint' + number);
+
+    const empty = field.value === '';
+    const right = field.value === answers[id];
+
+    field.classList.toggle('correct', right);
+    field.classList.toggle('incorrect', !empty && !right);
+    field.setAttribute('aria-invalid', String(!empty && !right));
+
+    icon.textContent = empty ? '' : (right ? '✓' : '✗');
+    hint.hidden = empty || right;
+
+    if (right) correct++;
+    if (empty) unanswered++;
+  });
+
+  const notes = ['notes1', 'notes2', 'notes3'].filter(function(id) {
+    return document.getElementById(id).value.trim().length > 0;
+  }).length;
+
+  let message = correct + ' of 7 clues correct.';
+
+  if (correct === 7) {
+    message +=
+      ' All clues checked. Now read your proof aloud: does it ' +
+      'explain why the corner rate tends to zero?';
+  } else if (unanswered) {
+    message +=
+      ' ' + unanswered + ' not answered yet. ' +
+      'Try those, then use any hints.';
+  } else {
+    message +=
+      ' Read the hints beside the answers to try again.';
+  }
+
+  message +=
+    ' Written notes: ' + notes +
+    ' of 3 spaces filled; these are for discussion, ' +
+    'not an automatic score.';
+
+  document.getElementById('overallFeedback').textContent = message;
+  hasChecked = true;
+}
+
+function formatNumber(value) {
+  return Number(value.toFixed(4)).toString();
+}
+
+function updateRectangle() {
+  const h = Number(document.getElementById('stepSlider').value);
+  const added = 80 * h;
+  const top = 170 - added;
+
+  const values = {
+    stepValue: h,
+    areaRight: 2 * h,
+    areaTop: 4 * h,
+    areaCorner: h * h,
+    areaTotal: 6 * h + h * h,
+    rateCorner: h,
+    rateTotal: 6 + h
+  };
+
+  Object.keys(values).forEach(function(id) {
+    document.getElementById(id).textContent =
+      formatNumber(values[id]);
+  });
+
+  const topStrip = document.getElementById('topStrip');
+  topStrip.setAttribute('y', top);
+  topStrip.setAttribute('height', added);
+
+  document.getElementById('rightStrip')
+    .setAttribute('width', added);
+
+  const corner = document.getElementById('corner');
+  corner.setAttribute('y', top);
+  corner.setAttribute('width', added);
+  corner.setAttribute('height', added);
+
+  const outline = document.getElementById('newOutline');
+  outline.setAttribute('y', top);
+  outline.setAttribute('width', 320 + added);
+  outline.setAttribute('height', 160 + added);
+
+  document.getElementById('topPointer').setAttribute(
+    'd',
+    'M 220 52 L 220 ' + top
+  );
+
+  document.getElementById('cornerPointer').setAttribute(
+    'd',
+    'M 520 52 L ' + (420 + added / 2) +
+    ' ' + (170 - added / 2)
+  );
+
+  document.getElementById('rightPointer').setAttribute(
+    'd',
+    'M 522 269 L ' + (420 + added / 2) + ' 269'
+  );
+}
+
+document.getElementById('stepSlider')
+  .addEventListener('input', updateRectangle);
+
+document.querySelectorAll('[data-step]').forEach(function(button) {
+  button.addEventListener('click', function() {
+    document.getElementById('stepSlider').value = button.dataset.step;
+    updateRectangle();
+  });
+});
+
+Object.keys(answers).forEach(function(id) {
+  document.getElementById(id).addEventListener('change', function() {
+    if (hasChecked) evaluateProof();
+  });
+});
+
+document.getElementById('checkButton')
+  .addEventListener('click', evaluateProof);
+
+document.getElementById('printButton')
+  .addEventListener('click', function() {
+    window.print();
+  });
+
+updateRectangle();
+</script>
+</body>
+</html>

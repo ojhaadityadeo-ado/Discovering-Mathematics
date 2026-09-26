@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 38 — Cube Roots of Unity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;
+      background-image:radial-gradient(#cbd5e1 1px,transparent 1px);
+      background-size:20px 20px;font-family:Inter,Arial,sans-serif
+    }
+    .case-file{
+      max-width:896px;margin:12px auto;position:relative;overflow:hidden;
+      border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;
+      font:17px/1.8 "Courier Prime",monospace
+    }
+    .stamp{
+      position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;
+      font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);
+      opacity:.2;pointer-events:none
+    }
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}
+    .mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:725px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}
+    .briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}
+    .act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}
+    p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}
+    .evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}
+    .success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .question-card label{display:block;font-weight:bold;margin-bottom:9px}
+    .answer-line{display:flex;align-items:center;gap:8px}
+    .hole{min-width:0;width:100%;padding:9px 10px;font:14px Inter,Arial,sans-serif;border:2px dashed #94a3b8;border-radius:4px;background:#f1f5f9;color:#1e293b;cursor:pointer}
+    .hole:focus{outline:3px solid #c7d2fe;border-color:#4f46e5;background:#fff}
+    .hole.correct{border:2px solid #16a34a;background:#f0fdf4;color:#15803d}
+    .hole.incorrect{border:2px solid #dc2626;background:#fef2f2;color:#b91c1c}
+    .feedback-icon{width:25px;flex-shrink:0;font:20px Inter,Arial,sans-serif}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}
+    [hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}
+    .notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .condition-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+    .condition{background:#fff;border:1px solid #cbd5e1;border-top:4px solid #6366f1;padding:13px;font:14px/1.75 Inter,Arial,sans-serif}
+    .condition strong{display:block;margin-bottom:6px}
+    .math-block{overflow-x:auto;padding:3px 0}
+    .table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}
+    th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}
+    th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}
+    .graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}
+    .graph-head .mini-label{display:block;margin-bottom:4px}
+    .case-buttons{display:flex;gap:8px;flex-wrap:wrap;padding:13px 18px;border-bottom:1px solid #e2e8f0}
+    .case-buttons button,.control-row button{padding:8px 12px;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc;color:#334155;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    .case-buttons button[aria-pressed="true"]{background:#4338ca;color:#fff;border-color:#4338ca}
+    button:focus-visible{outline:3px solid #a5b4fc;outline-offset:3px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}
+    .control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}
+    .control-row label{min-width:190px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}
+    .control-row button{background:#fff;color:#4338ca}
+    .legend{padding:10px 18px;display:flex;gap:15px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;font:12px/1.7 Inter,Arial,sans-serif}
+    .swatch{display:inline-block;width:15px;height:4px;margin-right:5px;vertical-align:middle}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .output-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#e2e8f0}
+    .output-cell{padding:12px 13px;background:#f8fafc;font:12px/1.7 Inter,Arial,sans-serif}
+    .output-cell strong{display:block;font-size:17px;color:#312e81;font-variant-numeric:tabular-nums}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}
+    figure{margin:0}svg{display:block;width:100%;height:auto;background:#fff}
+    svg text{font:14px Inter,Arial,sans-serif;fill:#475569}.plot-label{font-size:16px;font-weight:600;fill:#1e293b}
+    .axis{stroke:#cbd5e1;stroke-width:1.2}.grid-line{stroke:#e2e8f0;stroke-width:1}
+    .circle-main{fill:#eef2ff;fill-opacity:.48;stroke:#4f46e5;stroke-width:4}
+    .line-main{fill:none;stroke:#ea580c;stroke-width:4;stroke-linecap:round}
+    .line-tangent{fill:none;stroke:#16a34a;stroke-width:4;stroke-linecap:round}
+    .true-tangent{fill:none;stroke:#16a34a;stroke-width:2.5;stroke-dasharray:8 5}
+    .radius-line{fill:none;stroke:#4f46e5;stroke-width:4;stroke-linecap:round}
+    .distance-line{fill:none;stroke:#0f766e;stroke-width:4;stroke-linecap:round}
+    .along-line{fill:none;stroke:#ea580c;stroke-width:3;stroke-linecap:round}
+    .test-line{fill:none;stroke:#64748b;stroke-width:2.5;stroke-dasharray:6 4}
+    .right-angle{fill:none;stroke:#0f172a;stroke-width:1.8}
+    .triangle-fill{fill:#14b8a6;fill-opacity:.15}
+    .point-center{fill:#0f172a;stroke:#fff;stroke-width:2}
+    .point-foot{fill:#fff;stroke:#0f172a;stroke-width:2}
+    .point-test{fill:#dc2626;stroke:#fff;stroke-width:2}
+    .point-hit{fill:#16a34a;stroke:#fff;stroke-width:2}
+    .point-second{fill:#2563eb;stroke:#fff;stroke-width:2}
+    figcaption{padding:13px 18px;border-top:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif;background:#f8fafc}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    #overall-feedback{flex:1;min-width:210px;font-size:14px;line-height:1.8}
+    .primary-button{padding:12px 18px;border:2px solid #0f172a;background:#1e293b;color:#fff;border-radius:4px;font:700 13px Inter,Arial,sans-serif;cursor:pointer}
+    .primary-button:hover{background:#4338ca}.print-button{padding:12px 15px;background:#fff;color:#334155;border:1px solid #94a3b8;border-radius:4px;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){
+      body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}
+      header,.briefing,.act,.report,footer{padding:23px 19px}.stamp{display:none}h2{font-size:19px}
+      .condition-grid{grid-template-columns:1fr}.evidence,.question-card{padding:14px}.lead-question{font-size:17px}
+      .control-row label{min-width:100%}.output-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media print{
+      body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}
+      header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}
+      .case-buttons,.lab-controls,footer button{display:none}.graph-card,.question-card,.notes-box{break-inside:avoid}
+      .graph-card svg{max-height:300px}.field-notes{min-height:80px}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
+  </style>
+<style>
+fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}
+.choice{display:flex!important;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}
+.choice:has(input:checked){background:#eef2ff;border-color:#6366f1}.choice input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}
+.clue-feedback:empty{display:none}.clue-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+.reason{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 24px;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}
+.reason summary{color:#3730a3;font-weight:600;cursor:pointer}caption{text-align:left;font-weight:600;margin-bottom:10px}
+.intro-note{padding:10px 30px}select{max-width:100%;padding:9px;font:14px Inter,Arial,sans-serif;color:#1e293b}
+#empty-label{font-size:21px;font-weight:bold}#expanded{overflow-wrap:anywhere;text-align:left}
+@media print{details>summary{display:none}.reason{break-inside:avoid}.clue-feedback,.detective-hint{display:none}}
+</style>
+
+
+<style>
+.micro{background:#fffbeb;border-left:4px solid #eab308;padding:12px 16px;margin:16px 0}.micro>p{margin:0}.micro summary{font:600 14px/1.8 Inter,Arial,sans-serif;color:#854d0e;cursor:pointer}.micro details>div{font:15px/1.85 Inter,Arial,sans-serif;margin-top:8px}.why{background:#f0fdf4;border-left:4px solid #16a34a;padding:12px 16px;font:14px/1.85 Inter,Arial,sans-serif;margin:18px 0}.why strong{color:#166534}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.actions button{padding:12px 16px;font:600 14px Inter,Arial,sans-serif;border:1px solid #475569;border-radius:4px;cursor:pointer}.actions .primary{background:#1e293b;color:white}.score{font:600 14px/1.8 Inter,Arial,sans-serif}.lab-controls select{font-size:16px;max-width:100%;width:100%}.lab-controls label{display:block;font-weight:600}.step-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.step-buttons button{padding:10px 14px;border:1px solid #94a3b8;border-radius:4px;background:white;color:#334155;font:600 14px Inter,Arial,sans-serif;cursor:pointer}.step-buttons button:disabled{opacity:.5;cursor:default}
+.live-readout{padding:14px 18px;font:600 15px/1.8 Inter,Arial,sans-serif;background:#eef2ff;color:#312e81;overflow-wrap:anywhere}.plot38{width:100%;display:block}.plot38 text{font-family:Inter,Arial,sans-serif;fill:#334155;font-size:13px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}.plot38 .axis-title{font-size:12px}.plot38 .point-label{font-weight:700;font-size:14px}.legend-item{display:inline-flex;gap:6px;align-items:center}.legend-dot{width:10px;height:10px;border-radius:50%;background:#4338ca}.legend-dot.orange{background:#c2410c}.legend-dot.green{background:#047857}.proof-map{font:15px/1.85 Inter,Arial,sans-serif}.theorem{background:#eef2ff;border:1px solid #c7d2fe;padding:16px;margin:20px 0}.math-block{max-width:100%}
+@media(max-width:550px){.lab-controls,.live-readout{padding:13px}.step-buttons button{flex:1}.act,.report{padding:22px 16px}.theorem{padding:10px}h2{font-size:18px}}
+@media print{.actions,.score{display:none}.micro,.why{break-inside:avoid}.reason{break-inside:auto}.plot38{max-height:330px}.graph-card{break-inside:avoid}.live-readout{font-size:12px}.lab-controls{display:none}}
+</style></head>
+<body><main class="case-file">
+<div class="stamp" aria-hidden="true">CASE FILE</div>
+<header><h1>MATH DETECTIVE: CASE FILE #38</h1><p class="subject">Subject: Cube Roots of Unity — Three Turns, One Return</p><p class="mission"><strong>Mission:</strong> Find all complex multipliers that return every point after three applications. Use their geometry to explain their sum, their conjugates, and the factors of a sum of cubes.</p></header>
+<div class="briefing"><p><strong>The case:</strong> A complex multiplier acts on every point of the complex plane. Apply it three times and every point must return to where it began. The multiplier 1 clearly works. Are there any others?</p></div>
+<p class="small-note intro-note">Follow 9 main clues and the small-step questions. Each green “Why this matters” note connects the current step to our main goal. The two visual labs and answer checking work offline; equation formatting and display fonts use the internet. Print your notes before closing if you want to keep them.</p>
+<noscript><div class="evidence warning-evidence">Enable JavaScript for the visual labs and answer checking. The written proof and expandable explanations remain available.</div></noscript>
+
+<section class="act" aria-labelledby="act1"><h2 id="act1">Act 1: Where could the multiplier be?</h2>
+<p>A point with complex coordinate q moves to zq when we multiply by z. Three applications give \(q\mapsto zq\mapsto z^2q\mapsto z^3q\). “Unity” means the number 1, so a cube root of unity is a number satisfying</p>
+<div class="math-block">\[z^3=1.\]</div>
+<div class="micro"><p><strong>Small step 1.</strong> Why does returning every point lead to this equation?</p><details><summary>Open the answer</summary><div>Take the starting point q = 1. Returning that point requires \(z^3=1\). Conversely, if \(z^3=1\), then \(z^3q=q\) for every complex q. Checking only q = 0 would tell us nothing: every multiplier keeps 0 at 0.</div></details></div>
+<p>Before finding z exactly, can we locate it? For \(z=x+iy\), its modulus \(|z|=\sqrt{x^2+y^2}\) is its distance from the origin. Moduli multiply: \(|uv|=|u||v|\).</p>
+<div class="question-card"><fieldset><legend>Clue 1 · What immediate observation follows from \(z^3=1\)?</legend><label class="choice"><input type="radio" name="q1" value="0"><span>A. z must be a positive real number, because its cube is positive.</span></label><label class="choice"><input type="radio" name="q1" value="1"><span>B. \(|z|^3=1\), so \(|z|=1\): z is on the unit circle.</span></label><label class="choice"><input type="radio" name="q1" value="2"><span>C. Every point on the unit circle must satisfy \(z^3=1\).</span></label></fieldset><p class="clue-feedback" id="feedback1" aria-live="polite"></p><div class="detective-hint" id="hint1" hidden><strong>Follow this clue:</strong> Take the modulus on both sides. Remember that a modulus is a nonnegative real number.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><div class="math-block">\[|z|^3=|z^3|=|1|=1.\]</div><p>The only nonnegative real number with cube 1 is 1. Hence \(|z|=1\). Also z cannot be zero, since \(0^3\ne1\).</p></details>
+<div class="micro"><p><strong>Small step 2.</strong> Have we found the roots, or only narrowed down where they can be?</p><details><summary>Open the answer</summary><div>Only narrowed them down. For example, \(|i|=1\), but \(i^3=-i\ne1\). Being on the unit circle is necessary; it is not enough.</div></details></div>
+<div class="why"><strong>Why this matters:</strong> The multiplier cannot stretch or shrink distances from the origin. We now need to find which turns return a point after three applications.</div>
+</section>
+
+<section class="act white" aria-labelledby="act2"><h2 id="act2">Act 2: Find every root without guessing angles</h2>
+<p>We already know that z = 1 works. So we should use it to simplify the equation.</p>
+<div class="question-card"><fieldset><legend>Clue 2 · What is a useful next step if we want all the other roots?</legend><label class="choice"><input type="radio" name="q2" value="0"><span>A. Factor \(z^3-1\) and solve the remaining quadratic.</span></label><label class="choice"><input type="radio" name="q2" value="1"><span>B. Divide \(z^3=1\) by \(z-1\) immediately.</span></label><label class="choice"><input type="radio" name="q2" value="2"><span>C. Keep only the real root because the right side is real.</span></label></fieldset><p class="clue-feedback" id="feedback2" aria-live="polite"></p><div class="detective-hint" id="hint2" hidden><strong>Follow this clue:</strong> A known root suggests a factor. But dividing by z−1 without a separate case would lose the root z = 1.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><div class="math-block">\[z^3-1=(z-1)(z^2+z+1).\]</div><p>Expanding the right side gives \(z^3+z^2+z-z^2-z-1=z^3-1\). A product of complex numbers is zero only if at least one factor is zero. Therefore</p><div class="math-block">\[z=1\quad\text{or}\quad z^2+z+1=0.\]</div></details>
+<p>Now apply the quadratic formula with coefficients 1, 1, 1:</p>
+<div class="math-block">\[\begin{aligned}
+z&=\frac{-1\pm\sqrt{1^2-4(1)(1)}}{2(1)}\\
+&=\frac{-1\pm\sqrt{-3}}2
+=\frac{-1\pm i\sqrt3}{2}.
+\end{aligned}\]</div>
+<div class="micro"><p><strong>Small step 3.</strong> Why does \(i\sqrt3\) appear?</p><details><summary>Open the answer</summary><div>Because \((i\sqrt3)^2=i^2\cdot3=-3\). The two square roots of −3 are \(i\sqrt3\) and \(-i\sqrt3\). This is where the two nonreal roots enter.</div></details></div>
+<p>Choose the root above the real axis and name it</p>
+<div class="math-block">\[\omega=-\frac12+\frac{\sqrt3}{2}i.\]</div>
+<p>Do not assume the other root is \(\omega^2\) yet. Check by multiplying:</p>
+<div class="math-block">\[\begin{aligned}
+\omega^2
+&=\left(-\frac12+\frac{\sqrt3}{2}i\right)^2\\
+&=\left(-\frac12\right)^2
++2\left(-\frac12\right)\left(\frac{\sqrt3}{2}i\right)
++\left(\frac{\sqrt3}{2}i\right)^2\\
+&=\frac14-\frac{\sqrt3}{2}i+\frac34i^2\\
+&=\frac14-\frac34-\frac{\sqrt3}{2}i\\
+&=-\frac12-\frac{\sqrt3}{2}i.
+\end{aligned}\]</div>
+<div class="micro"><p><strong>Small step 4.</strong> Which step makes the real part \(-\tfrac12\), rather than 1?</p><details><summary>Open the answer</summary><div>Using \(i^2=-1\). The last squared term is \(-3/4\), so the real part is \(1/4-3/4=-1/2\).</div></details></div>
+<div class="theorem"><p>The three distinct roots are</p><div class="math-block">\[\boxed{1,\ \omega,\ \omega^2}.\]</div><p>The factorization gave all possibilities: one root from the linear factor and two from the quadratic. So no roots are missing.</p></div>
+<div class="why"><strong>Why this matters:</strong> We have exact coordinates. Now we can explain the shape and the turns from those coordinates, instead of relying on a picture alone.</div>
+</section>
+
+<section class="act" aria-labelledby="act3"><h2 id="act3">Act 3: Read the coordinates as turns</h2>
+<p>On the unit circle, a point at angle \(\theta\) has coordinate \(\cos\theta+i\sin\theta\). Angles here are measured counterclockwise from the positive real axis.</p>
+<div class="table-wrap"><table><thead><tr><th>Root</th><th>Point in the plane</th><th>Angle, modulo 360°</th></tr></thead><tbody><tr><td>1</td><td>\((1,0)\)</td><td>0°</td></tr><tr><td>\(\omega\)</td><td>\(\left(-\tfrac12,\tfrac{\sqrt3}2\right)\)</td><td>120°</td></tr><tr><td>\(\omega^2\)</td><td>\(\left(-\tfrac12,-\tfrac{\sqrt3}2\right)\)</td><td>240° (also −120°)</td></tr></tbody></table></div>
+<div class="micro"><p><strong>Small step 5.</strong> Why is the angle of \(\omega\) 120°, not 60°?</p><details><summary>Open the answer</summary><div>Its real part is negative and its imaginary part is positive, so it is in the second quadrant. Here \(\cos120^\circ=-1/2\) and \(\sin120^\circ=\sqrt3/2\). At 60°, the real part would be positive.</div></details></div>
+<p>The gaps are 120°, 120°, and another 120° from 240° back to 360° = 0°. Equal central angles in the same circle give equal chords. Thus the roots form an equilateral triangle.</p>
+<div class="micro"><p><strong>Small step 6.</strong> Can we check one side length from the coordinates?</p><details><summary>Open the answer</summary><div>Yes. The side from \(\omega\) to \(\omega^2\) is vertical and has length \(\sqrt3\). Also \(|1-\omega|^2=(3/2)^2+(\sqrt3/2)^2=3\), and similarly \(|1-\omega^2|^2=3\). All three sides have length \(\sqrt3\).</div></details></div>
+<p>Multiplying complex numbers multiplies their moduli and adds their angles. For example, multiplying \(\rho(\cos\theta+i\sin\theta)\) by \(\cos120^\circ+i\sin120^\circ\) gives</p>
+<div class="math-block">\[\rho\bigl(\cos(\theta+120^\circ)+i\sin(\theta+120^\circ)\bigr).\]</div>
+<p>This follows by expanding and using the sine and cosine addition formulas. The length \(\rho\) stays the same.</p>
+<div class="question-card"><fieldset><legend>Clue 3 · What does multiplying an arbitrary point by ω do?</legend><label class="choice"><input type="radio" name="q3" value="0"><span>A. Move it 120 units to the right.</span></label><label class="choice"><input type="radio" name="q3" value="1"><span>B. Triple its distance from the origin.</span></label><label class="choice"><input type="radio" name="q3" value="2"><span>C. Turn it 120° counterclockwise about the origin, without changing its distance from the origin.</span></label></fieldset><p class="clue-feedback" id="feedback3" aria-live="polite"></p><div class="detective-hint" id="hint3" hidden><strong>Follow this clue:</strong> Use both pieces of information: the modulus tells you the scale, and the angle tells you the turn.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>Since \(|\omega|=1\), multiplication does not change length. Its angle is 120°, so it rotates each nonzero point through 120°. The origin stays fixed. Applying this three times makes a full 360° turn.</p><p>Multiplication by \(\omega^2\) gives a 240° counterclockwise turn, or a 120° clockwise turn. Three such turns give 720°, again returning every point. Multiplication by 1 changes nothing.</p></details>
+<div class="graph-card"><div class="graph-head"><span class="mini-label">Visual lab 1 · multiply, turn, return</span>Follow one point through three applications</div>
+<div class="lab-controls">
+<label for="start">Starting point</label><select id="start"><option value="root">P = 1 · see the three roots</option><option value="other">P = 1.5 + 0.5i · test a different point</option></select>
+<label for="multiplier">Multiplier</label><select id="multiplier"><option value="1">ω · 120° turn</option><option value="2">ω² · 240° turn</option><option value="0">1 · no turn</option></select>
+<div class="step-buttons"><button id="rot-back" type="button">Previous step</button><button id="rot-next" type="button">Apply multiplier</button><button id="rot-reset" type="button">Start again</button></div>
+</div>
+<svg id="rotation-plot" class="plot38" role="img" aria-labelledby="rotation-title rotation-desc" viewBox="0 0 720 420"><title id="rotation-title">A complex point under repeated multiplication</title><desc id="rotation-desc">Three rotations bring the point back. Enable JavaScript to explore.</desc><g id="rotation-drawing"></g></svg>
+<div class="live-readout" id="rotation-readout" aria-live="polite"></div>
+<figcaption>The pale triangle shows the three positions for a nonreal multiplier. The large orange ring marks the current point. Here m means the selected multiplier: mP is the point after one application, and m²P after two. The faint unit circle has radius 1; a different starting point can move on a larger circle. At step 3, the point returns exactly to its start. Decimal coordinates are rounded.</figcaption></div>
+<div class="why"><strong>Why this matters:</strong> The equation is now a motion we can see. The three roots represent the three possible turns that become a whole number of full turns after three applications.</div>
+</section>
+
+<section class="act white" aria-labelledby="act4"><h2 id="act4">Act 4: Why do the three roots add to zero?</h2>
+<p>We want to explain \(1+\omega+\omega^2\). A useful clue is the factorization we already have:</p>
+<div class="math-block">\[0=\omega^3-1=(\omega-1)(\omega^2+\omega+1).\]</div>
+<div class="question-card"><fieldset><legend>Clue 4 · Which fact lets us conclude that the second factor is zero?</legend><label class="choice"><input type="radio" name="q4" value="0"><span>A. \(\omega\) is any number on the unit circle.</span></label><label class="choice"><input type="radio" name="q4" value="1"><span>B. \(\omega\ne1\), so \(\omega-1\ne0\).</span></label><label class="choice"><input type="radio" name="q4" value="2"><span>C. Every cube root of 1 makes \(1+z+z^2=0\).</span></label></fieldset><p class="clue-feedback" id="feedback4" aria-live="polite"></p><div class="detective-hint" id="hint4" hidden><strong>Follow this clue:</strong> Could we divide by the first factor if we had chosen the root 1?</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>Our chosen \(\omega\) is nonreal, so \(\omega-1\ne0\). Divide by that nonzero factor:</p><div class="math-block">\[\boxed{1+\omega+\omega^2=0}.\]</div><p>If we chose z = 1 instead, the first factor would be zero. The second would be \(1+1+1=3\), not zero. In these identities, ω means a nonreal cube root of unity.</p></details>
+<div class="micro"><p><strong>Small step 7.</strong> Can we see the cancellation directly in the coordinates?</p><details><summary>Open the answer</summary><div>Yes. The real parts add to \(1-\tfrac12-\tfrac12=0\). The imaginary parts add to \(0+\tfrac{\sqrt3}2-\tfrac{\sqrt3}2=0\). Both coordinates of the sum are zero.</div></details></div>
+<p>Adding complex numbers adds their position vectors. Place the vector for 1 first, then move a copy of the vector for ω to its endpoint, then do the same for \(\omega^2\). The final endpoint is their sum.</p>
+<div class="graph-card"><div class="graph-head"><span class="mini-label">Visual lab 2 · add the vectors</span>Does the path return to the origin?</div>
+<div class="lab-controls"><label for="sum-case">Vectors to add</label><select id="sum-case"><option value="roots">1, ω, ω² · three unit vectors</option><option value="line">1, 2, −3 · a different zero sum</option></select>
+<div class="step-buttons"><button type="button" id="sum-back">Previous step</button><button type="button" id="sum-next">Add next vector</button><button type="button" id="sum-reset">Start again</button></div></div>
+<svg id="sum-plot" class="plot38" role="img" aria-labelledby="sum-title sum-desc" viewBox="0 0 720 380"><title id="sum-title">Head-to-tail addition of three complex vectors</title><desc id="sum-desc">The final endpoint shows the sum. Enable JavaScript to explore.</desc><g id="sum-drawing"></g></svg>
+<div class="live-readout" id="sum-readout" aria-live="polite"></div>
+<figcaption>Each arrow keeps its original length and direction when it is moved to the preceding endpoint. S₁ and S₂ are partial sums. This is a diagram of vector addition; its vertices are not the original three root points. In the second example, the last dashed arrow retraces the real axis.</figcaption></div>
+<div class="question-card"><fieldset><legend>Clue 5 · If three complex numbers add to zero, what can we safely conclude?</legend><label class="choice"><input type="radio" name="q5" value="0"><span>A. The head-to-tail vector path closes; the points need not form an equilateral triangle.</span></label><label class="choice"><input type="radio" name="q5" value="1"><span>B. The three points must be equally spaced on the unit circle.</span></label><label class="choice"><input type="radio" name="q5" value="2"><span>C. All three numbers must individually be zero.</span></label></fieldset><p class="clue-feedback" id="feedback5" aria-live="polite"></p><div class="detective-hint" id="hint5" hidden><strong>Follow this clue:</strong> Try 1, 2 and −3. Their sum is zero, but where are their points?</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>The points 1, 2 and −3 all lie on the real axis. They add to zero but do not form a nondegenerate triangle. For our roots, the equilateral shape comes from their unit lengths and 120° spacing, not from the zero sum alone.</p></details>
+<h3>What does the zero sum say about the center?</h3>
+<p>The centroid is the average of the three position vectors:</p><div class="math-block">\[G=\frac{1+\omega+\omega^2}{3}=0.\]</div>
+<p>So the origin is the centroid of the root triangle. There is another way to see why the sum has to be zero.</p>
+<div class="micro"><p><strong>Small step 8.</strong> If \(S=1+\omega+\omega^2\), what happens when we multiply S by ω?</p><details><summary>Open the answer</summary><div>\(\omega S=\omega+\omega^2+\omega^3=\omega+\omega^2+1=S\). The multiplication just moves each root to the next one, so the sum is unchanged.</div></details></div>
+<p>Yet multiplying by ω turns a vector through 120°. The only vector that remains in the same position under that turn is the zero vector. Algebraically, \(\omega S=S\) gives \((\omega-1)S=0\); since \(\omega\ne1\), we get S = 0.</p>
+<div class="why"><strong>Why this matters:</strong> We now have two useful facts, \(\omega+\omega^2=-1\) and \(\omega^3=1\). They will simplify the coefficients when we multiply the complex factors later.</div>
+</section>
+
+<section class="act" aria-labelledby="act5"><h2 id="act5">Act 5: A reflection is also an inverse</h2>
+<p>The conjugate of \(x+iy\) is \(x-iy\). Geometrically, this reflects a point across the real axis. So reflecting the point at 120° gives the point at −120°, which is also 240°.</p>
+<div class="math-block">\[\overline\omega=-\frac12-\frac{\sqrt3}{2}i=\omega^2.\]</div>
+<p>Can we explain the same fact without using the exact coordinates? For any complex z, \(z\overline z=|z|^2\). Since ω has modulus 1,</p>
+<div class="math-block">\[\omega\overline\omega=1,\qquad \omega\omega^2=\omega^3=1.\]</div>
+<div class="question-card"><fieldset><legend>Clue 6 · Both products equal 1. What is the useful next observation?</legend><label class="choice"><input type="radio" name="q6" value="0"><span>A. Every complex number is equal to its conjugate.</span></label><label class="choice"><input type="radio" name="q6" value="1"><span>B. Conjugation always equals squaring.</span></label><label class="choice"><input type="radio" name="q6" value="2"><span>C. Both ω̄ and ω² are the inverse of the same nonzero number ω.</span></label></fieldset><p class="clue-feedback" id="feedback6" aria-live="polite"></p><div class="detective-hint" id="hint6" hidden><strong>Follow this clue:</strong> A nonzero number has only one multiplicative inverse.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>Subtract the two product equations:</p><div class="math-block">\[\omega(\overline\omega-\omega^2)=0.\]</div><p>Since \(\omega\ne0\), we can divide by it and get \(\overline\omega=\omega^2\). Thus</p><div class="math-block">\[\boxed{\overline\omega=\omega^{-1}=\omega^2}.\]</div></details>
+<div class="micro"><p><strong>Small step 9.</strong> Is \(\overline z=z^2\) true for every point on the unit circle?</p><details><summary>Open the answer</summary><div>No. On the unit circle, \(\overline z=1/z\). For z = i, the conjugate is −i, while \(z^2=-1\). For ω we also use \(\omega^3=1\), which gives \(1/\omega=\omega^2\).</div></details></div>
+<div class="why"><strong>Why this matters:</strong> The two nonreal roots form a conjugate pair. This will explain how two complex factors can multiply to give a real expression.</div>
+</section>
+
+<section class="act white" aria-labelledby="act6"><h2 id="act6">Act 6: Turn the roots into factors</h2>
+<p>We found ω and \(\omega^2\) by solving \(x^2+x+1=0\). So the natural candidate is \((x-\omega)(x-\omega^2)\). To prove equality for every x, we should expand it.</p>
+<div class="math-block">\[\begin{aligned}
+(x-\omega)(x-\omega^2)
+&=x^2-x\omega^2-x\omega+\omega\omega^2\\
+&=x^2-(\omega+\omega^2)x+\omega^3.
+\end{aligned}\]</div>
+<div class="question-card"><fieldset><legend>Clue 7 · Which earlier facts finish this calculation?</legend><label class="choice"><input type="radio" name="q7" value="0"><span>A. Only \(|\omega|=1\); no other identities are needed.</span></label><label class="choice"><input type="radio" name="q7" value="1"><span>B. \(\omega+\omega^2=-1\) and \(\omega^3=1\).</span></label><label class="choice"><input type="radio" name="q7" value="2"><span>C. \(\omega+\omega^2=1\) and \(\omega^3=-1\).</span></label></fieldset><p class="clue-feedback" id="feedback7" aria-live="polite"></p><div class="detective-hint" id="hint7" hidden><strong>Follow this clue:</strong> We need one fact for the x coefficient and another for the constant term.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><div class="math-block">\[x^2-(\omega+\omega^2)x+\omega^3=x^2-(-1)x+1=x^2+x+1.\]</div><p>Therefore</p><div class="math-block">\[\boxed{x^2+x+1=(x-\omega)(x-\omega^2)}.\]</div></details>
+<div class="micro"><p><strong>Small step 10.</strong> Why does the middle term become +x rather than −x?</p><details><summary>Open the answer</summary><div>There are two minus signs: the expansion has \(-(\omega+\omega^2)x\), and the sum inside the parentheses is −1. Thus \(-(-1)x=+x\).</div></details></div>
+<p>Both sides have leading coefficient 1. This matters: knowing the zeros alone would not distinguish \(x^2+x+1\) from \(5(x^2+x+1)\). The direct expansion checks the coefficient as well as the roots.</p>
+<div class="why"><strong>Why this matters:</strong> We can now turn a quadratic with no real roots into two linear factors over the complex numbers. The same idea will explain the sum of cubes.</div>
+</section>
+
+<section class="act" aria-labelledby="act7"><h2 id="act7">Act 7: Discover the factors of a³ + b³</h2>
+<p>Let a and b be complex numbers. We want an identity for all their values. First treat b as fixed and ask which values of a make \(a^3+b^3=0\).</p>
+<div class="question-card"><fieldset><legend>Clue 8 · We want to connect this equation to cube roots of unity. What can we do?</legend><label class="choice"><input type="radio" name="q8" value="0"><span>A. Divide by b without checking whether it is zero.</span></label><label class="choice"><input type="radio" name="q8" value="1"><span>B. Conclude that a and b must both be zero.</span></label><label class="choice"><input type="radio" name="q8" value="2"><span>C. First assume \(b\ne0\), then rewrite it as \((-a/b)^3=1\).</span></label></fieldset><p class="clue-feedback" id="feedback8" aria-live="polite"></p><div class="detective-hint" id="hint8" hidden><strong>Follow this clue:</strong> We know the roots of z³ = 1. Can a ratio of a and b play the role of z?</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>For \(b\ne0\),</p><div class="math-block">\[\begin{aligned}
+a^3+b^3=0
+&\iff a^3=-b^3\\
+&\iff \frac{a^3}{b^3}=-1\\
+&\iff \left(-\frac ab\right)^3=1.
+\end{aligned}\]</div><p>The minus sign is important: \((a/b)^3=-1\), whereas \((-a/b)^3=1\). Therefore</p><div class="math-block">\[-\frac ab\in\{1,\omega,\omega^2\}.\]</div></details>
+<div class="micro"><p><strong>Small step 11.</strong> If \(-a/b=\omega\), what is a, and which factor is zero?</p><details><summary>Open the answer</summary><div>Multiply by b and then by −1: \(a=-b\omega\). Hence \(a+b\omega=0\). The other roots similarly suggest \(a+b\) and \(a+b\omega^2\).</div></details></div>
+<p>So the three zeros are \(-b,-b\omega,-b\omega^2\). This suggests</p><div class="math-block">\[(a+b)(a+b\omega)(a+b\omega^2).\]</div>
+<p>Geometrically, these three zeros are the original root triangle multiplied by \(-b\). For \(b\ne0\), this rotates it and scales every length by \(|b|\); it is still equilateral and centered at 0.</p>
+<p class="lead-question">The roots suggest the factors. How can we verify the whole identity, including the case b = 0?</p>
+<p>Multiply directly. Start with the two nonreal factors:</p>
+<div class="math-block">\[\begin{aligned}
+(a+b\omega)(a+b\omega^2)
+&=a^2+ab\omega^2+ab\omega+b^2\omega\omega^2\\
+&=a^2+ab(\omega+\omega^2)+b^2\omega^3\\
+&=a^2-ab+b^2.
+\end{aligned}\]</div>
+<div class="micro"><p><strong>Small step 12.</strong> Why do we get \(b^2\), not b, in the last term?</p><details><summary>Open the answer</summary><div>The last term comes from \((b\omega)(b\omega^2)\). The two b factors multiply to \(b^2\), while \(\omega\omega^2=\omega^3=1\).</div></details></div>
+<p>Now include the remaining factor:</p>
+<div class="math-block">\[\begin{aligned}
+(a+b)(a^2-ab+b^2)
+&=a(a^2-ab+b^2)+b(a^2-ab+b^2)\\
+&=a^3-a^2b+ab^2+a^2b-ab^2+b^3\\
+&=a^3+b^3.
+\end{aligned}\]</div>
+<div class="micro"><p><strong>Small step 13.</strong> Which terms cancel, and why is this calculation stronger than just checking a few values?</p><details><summary>Open the answer</summary><div>The terms \(-a^2b\) and \(+a^2b\) cancel, as do \(+ab^2\) and \(-ab^2\). We used algebraic identities, with no division by b. So the equality holds for every complex a and b, including b = 0.</div></details></div>
+<div class="theorem"><div class="math-block">\[\boxed{a^3+b^3=(a+b)(a+b\omega)(a+b\omega^2)}.\]</div><p>At b = 0, the right side is \(a\cdot a\cdot a=a^3\). The three zeros in a merge at 0; the identity still holds.</p></div>
+<div class="why"><strong>Why this matters:</strong> The root equation tells us where to look for factors. Multiplication checks the exact identity and includes the case that the division argument could not cover.</div>
+</section>
+
+<section class="act white" aria-labelledby="act8"><h2 id="act8">Act 8: How do complex factors give a real result?</h2>
+<p>Now suppose a and b are real. The familiar real factorization is</p><div class="math-block">\[a^3+b^3=(a+b)(a^2-ab+b^2).\]</div>
+<div class="question-card"><fieldset><legend>Clue 9 · Why is the product of the other two complex factors real?</legend><label class="choice"><input type="radio" name="q9" value="0"><span>A. They are conjugates: \(\overline{a+b\omega}=a+b\omega^2\), because a and b are real.</span></label><label class="choice"><input type="radio" name="q9" value="1"><span>B. The factors are individually real for every real a and b.</span></label><label class="choice"><input type="radio" name="q9" value="2"><span>C. Every product of two complex numbers is real.</span></label></fieldset><p class="clue-feedback" id="feedback9" aria-live="polite"></p><div class="detective-hint" id="hint9" hidden><strong>Follow this clue:</strong> Conjugation reflects the imaginary part. What does it do to the real numbers a and b?</div></div>
+<details class="reason"><summary>Open the reasoning</summary><div class="math-block">\[\overline{a+b\omega}=\overline a+\overline b\,\overline\omega=a+b\omega^2.\]</div><p>Writing the factors in coordinates makes the cancellation visible:</p><div class="math-block">\[\begin{aligned}
+a+b\omega&=\left(a-\frac b2\right)+i\frac{\sqrt3 b}{2},\\
+a+b\omega^2&=\left(a-\frac b2\right)-i\frac{\sqrt3 b}{2}.
+\end{aligned}\]</div><p>Multiply these conjugates:</p><div class="math-block">\[\begin{aligned}
+(a+b\omega)(a+b\omega^2)
+&=\left(a-\frac b2\right)^2+\left(\frac{\sqrt3 b}{2}\right)^2\\
+&=a^2-ab+\frac{b^2}{4}+\frac{3b^2}{4}\\
+&=a^2-ab+b^2.
+\end{aligned}\]</div><p>Geometrically, this is \(|a+b\omega|^2\): the squared distance of that complex point from the origin.</p></details>
+<div class="micro"><p><strong>Small step 14.</strong> Where did we use the assumption that a and b are real?</p><details><summary>Open the answer</summary><div>We used \(\overline a=a\) and \(\overline b=b\). For arbitrary complex a and b, the two factors need not be conjugates. But the sum-of-cubes factorization remains true, because its direct expansion did not use that assumption.</div></details></div>
+<p>For real a and b, the two-square expression is nonnegative and is zero only if a = b = 0. If \(b\ne0\), it is positive, so the only real zero of \(a^3+b^3\), viewed as an equation in a, is \(a=-b\). The other two zeros are nonreal.</p>
+<div class="notes-box"><label for="notes">Your detective note · Explain how “three turns return a point” leads to roots, then to a triangle, then to factors. Name one assumption that you had to check along the way.</label><textarea class="field-notes" id="notes" placeholder="First the modulus tells us… The nonreal root turns by… The sum vanishes because… To divide by b we need…"></textarea></div>
+</section>
+
+<section class="report" aria-labelledby="report"><h2 id="report">Final case report</h2>
+<div class="evidence success-evidence"><p><strong>The roots:</strong> \(1,\omega,\omega^2\), where \(\omega=-\tfrac12+\tfrac{\sqrt3}{2}i\).</p><p><strong>The geometry:</strong> Their angles are 0°, 120°, 240°. They form an equilateral triangle on the unit circle. Multiplication by ω rotates every point by 120°.</p><p><strong>The useful identities:</strong></p><div class="math-block">\[\omega^3=1,\qquad1+\omega+\omega^2=0,\qquad\overline\omega=\omega^2.\]</div><p><strong>The factors:</strong></p><div class="math-block">\[x^2+x+1=(x-\omega)(x-\omega^2),\]</div><div class="math-block">\[a^3+b^3=(a+b)(a+b\omega)(a+b\omega^2).\]</div></div>
+<p class="proof-map"><strong>What holds the proof together?</strong> Modulus locates the roots. Factoring finds them all. Angles explain the motion. The zero sum and product simplify the factors. A direct expansion proves the final identity for every a and b.</p>
+<div class="actions"><button id="check" class="primary" type="button">Check my clues</button><button id="show-reasons" type="button">Open all explanations</button><button id="print" type="button">Print / Save as PDF</button></div><p class="score" id="score" aria-live="polite">Choose an answer to each of the 9 clues, then check your reasoning.</p>
+</section><footer><span>CASE FILE #38 · THREE ROOTS · THREE TURNS · ONE RETURN</span></footer>
+</main>
+<script>
+'use strict';
+const answerKeys=[1,0,2,1,0,2,1,2,0];
+const answerReasons=["Taking moduli gives |z|³=1, so |z|=1. This locates the roots but does not yet identify which points on the circle work.","The factor z−1 removes the known root 1. The remaining quadratic lets us find every other possibility.","The factor |ω|=1 keeps lengths unchanged, and the argument 120° adds a turn of 120°. Three such turns total 360°.","Since ω−1 is nonzero, we can divide by it. The identity ω³=1 alone would also allow ω=1, for which 1+ω+ω²=3.","Zero sum says that the vector path closes, or that the centroid is the origin. It does not by itself force equal sides or noncollinear points.","Both ω̄ and ω² multiply ω to give 1. Since ω is nonzero, it has a unique inverse, so these two numbers are equal.","The two identities give the coefficient of x and the constant term. Expansion then proves the polynomial identity for every x.","We may divide by b only after assuming b≠0. Then the cube-root equation predicts the three zeros in a. Direct multiplication proves the identity even at b=0.","For real a and b, conjugation leaves them unchanged and exchanges ω with ω². So the two factors are conjugates and their product is a squared modulus."];
+const el=id=>document.getElementById(id);
+const W={x:-.5,y:Math.sqrt(3)/2},W2={x:-.5,y:-Math.sqrt(3)/2};
+const add=(a,b)=>({x:a.x+b.x,y:a.y+b.y});
+const mul=(a,b)=>({x:a.x*b.x-a.y*b.y,y:a.x*b.y+a.y*b.x});
+const fmt=n=>Math.abs(n)<.0005?'0':Number(n.toFixed(3)).toString();
+const complex=p=>fmt(p.x)+(p.y<-.0005?' − ':' + ')+fmt(Math.abs(p.y))+'i';
+let rotationStep=0,sumStep=0;
+function rotationData(){
+ const p=el('start').value==='root'?{x:1,y:0}:{x:1.5,y:.5};
+ const power=Number(el('multiplier').value),m=power===1?W:power===2?W2:{x:1,y:0};
+ const orbit=[p];for(let i=1;i<=3;i++)orbit.push(mul(orbit[i-1],m));
+ return {p,m,power,orbit,current:orbit[rotationStep],step:rotationStep,radius:Math.hypot(p.x,p.y)};
+}
+function svgLine(a,b,color,extra=''){return '<line x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'" stroke="'+color+'" '+(extra.includes('stroke-width=')?'':'stroke-width="3" ')+extra+'/>';}
+function svgText(p,s,extra=''){return '<text x="'+p.x+'" y="'+p.y+'" '+extra+'>'+s+'</text>';}
+function axes(w,h,point,xTicks,yTicks,showTicks=true){
+ let s=svgLine(point({x:xTicks[0],y:0}),point({x:xTicks.at(-1),y:0}),'#cbd5e1','stroke-width="1"');
+ s+=svgLine(point({x:0,y:yTicks[0]}),point({x:0,y:yTicks.at(-1)}),'#cbd5e1','stroke-width="1"');
+ if(showTicks)xTicks.forEach(t=>{if(t!==0)s+=svgText({x:point({x:t,y:0}).x,y:point({x:0,y:0}).y+20},fmt(t),'text-anchor="middle"');});
+ if(showTicks)yTicks.forEach(t=>{if(t!==0)s+=svgText({x:point({x:0,y:0}).x-10,y:point({x:0,y:t}).y+4},fmt(t),'text-anchor="end"');});
+ s+=svgText({x:w-14,y:h-12},'Real axis','text-anchor="end" class="axis-title"');
+ s+=svgText({x:14,y:20},'Imaginary axis','class="axis-title"');
+ return s;
+}
+function drawRotation(){
+ const d=rotationData(),svg=el('rotation-plot'),w=Math.max(280,svg.clientWidth||720),h=Math.max(310,Math.min(420,w*.64));
+ svg.setAttribute('viewBox','0 0 '+w+' '+h);
+ const scale=Math.min(w-110,h-95)/(2*d.radius),cx=w/2,cy=h/2;
+ const point=p=>({x:cx+p.x*scale,y:cy-p.y*scale});
+ let s=axes(w,h,point,[-d.radius,0,d.radius],[-d.radius,0,d.radius],false);
+ for(const t of [-1,1]){
+  s+=svgText({x:point({x:t,y:0}).x,y:cy+20},String(t),'text-anchor="middle"');
+  s+=svgText({x:cx-10,y:point({x:0,y:t}).y+4},String(t),'text-anchor="end"');
+ }
+ s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+scale+'" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 5"/>';
+ if(d.radius>1.01)s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+scale*d.radius+'" fill="none" stroke="#c7d2fe" stroke-width="1.5"/>';
+ if(d.power!==0)s+='<polygon points="'+d.orbit.slice(0,3).map(p=>{p=point(p);return p.x+','+p.y;}).join(' ')+'" fill="#eef2ff" fill-opacity=".65" stroke="#818cf8" stroke-width="2"/>';
+ const labels=el('start').value==='root'?(d.power===2?['1','ω²','ω']:['1','ω','ω²']):['P','mP','m²P'];
+ const count=d.power===0?1:3;
+ for(let i=0;i<count;i++){
+  const p=point(d.orbit[i]);s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="5" fill="#4338ca"/>';
+  const off=d.orbit[i];const tx=p.x+(off.x>=0?12:-12),ty=p.y+(off.y>=0?-13:23);
+  s+=svgText({x:tx,y:ty},labels[i],'class="point-label" text-anchor="'+(off.x>=0?'start':'end')+'"');
+ }
+ const c=point(d.current);s+=svgLine({x:cx,y:cy},c,'#c2410c');
+ s+='<circle cx="'+c.x+'" cy="'+c.y+'" r="10" fill="white" stroke="#c2410c" stroke-width="3"/><circle cx="'+c.x+'" cy="'+c.y+'" r="4" fill="#c2410c"/><circle cx="'+cx+'" cy="'+cy+'" r="3" fill="#334155"/>';
+ s+=svgText({x:cx-9,y:cy+19},'O','text-anchor="end"');
+ el('rotation-drawing').innerHTML=s;
+ const name=d.power===1?'ω':d.power===2?'ω²':'1';
+ el('rotation-readout').textContent='Step '+rotationStep+' / 3 · multiplier '+name+' · current point '+complex(d.current)+' · length '+fmt(d.radius)+'. '+(rotationStep===3?'Back at the starting point.':d.power===0?'The point stays fixed at every step.':'Total turn so far: '+(120*d.power*rotationStep)+'° counterclockwise.');
+ el('rotation-desc').textContent='Starting at '+complex(d.p)+', multiplying by '+name+' '+rotationStep+' times gives '+complex(d.current)+'. Distance from the origin remains '+fmt(d.radius)+'.';
+ el('rot-back').disabled=rotationStep===0;el('rot-next').disabled=rotationStep===3;
+ return d;
+}
+function sumData(){
+ const isRoots=el('sum-case').value==='roots';
+ const vectors=isRoots?[{x:1,y:0},W,W2]:[{x:1,y:0},{x:2,y:0},{x:-3,y:0}];
+ const partial=[{x:0,y:0}];vectors.forEach(v=>partial.push(add(partial.at(-1),v)));
+ return {isRoots,vectors,partial,step:sumStep,current:partial[sumStep]};
+}
+function arrow(a,b,color,dashed){
+ const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);if(!len)return '';
+ const ux=dx/len,uy=dy/len,size=9,back={x:b.x-size*ux,y:b.y-size*uy};
+ return svgLine(a,back,color,dashed?'stroke-dasharray="6 4"':'')+'<polygon points="'+b.x+','+b.y+' '+(back.x-4*uy)+','+(back.y+4*ux)+' '+(back.x+4*uy)+','+(back.y-4*ux)+'" fill="'+color+'"/>';
+}
+function drawSum(){
+ const d=sumData(),svg=el('sum-plot'),w=Math.max(280,svg.clientWidth||720),h=Math.max(300,Math.min(380,w*.6));
+ svg.setAttribute('viewBox','0 0 '+w+' '+h);
+ const xmin=d.isRoots?-.45:-.45,xmax=d.isRoots?1.45:3.45,ymin=d.isRoots?-.4:-.8,ymax=d.isRoots?1.2:.8;
+ const scale=Math.min((w-60)/(xmax-xmin),(h-70)/(ymax-ymin)),cx=w/2-(xmin+xmax)/2*scale,cy=h/2+(ymin+ymax)/2*scale;
+ const point=p=>({x:cx+p.x*scale,y:cy-p.y*scale});
+ let s=axes(w,h,point,d.isRoots?[0,1]:[0,1,2,3],d.isRoots?[0,1]:[-.5,0,.5],false);
+ const colors=['#4338ca','#c2410c','#047857'],names=d.isRoots?['1','ω','ω²']:['1','2','−3'];
+ if(d.isRoots)s+='<polygon points="'+d.partial.slice(0,3).map(p=>{p=point(p);return p.x+','+p.y;}).join(' ')+'" fill="#eef2ff" fill-opacity=".65" stroke="#cbd5e1" stroke-dasharray="4 4"/>';
+ for(let i=0;i<sumStep;i++){
+  const a=point(d.partial[i]),b=point(d.partial[i+1]);
+  s+=arrow(a,b,colors[i],!d.isRoots&&i===2);
+  let pos={x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+  if(d.isRoots){if(i===0)pos.y+=42;else if(i===1){pos.x+=22;pos.y+=3;}else{pos.x-=25;pos.y+=3;}}
+  else pos.y+=i===2?53:-29;
+  s+=svgText(pos,names[i],'class="point-label" text-anchor="middle"');
+ }
+ for(let i=0;i<=Math.min(sumStep,2);i++){
+  const p=point(d.partial[i]);s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="#334155"/>';
+  const text=i===0?(sumStep===3?'S₀ = S₃ = 0':'S₀ = 0'):'S'+(i===1?'₁':'₂');
+  const closedOrigin=i===0&&sumStep===3;
+  s+=svgText({x:p.x+(i===0?-8:i===1?8:0),y:p.y+(closedOrigin?73:d.isRoots&&i===2?-17:25)},text,'text-anchor="'+(closedOrigin?'start':i===0?'end':i===1?'start':'middle')+'" class="point-label"');
+ }
+ const current=point(d.current);s+='<circle cx="'+current.x+'" cy="'+current.y+'" r="8" fill="none" stroke="#047857" stroke-width="3"/>';
+ el('sum-drawing').innerHTML=s;
+ const formulas=d.isRoots?['No vectors yet: S₀ = 0.','S₁ = 1.','S₂ = 1 + ω = ½ + (√3/2)i.','S₃ = 1 + ω + ω² = 0. The path closes.']:['No vectors yet: S₀ = 0.','S₁ = 1.','S₂ = 1 + 2 = 3.','S₃ = 1 + 2 − 3 = 0. The path closes along one line.'];
+ el('sum-readout').textContent='Step '+sumStep+' / 3 · '+formulas[sumStep];
+ el('sum-desc').textContent=(d.isRoots?'Add the three unit root vectors. ':'Add the collinear vectors 1, 2, and −3. ')+formulas[sumStep];
+ el('sum-back').disabled=sumStep===0;el('sum-next').disabled=sumStep===3;return d;
+}
+el('start').addEventListener('change',()=>{rotationStep=0;drawRotation();});
+el('multiplier').addEventListener('change',()=>{rotationStep=0;drawRotation();});
+el('rot-next').addEventListener('click',()=>{rotationStep=Math.min(3,rotationStep+1);drawRotation();});
+el('rot-back').addEventListener('click',()=>{rotationStep=Math.max(0,rotationStep-1);drawRotation();});
+el('rot-reset').addEventListener('click',()=>{rotationStep=0;drawRotation();});
+el('sum-case').addEventListener('change',()=>{sumStep=0;drawSum();});
+el('sum-next').addEventListener('click',()=>{sumStep=Math.min(3,sumStep+1);drawSum();});
+el('sum-back').addEventListener('click',()=>{sumStep=Math.max(0,sumStep-1);drawSum();});
+el('sum-reset').addEventListener('click',()=>{sumStep=0;drawSum();});
+function checkClues(){
+ let correct=0,unanswered=0;
+ answerKeys.forEach((key,i)=>{
+  const q=i+1,selected=document.querySelector('input[name="q'+q+'"]:checked'),out=el('feedback'+q),hint=el('hint'+q);
+  if(!selected){unanswered++;out.textContent='Choose an answer, then check again.';out.style.color='#92400e';hint.hidden=true;}
+  else if(Number(selected.value)===key){correct++;out.textContent='Correct. '+answerReasons[i];out.style.color='#15803d';hint.hidden=true;}
+  else{out.textContent='Not yet. Follow the clue and try again.';out.style.color='#b91c1c';hint.hidden=false;}
+ });
+ el('score').textContent=correct+' / 9 correct. '+(unanswered?unanswered+' unanswered. ':'')+(correct===9?'Case solved: connect the algebra to the turns and the vector sum.':'Use the clues to review your reasoning.');
+ return {correct,unanswered};
+}
+el('check').addEventListener('click',checkClues);
+el('show-reasons').addEventListener('click',()=>document.querySelectorAll('details').forEach(d=>d.open=true));
+el('print').addEventListener('click',()=>window.print());
+let printStates=[];
+window.addEventListener('beforeprint',()=>{printStates=Array.from(document.querySelectorAll('details'),d=>[d,d.open]);document.querySelectorAll('details').forEach(d=>d.open=true);drawRotation();drawSum();});
+window.addEventListener('afterprint',()=>{printStates.forEach(([d,open])=>d.open=open);drawRotation();drawSum();});
+if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(()=>{drawRotation();drawSum();});observer.observe(el('rotation-plot'));observer.observe(el('sum-plot'));}
+else window.addEventListener('resize',()=>{drawRotation();drawSum();});
+drawRotation();drawSum();
+</script></body></html>

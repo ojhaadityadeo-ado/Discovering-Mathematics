@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Detective: De Morgan's Second Law</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+    body {
+      background-color:#e2e8f0; color:#1e293b; font-family:'Inter',sans-serif;
+      background-image:radial-gradient(#cbd5e1 1px, transparent 1px); background-size:20px 20px;
+    }
+    .case-file {
+      font-family:'Courier Prime',monospace; line-height:1.8; font-size:1.08rem;
+      background-color:#fdfbf7; box-shadow:0 10px 25px rgba(0,0,0,.1);
+    }
+    .hole {
+      font-family:'Inter',sans-serif; font-size:.95rem; border:2px dashed #94a3b8;
+      border-radius:.25rem; padding:.125rem .5rem; margin:0 .25rem; transition:all .2s;
+      outline:none; background-color:#f1f5f9;
+    }
+    .hole:focus { border-color:#4f46e5; border-style:solid; background:#fff; }
+    .hole.correct { border-color:#16a34a; border-style:solid; background:#f0fdf4; color:#15803d; }
+    .hole.incorrect { border-color:#dc2626; border-style:solid; background:#fef2f2; color:#b91c1c; }
+    .hole-text { width:165px; text-align:center; }
+    .hole-select { max-width:100%; width:auto; cursor:pointer; text-overflow:ellipsis; }
+    .field-notes {
+      width:100%; min-height:88px; font-family:'Courier Prime',monospace; background:#fefce8;
+      border:1px solid #fde047; border-left:4px solid #eab308; padding:.75rem; margin:.5rem 0;
+      border-radius:.25rem; resize:vertical; font-size:.95rem; color:#3f3f46;
+      box-shadow:inset 0 2px 4px rgba(0,0,0,.05);
+    }
+    .field-notes::placeholder { color:#a1a1aa; font-style:italic; }
+    .detective-hint {
+      display:none; background:#fffbeb; border-left:4px solid #f59e0b; padding:.55rem;
+      margin-top:.5rem; font-size:.9rem; font-family:'Inter',sans-serif; color:#b45309;
+    }
+    .feedback-icon { margin-left:4px; font-size:1.1rem; vertical-align:middle; }
+    .stamp {
+      position:absolute; top:20px; right:20px; border:4px solid #dc2626; color:#dc2626;
+      font-size:1.4rem; font-weight:bold; padding:.25rem 1rem; transform:rotate(-15deg);
+      opacity:.2; pointer-events:none;
+    }
+    .evidence {
+      background:#eef2ff; border-left:4px solid #6366f1; padding:.8rem 1rem; margin:1rem 0;
+      font-family:'Inter',sans-serif; font-size:.96rem;
+    }
+    .question-card { background:#fff; border:1px solid #e2e8f0; padding:1rem; margin:1rem 0; border-radius:.25rem; }
+    .mini-label { font-family:'Inter',sans-serif; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; font-weight:700; color:#64748b; }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex justify-center items-start">
+  <div class="max-w-4xl w-full case-file rounded-sm relative mt-4">
+    <div class="stamp">CASE FILE</div>
+
+    <div class="bg-slate-800 text-slate-100 p-6 rounded-t-sm border-b-4 border-slate-900">
+      <h1 class="text-3xl font-bold font-sans tracking-wide">MATH DETECTIVE: CASE FILE #2</h1>
+      <p class="mt-2 font-mono text-slate-400">Subject: De Morgan's Second Law</p>
+      <p class="text-sm font-sans mt-2"><strong>Mission:</strong> Prove \((A\cap B)'=A'\cup B'\) by following an arbitrary element through the definitions.</p>
+    </div>
+
+    <div class="bg-indigo-900 text-indigo-100 p-4 font-sans text-sm shadow-inner">
+      <strong>Detective Briefing:</strong> Complements are taken relative to a fixed universal set \(U\). We begin the proof immediately. Remember: to prove two sets are equal, we must eventually establish both subset directions.
+    </div>
+
+    <div class="p-6 md:p-10 border-b border-slate-200 bg-white">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Act 1: First Trail — Prove \((A\cap B)'\subseteq A'\cup B'\)</h2>
+
+      <p class="mb-4"><strong>Start the proof:</strong> Let \(x\in(A\cap B)'\).</p>
+
+      <p class="mb-4">Before following the clues: what kind of element is \(x\)?</p>
+      <div class="question-card">
+        <select id="hole1" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="arbitrary">An arbitrary element of \((A\cap B)'\)</option>
+          <option value="special">A specially chosen element with extra properties</option>
+          <option value="only">The only element of \((A\cap B)'\)</option>
+        </select><span id="feedback1" class="feedback-icon"></span>
+      </div>
+      <div id="hint1" class="detective-hint">🕵️ <strong>Detective's Note:</strong> A subset proof must work for every element of the starting set, so we choose no special element.</div>
+
+      <div class="evidence">
+        <div class="mini-label">Why arbitrary?</div>
+        If we show this arbitrary \(x\) must lie in \(A'\cup B'\), then the same reasoning applies to every element of \((A\cap B)'\). That is exactly what \((A\cap B)'\subseteq A'\cup B'\) means.
+      </div>
+
+      <p class="mb-4">Decode the complement. From \(x\in(A\cap B)'\), we know:</p>
+      <div class="question-card">
+        <select id="hole2" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="notinter">\(x\notin A\cap B\)</option>
+          <option value="ininter">\(x\in A\cap B\)</option>
+          <option value="nota">\(x\notin A\) only</option>
+        </select><span id="feedback2" class="feedback-icon"></span>
+      </div>
+      <div id="hint2" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Membership in the complement means non-membership in the original set.</div>
+
+      <p class="mb-4">Now focus on \(x\notin A\cap B\). What would it mean for \(x\) to belong to \(A\cap B\)?</p>
+      <div class="question-card">
+        <select id="hole3" class="hole hole-select text-sm">
+          <option value="">[Select Meaning of Intersection]</option>
+          <option value="both">\(x\in A\) and \(x\in B\)</option>
+          <option value="either">\(x\in A\) or \(x\in B\)</option>
+          <option value="neither">\(x\notin A\) and \(x\notin B\)</option>
+        </select><span id="feedback3" class="feedback-icon"></span>
+      </div>
+      <div id="hint3" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Intersection means an element satisfies both membership conditions.</div>
+
+      <p class="mb-4">So if \(x\) is <em>not</em> in the intersection, which conclusion is forced?</p>
+      <div class="question-card">
+        <select id="hole4" class="hole hole-select text-sm">
+          <option value="">[Select Logical Conclusion]</option>
+          <option value="or">\(x\notin A\) or \(x\notin B\)</option>
+          <option value="and">\(x\notin A\) and \(x\notin B\)</option>
+          <option value="bothin">\(x\in A\) and \(x\in B\)</option>
+        </select><span id="feedback4" class="feedback-icon"></span>
+      </div>
+      <div id="hint4" class="detective-hint">🕵️ <strong>Detective's Note:</strong> To fail being in <em>both</em> sets, at least one of the two membership conditions must fail. It is not necessary that both fail.</div>
+
+      <div class="evidence">
+        <div class="mini-label">Logic fingerprint</div>
+        \[
+          \neg(P\land Q)\iff (\neg P)\lor(\neg Q).
+        \]
+        Here \(P\) is “\(x\in A\)” and \(Q\) is “\(x\in B\)”.
+      </div>
+
+      <p class="mb-4">Translate non-membership into complements:</p>
+      <p class="bg-slate-100 p-4 border-l-4 border-slate-400">
+        \(x\notin A\Rightarrow x\in\)
+        <input id="hole5" class="hole hole-text" placeholder="?" autocomplete="off"><span id="feedback5" class="feedback-icon"></span>,
+        while \(x\notin B\Rightarrow x\in\)
+        <input id="hole6" class="hole hole-text" placeholder="?" autocomplete="off"><span id="feedback6" class="feedback-icon"></span>.
+      </p>
+      <div id="hint5" class="detective-hint">🕵️ <strong>Detective's Note:</strong> The complement of \(A\) is \(A'\).</div>
+      <div id="hint6" class="detective-hint">🕵️ <strong>Detective's Note:</strong> The complement of \(B\) is \(B'\).</div>
+
+      <p class="mb-4 mt-5">We have therefore reached \(x\in A'\) <strong>or</strong> \(x\in B'\). Which set records “in at least one”?</p>
+      <div class="question-card">
+        <select id="hole7" class="hole hole-select text-sm">
+          <option value="">[Select Operation]</option>
+          <option value="union">\(A'\cup B'\)</option>
+          <option value="intersection">\(A'\cap B'\)</option>
+          <option value="difference">\(A'\setminus B'\)</option>
+        </select><span id="feedback7" class="feedback-icon"></span>
+      </div>
+      <div id="hint7" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Union means membership in at least one of the sets.</div>
+
+      <p class="font-bold text-lg bg-green-50 p-4 border-l-4 border-green-500">
+        Thus \(x\in A'\cup B'\). Since \(x\) was arbitrary, \((A\cap B)'\subseteq A'\cup B'\).
+      </p>
+
+      <div class="mb-6 mt-5 border-l-4 border-indigo-400 pl-4 bg-indigo-50 py-2 pr-2">
+        <label class="block text-sm font-bold text-indigo-700 mb-1">📝 Reconstruct the Trail</label>
+        <textarea class="field-notes" placeholder="Write the first inclusion in your own words, starting: Let x ∈ (A ∩ B)'..."></textarea>
+      </div>
+    </div>
+
+    <div class="p-6 md:p-10 border-b border-slate-200">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Act 2: Reverse Trail — Prove \(A'\cup B'\subseteq(A\cap B)'\)</h2>
+
+      <p class="mb-4"><strong>Begin the converse:</strong> Let \(x\in A'\cup B'\).</p>
+
+      <p class="mb-4">What does membership in the union tell us?</p>
+      <div class="question-card">
+        <select id="hole8" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="orcomp">\(x\in A'\) or \(x\in B'\)</option>
+          <option value="andcomp">\(x\in A'\) and \(x\in B'\)</option>
+          <option value="neither">\(x\notin A'\) and \(x\notin B'\)</option>
+        </select><span id="feedback8" class="feedback-icon"></span>
+      </div>
+      <div id="hint8" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Union corresponds to “or.”</div>
+
+      <p class="mb-4">Decode the complements. The previous clue becomes:</p>
+      <div class="question-card">
+        <select id="hole9" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="notor">\(x\notin A\) or \(x\notin B\)</option>
+          <option value="notand">\(x\notin A\) and \(x\notin B\)</option>
+          <option value="inor">\(x\in A\) or \(x\in B\)</option>
+        </select><span id="feedback9" class="feedback-icon"></span>
+      </div>
+      <div id="hint9" class="detective-hint">🕵️ <strong>Detective's Note:</strong> \(x\in A'\) means \(x\notin A\), and similarly for \(B'\).</div>
+
+      <p class="mb-4">If at least one of “\(x\in A\)” and “\(x\in B\)” fails, can \(x\) lie in \(A\cap B\)?</p>
+      <div class="question-card">
+        <select id="hole10" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="no">No. Therefore \(x\notin A\cap B\).</option>
+          <option value="yes">Yes. Intersection only requires one membership condition.</option>
+        </select><span id="feedback10" class="feedback-icon"></span>
+      </div>
+      <div id="hint10" class="detective-hint">🕵️ <strong>Detective's Note:</strong> To be in an intersection, both conditions must hold. If even one fails, intersection membership fails.</div>
+
+      <p class="mb-4">Finally, translate \(x\notin A\cap B\) back into complement notation:</p>
+      <div class="question-card">
+        <select id="hole11" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="incomp">\(x\in(A\cap B)'\)</option>
+          <option value="ininter">\(x\in A\cap B\)</option>
+          <option value="ina">\(x\in A'\) only</option>
+        </select><span id="feedback11" class="feedback-icon"></span>
+      </div>
+      <div id="hint11" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Being outside \(A\cap B\) is exactly being inside its complement.</div>
+
+      <p class="font-bold text-lg bg-green-50 p-4 border-l-4 border-green-500">
+        Hence \(A'\cup B'\subseteq(A\cap B)'\).
+      </p>
+
+      <div class="mb-6 mt-5 border-l-4 border-indigo-400 pl-4 bg-indigo-50 py-2 pr-2">
+        <label class="block text-sm font-bold text-indigo-700 mb-1">📝 Converse Interrogation Log</label>
+        <textarea class="field-notes" placeholder="Write the reverse inclusion without copying the first direction. Explain why 'or' appears naturally."></textarea>
+      </div>
+    </div>
+
+    <div class="p-6 md:p-10 bg-white border-b border-slate-200">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Act 3: The Crucial “OR” Mystery</h2>
+
+      <p class="mb-4">A common mistake is to say:</p>
+      <p class="bg-red-50 p-4 border-l-4 border-red-400 mb-4">
+        “If \(x\notin A\cap B\), then \(x\notin A\) <strong>and</strong> \(x\notin B\).”
+      </p>
+      <p class="mb-4">Is that statement always true?</p>
+      <div class="question-card">
+        <select id="hole12" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="false">No. An element can fail to be in the intersection by missing only one of the sets.</option>
+          <option value="true">Yes. Being outside an intersection means being outside both sets.</option>
+        </select><span id="feedback12" class="feedback-icon"></span>
+      </div>
+      <div id="hint12" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Imagine \(x\in A\) but \(x\notin B\). Is \(x\) in \(A\cap B\)?</div>
+
+      <p class="mb-4">Suppose \(x\in A\) but \(x\notin B\). Then which statements are true?</p>
+      <div class="question-card">
+        <select id="hole13" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="counter">\(x\notin A\cap B\), and \(x\in B'\subseteq A'\cup B'\)</option>
+          <option value="inter">\(x\in A\cap B\)</option>
+          <option value="aprime">\(x\in A'\)</option>
+        </select><span id="feedback13" class="feedback-icon"></span>
+      </div>
+      <div id="hint13" class="detective-hint">🕵️ <strong>Detective's Note:</strong> This example exposes why the answer must involve “or,” not “and.”</div>
+
+      <div class="evidence">
+        <div class="mini-label">Key distinction</div>
+        First Law: outside a <strong>union</strong> means outside <strong>both</strong> sets.<br>
+        Second Law: outside an <strong>intersection</strong> means outside <strong>at least one</strong> set.
+      </div>
+
+      <div class="mb-6 mt-5 border-l-4 border-indigo-400 pl-4 bg-indigo-50 py-2 pr-2">
+        <label class="block text-sm font-bold text-indigo-700 mb-1">📝 Explain the Difference</label>
+        <textarea class="field-notes" placeholder="In your own words, explain why the first law produces an intersection of complements but the second produces a union of complements."></textarea>
+      </div>
+    </div>
+
+    <div class="p-6 md:p-10 bg-slate-50 border-b border-slate-200">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Act 4: What If the Starting Set Is Empty?</h2>
+
+      <p class="mb-4">In the first direction we said, “Let \(x\in(A\cap B)'\).” What if \((A\cap B)'=\varnothing\)? Can we literally choose such an \(x\)?</p>
+      <div class="question-card">
+        <select id="hole14" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="cannot">No. There is no element to choose.</option>
+          <option value="can">Yes. Every set contains an element.</option>
+        </select><span id="feedback14" class="feedback-icon"></span>
+      </div>
+      <div id="hint14" class="detective-hint">🕵️ <strong>Detective's Note:</strong> The empty set has no elements.</div>
+
+      <p class="mb-4">Does this cause the subset proof to fail?</p>
+      <div class="question-card">
+        <select id="hole15" class="hole hole-select text-sm">
+          <option value="">[Select Best Explanation]</option>
+          <option value="vacuous">No. There is no element in the empty starting set that could be a counterexample.</option>
+          <option value="fails">Yes. Every subset proof requires physically choosing an element.</option>
+          <option value="equal">No, because the empty set equals every set.</option>
+        </select><span id="feedback15" class="feedback-icon"></span>
+      </div>
+      <div id="hint15" class="detective-hint">🕵️ <strong>Detective's Note:</strong> To disprove \(X\subseteq Y\), you need an element in \(X\) that is not in \(Y\). Can \(\varnothing\) provide one?</div>
+
+      <div class="evidence">
+        <div class="mini-label">Formal foundation</div>
+        \[
+          X\subseteq Y \iff \forall x\,(x\in X\Rightarrow x\in Y).
+        \]
+        When \(X=\varnothing\), there is no counterexample, so the implication is true for every \(x\). This is called <strong>vacuous truth</strong>.
+      </div>
+    </div>
+
+    <div class="p-6 md:p-10 bg-white">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Final Report: Close the Case</h2>
+
+      <p class="mb-4">We have proved both directions. Which conclusion now follows?</p>
+      <div class="question-card">
+        <select id="hole16" class="hole hole-select text-sm">
+          <option value="">[Select Final Deduction]</option>
+          <option value="equal">Since each set is a subset of the other, the sets are equal.</option>
+          <option value="size">We must still show that the two sets have the same number of elements.</option>
+          <option value="oneway">One subset direction is enough for equality.</option>
+        </select><span id="feedback16" class="feedback-icon"></span>
+      </div>
+      <div id="hint16" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Two sets are equal exactly when each is contained in the other.</div>
+
+      <p class="mb-4 text-lg font-bold">
+        Therefore,
+        \[
+          \boxed{(A\cap B)'=A'\cup B'}.
+        \]
+      </p>
+
+      <div class="evidence">
+        <div class="mini-label">Proof skeleton</div>
+        \[
+        x\in(A\cap B)'\Rightarrow x\notin A\cap B
+        \Rightarrow (x\notin A\ \text{or}\ x\notin B)
+        \Rightarrow (x\in A'\ \text{or}\ x\in B')
+        \Rightarrow x\in A'\cup B'.
+        \]
+        Then run the same chain backwards for the converse.
+      </div>
+
+      <div class="mb-6 mt-5 border-l-4 border-indigo-400 pl-4 bg-indigo-50 py-2 pr-2">
+        <label class="block text-sm font-bold text-indigo-700 mb-1">📝 Chief Inspector's Final Proof</label>
+        <textarea class="field-notes" placeholder="Write the complete proof of De Morgan's Second Law from beginning to end using both subset directions."></textarea>
+      </div>
+    </div>
+
+    <div class="bg-slate-200 p-6 rounded-b-sm flex flex-col md:flex-row justify-between items-center gap-4 border-t-4 border-slate-300">
+      <div id="overall-feedback" class="text-lg font-bold font-sans text-slate-700">Awaiting Detective's Final Report...</div>
+      <button onclick="evaluateProof()" class="bg-slate-800 hover:bg-indigo-700 text-white font-bold py-3 px-8 shadow-lg transition-colors font-sans uppercase tracking-wider rounded-sm border-2 border-slate-900">Submit Findings</button>
+    </div>
+  </div>
+
+  <script>
+    const proofSchema = {
+      hole1:{type:'select',validAnswer:'arbitrary'},
+      hole2:{type:'select',validAnswer:'notinter'},
+      hole3:{type:'select',validAnswer:'both'},
+      hole4:{type:'select',validAnswer:'or'},
+      hole5:{type:'formula',validAnswers:["a'","a′","a^c","acomplement","a-complement"]},
+      hole6:{type:'formula',validAnswers:["b'","b′","b^c","bcomplement","b-complement"]},
+      hole7:{type:'select',validAnswer:'union'},
+      hole8:{type:'select',validAnswer:'orcomp'},
+      hole9:{type:'select',validAnswer:'notor'},
+      hole10:{type:'select',validAnswer:'no'},
+      hole11:{type:'select',validAnswer:'incomp'},
+      hole12:{type:'select',validAnswer:'false'},
+      hole13:{type:'select',validAnswer:'counter'},
+      hole14:{type:'select',validAnswer:'cannot'},
+      hole15:{type:'select',validAnswer:'vacuous'},
+      hole16:{type:'select',validAnswer:'equal'}
+    };
+
+    function normalizeMathString(str){
+      if(!str) return '';
+      return str.toLowerCase().replace(/\s+/g,'').replace(/[{}]/g,'').replace(/\\/g,'');
+    }
+
+    function evaluateProof(){
+      let correctCount=0;
+      const totalHoles=Object.keys(proofSchema).length;
+
+      document.querySelectorAll('.field-notes').forEach(note=>{
+        note.style.borderColor=note.value.trim().length>10?'#86efac':'#fde047';
+      });
+
+      for(const [id,rules] of Object.entries(proofSchema)){
+        const element=document.getElementById(id);
+        const number=id.replace('hole','');
+        const feedbackEl=document.getElementById('feedback'+number);
+        const hintEl=document.getElementById('hint'+number);
+        let isCorrect=false;
+
+        if(rules.type==='select'){
+          isCorrect=element.value===rules.validAnswer;
+        } else {
+          const user=normalizeMathString(element.value);
+          isCorrect=rules.validAnswers.some(ans=>normalizeMathString(ans)===user);
+        }
+
+        element.classList.remove('correct','incorrect');
+        if(isCorrect){
+          element.classList.add('correct');
+          feedbackEl.textContent='✅';
+          hintEl.style.display='none';
+          correctCount++;
+        } else if((element.value||'').trim()!==''){
+          element.classList.add('incorrect');
+          feedbackEl.textContent='❌';
+          hintEl.style.display='block';
+        } else {
+          feedbackEl.textContent='';
+          hintEl.style.display='none';
+        }
+      }
+
+      const fieldNotes=[...document.querySelectorAll('.field-notes')];
+      const notesFilled=fieldNotes.filter(n=>n.value.trim().length>10).length;
+      const noteMessage=notesFilled===fieldNotes.length
+        ? '<br><span class="text-sm text-blue-600 font-normal block mt-2">All written field observations are filled in for teacher review.</span>'
+        : `<br><span class="text-sm text-slate-500 font-normal block mt-2">${fieldNotes.length-notesFilled} written field observation(s) still need your explanation.</span>`;
+
+      const overall=document.getElementById('overall-feedback');
+      if(correctCount===totalHoles){
+        overall.innerHTML=`<span class="text-green-700">🕵️ Case Closed! You reconstructed De Morgan's Second Law from the definitions.</span>${noteMessage}`;
+      } else {
+        overall.innerHTML=`<span class="text-red-600">⚠️ Case still open: ${correctCount}/${totalHoles} objective clues correct. Revisit the highlighted evidence.</span>${noteMessage}`;
+      }
+      window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+    }
+  </script>
+</body>
+</html>
