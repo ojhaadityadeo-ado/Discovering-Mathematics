@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Math Detective: Case File 12 — Difference of Angles</title><style>
+0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+body{
+  margin:0;
+  background:#e2e8f0;
+  color:#1e293b;
+  font-family:'Inter',sans-serif;
+  background-image:radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size:20px 20px;
+}
+.case-file{
+  font-family:'Courier Prime',monospace;
+  line-height:1.75;
+  font-size:1.03rem;
+  background:#fdfbf7;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+.stamp{
+  position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;
+  font-size:1.15rem;font-weight:bold;padding:.25rem .7rem;transform:rotate(-12deg);
+  opacity:.2;pointer-events:none;
+}
+.case-badge{
+  font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:#4338ca;background:#eef2ff;border:1px solid #c7d2fe;
+  border-radius:9999px;padding:.22rem .6rem;display:inline-block;margin-bottom:.6rem;
+}
+.stage-nav{
+  display:flex;flex-wrap:wrap;gap:.4rem;padding:1rem 1.5rem;border-bottom:1px solid #cbd5e1;
+  background:#f8fafc;font-family:'Inter',sans-serif;
+}
+.stage-nav button{
+  border:1px solid #cbd5e1;background:white;color:#64748b;border-radius:.4rem;
+  padding:.45rem .75rem;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s;
+}
+.stage-nav button:hover{border-color:#6366f1;color:#4338ca}
+.stage-nav button[aria-current="step"]{background:#4338ca;color:white;border-color:#4338ca}
+.evidence{
+  background:#eef2ff;border-left:4px solid #6366f1;padding:.9rem 1rem;
+  margin:1rem 0;font-family:'Inter',sans-serif;font-size:.96rem;
+}
+.concept-card{
+  background:#f8fafc;border:1px solid #cbd5e1;border-left:4px solid #475569;
+  padding:1rem;margin:1rem 0;font-family:'Inter',sans-serif;
+}
+.logic-card{
+  background:#f0fdf4;border:1px solid #bbf7d0;border-left:4px solid #22c55e;
+  padding:1rem;margin:1rem 0;font-family:'Inter',sans-serif;
+}
+.warning-card{
+  background:#fff7ed;border:1px solid #fed7aa;border-left:4px solid #f97316;
+  padding:1rem;margin:1rem 0;font-family:'Inter',sans-serif;
+}
+.question-card{
+  background:#fff;border:1px solid #e2e8f0;padding:1rem;margin:1rem 0;border-radius:.4rem;
+}
+.field-notes{
+  width:100%;min-height:105px;font-family:'Courier Prime',monospace;
+  background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;
+  padding:.75rem;margin:.5rem 0;border-radius:.25rem;resize:vertical;
+  font-size:.95rem;color:#3f3f46;
+}
+.field-notes::placeholder{color:#a1a1aa;font-style:italic}
+.input-field{
+  width:100%;min-height:44px;border:2px dashed #94a3b8;border-radius:.35rem;background:#f8fafc;
+  padding:.65rem .75rem;font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:.2s;
+}
+.input-field:focus{border-color:#4f46e5;border-style:solid;background:white}
+.input-field.good{border-color:#16a34a;border-style:solid;background:#f0fdf4}
+.input-field.retry{border-color:#dc2626;border-style:solid;background:#fef2f2}
+.feedback{font-family:'Inter',sans-serif;font-size:.84rem;color:#64748b;min-height:1.25rem;margin-top:.35rem}
+.feedback.good{color:#15803d}.feedback.retry{color:#b91c1c}
+.detective-hint{
+  background:#fffbeb;border-left:4px solid #f59e0b;padding:.75rem 1rem;margin:.8rem 0;
+  font-family:'Inter',sans-serif;font-size:.9rem;color:#92400e;
+}
+.formula-box{
+  background:#fff;border:2px solid #cbd5e1;border-radius:.45rem;padding:1rem;
+  margin:1rem 0;overflow-x:auto;font-family:'Inter',sans-serif;
+}
+.diagram-card{
+  background:#fff;border:1px solid #cbd5e1;border-radius:.6rem;padding:1rem;
+  box-shadow:inset 0 1px 4px rgba(15,23,42,.04);
+}
+.diagram-title{
+  font-family:'Inter',sans-serif;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;
+  font-weight:700;color:#64748b;margin-bottom:.4rem;
+}
+.diagram-note{
+  font-family:'Inter',sans-serif;font-size:.88rem;color:#475569;border-top:1px solid #e2e8f0;
+  margin-top:.6rem;padding-top:.7rem;text-align:center;
+}
+.diagram-card > svg text{font-family:'Inter',sans-serif;fill:#1e293b}
+.stage-section[hidden]{display:none!important}
+.details-card{border-top:1px solid #e2e8f0;padding-top:.8rem;margin-top:.8rem}
+details summary{cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;color:#4338ca}
+details[open] summary{margin-bottom:.55rem}
+.action-btn{
+  background:#1e293b;color:#fff;border:2px solid #0f172a;border-radius:.25rem;
+  padding:.7rem 1rem;font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;
+}
+.action-btn:hover{background:#4338ca;border-color:#3730a3}
+.action-btn.secondary{background:#e2e8f0;color:#334155;border-color:#cbd5e1}
+.action-btn.secondary:hover{background:#cbd5e1}
+.action-btn:disabled{opacity:.45;cursor:not-allowed}
+.ratio-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.status-bar{font-family:'Inter',sans-serif;color:#64748b;font-size:.85rem;font-weight:600}
+.small{font-family:'Inter',sans-serif;font-size:.85rem;color:#64748b}
+.solution-step{margin:1rem 0;padding:.9rem;background:#fff;border:1px solid #e2e8f0;border-radius:.4rem}
+.mini-table{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:.9rem;margin:.6rem 0}
+.mini-table th,.mini-table td{border:1px solid #cbd5e1;padding:.55rem;text-align:left}
+.mini-table th{background:#f1f5f9}
+@media(max-width:900px){
+  .two-col{grid-template-columns:1fr!important}.sticky-board{position:static!important}.ratio-grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .stage-nav{padding:.75rem}.stamp{font-size:.9rem;right:10px;top:12px}.case-file{font-size:.98rem}
+}
+
+/* Preserve the original template with local layout rules. */
+*{box-sizing:border-box} [hidden]{display:none!important}
+body{min-height:100vh;padding:32px;display:flex;justify-content:center;align-items:flex-start}
+.case-file{width:100%;max-width:1152px;position:relative;margin-top:16px;border-radius:3px}
+header{background:#1e293b;color:#f1f5f9;padding:28px;border-bottom:4px solid #0f172a;border-radius:3px 3px 0 0}
+header h1{font:700 clamp(22px,3vw,30px)/1.3 Inter,sans-serif;letter-spacing:.025em;margin:0;padding-right:115px}
+header p{margin:12px 0 0}header p:first-of-type{color:#94a3b8;font-family:'Courier Prime',monospace}
+header p:last-child{font:14px/1.75 Inter,sans-serif;max-width:930px}
+.case-file > .bg-indigo-900{background:#312e81;color:#e0e7ff;padding:20px 28px;font:14px/1.8 Inter,sans-serif}
+.two-col{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:28px;padding:32px}
+.two-col>*{min-width:0}.sticky-board{align-self:start;position:sticky;top:16px}
+.diagram-card>svg{display:block;width:100%;height:auto}
+h2{font:700 20px/1.45 Inter,sans-serif;color:#1e293b;letter-spacing:.045em;text-transform:uppercase;margin:0 0 18px}
+h3{font:700 16px/1.5 Inter,sans-serif;margin:0 0 12px}
+p{margin:0 0 14px}p:last-child{margin-bottom:0}
+label{display:block;font:600 14px/1.75 Inter,sans-serif;margin-bottom:10px}
+strong{font-weight:700}ol{padding-left:24px;margin:0}li+li{margin-top:12px}
+.concept-card,.logic-card,.warning-card,.question-card,.evidence,.solution-step{min-width:0;line-height:1.8;overflow-wrap:break-word}
+.question-card.m-0{margin:0}.ratio-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+.action-btn{min-height:44px;line-height:1.5;white-space:normal}.mt-2{margin-top:8px}.mt-4{margin-top:16px}
+.text-center{text-align:center}.font-sans{font-family:Inter,sans-serif}.font-semibold{font-weight:600}.mb-2{margin-bottom:8px}
+.formula-box{padding:16px 12px;overflow-x:auto;max-width:100%}
+mjx-container[display="true"]{display:block!important;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:4px 0;margin:16px 0!important}
+mjx-container svg{max-width:100%;height:auto}mjx-container:not([display="true"]){display:inline-block;max-width:100%;vertical-align:middle}
+.details-card summary{line-height:1.65;padding:4px 0}details[open] summary{margin-bottom:14px}
+.mini-table{table-layout:fixed}.mini-table th,.mini-table td{overflow-wrap:break-word;padding:9px 6px}
+#height-key{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;font:12px/1.6 Inter,sans-serif;text-align:center}
+#height-key>div{border:1px solid #a7f3d0;background:#ecfdf5;border-radius:4px;padding:8px}
+#height-key>div+div{border-color:#fed7aa;background:#fff7ed}
+footer{background:#e2e8f0;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:4px solid #cbd5e1}
+button:focus-visible,summary:focus-visible{outline:3px solid #6366f1;outline-offset:3px}
+@media(max-width:1000px){.two-col{grid-template-columns:minmax(0,1fr)}.sticky-board{position:static;max-width:460px;width:100%;margin:0 auto}}
+@media(max-width:650px){body{padding:12px}.case-file{margin-top:0}header{padding:22px 18px}header h1{padding-right:0}.stamp{position:static;display:table;margin:12px 18px 0 auto;opacity:.4;font-size:14px}.case-file>.stamp{position:absolute;top:0;right:0;margin:4px 8px;font-size:10px;border-width:2px}header h1{padding-top:14px}.case-file>.bg-indigo-900{padding:18px}.two-col{padding:18px;gap:22px}.ratio-grid{grid-template-columns:1fr}.stage-nav{gap:6px}.stage-nav button{flex:1 1 130px}footer{flex-wrap:wrap;justify-content:center}#progress{order:-1;flex-basis:100%;text-align:center}.formula-box{font-size:.9rem}.diagram-card{padding:12px}}
+
+
+.math{font-family:Georgia,'Times New Roman',serif;font-size:1.08em;letter-spacing:0;line-height:1.65}.eq{display:block;text-align:center;margin:12px 0;overflow-wrap:break-word}.eqline{display:block;margin:6px 0}.term{display:inline-block;white-space:nowrap}.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.4;margin:0 5px}.frac>span:first-child{border-bottom:1px solid;padding:0 5px 3px}.frac>span:last-child{padding:3px 5px 0}.boxed{border:1px solid #64748b;padding:10px;display:block}.stage-section:focus{outline:none}.diagram-card>svg text{font-family:Arial,sans-serif}.note-status{font:12px/1.5 Arial,sans-serif;color:#64748b}.mini-table{table-layout:auto}.mini-table td{vertical-align:top}.stamp{z-index:1}code{font-size:.95em} .formula-box{overflow:visible} @media(max-width:650px){.math{font-size:1em}.two-col{padding:14px}.concept-card,.logic-card,.warning-card,.question-card{padding:12px}.mini-table{font-size:.8rem}}
+</style></head><body><div class="case-file"><div class="stamp">OPEN CASE</div><header><h1>MATH DETECTIVE: CASE FILE #12</h1><p>Subject: The Difference-Angle Identities</p><p><strong>Mission:</strong> Uncover sin(A − B), cos(A − B), and tan(A − B) using the addition identities and the meaning of a negative angle.</p></header><div class="bg-indigo-900"><strong>Detective Briefing:</strong> The formulas for a sum are already in our evidence file. Can we turn a difference into a sum by changing the orientation of one angle?</div><nav class="stage-nav" id="stage-nav" aria-label="Investigation stages"></nav><div class="two-col"><aside class="sticky-board"><div class="diagram-card"><div class="diagram-title">Exhibit 01 / Reverse the rotation</div><svg viewBox="0 0 400 370" role="img" aria-labelledby="scene-title scene-desc"><title id="scene-title">Opposite orientations on the unit circle</title><desc id="scene-desc">Angles B and negative B are shown as opposite rotations from the positive horizontal axis. Their endpoints are reflections across that axis, with the same x coordinate and opposite y coordinates. The example shows positive acute B.</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#475569"/></marker></defs><circle cx="185" cy="182" r="128" fill="#eef2ff" stroke="#c7d2fe" stroke-width="2"/><path d="M25 182H365 M185 340V22" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/><path d="M185 182L258.4 77.1" stroke="#4338ca" stroke-width="3"/><path d="M185 182L258.4 286.9" stroke="#c2410c" stroke-width="3"/><path d="M258.4 77.1V286.9" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 5"/><path d="M231 182A46 46 0 0 0 211.4 144.3 M231 182A46 46 0 0 1 211.4 219.7" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/><circle cx="258.4" cy="77.1" r="5" fill="#4338ca"/><circle cx="258.4" cy="286.9" r="5" fill="#c2410c"/><text x="168" y="204" font-size="15">O</text><text x="350" y="203" font-size="15">x</text><text x="195" y="32" font-size="15">y</text><text x="233" y="152" font-size="17">B</text><text x="231" y="226" font-size="17">−B</text><text x="274" y="80" font-size="16">P</text><text x="274" y="291" font-size="16">P′</text></svg><div class="diagram-note"><p><span class="math">P = (cos B, sin B)</span><br><span class="math">P′ = (cos B, −sin B)</span></p><p>Same horizontal coordinate.<br>Opposite vertical coordinate.</p></div><p class="small">Illustration: B is positive and acute. Reflection and the negative-angle identities hold for every real B.</p></div><div class="evidence"><strong>Keep this clue in view</strong><div class="formula-box math"><div class="eq">B′ = −B</div><div class="eq">A − B = A + B′</div></div></div><div class="concept-card"><strong>Negative-angle facts</strong><div class="math eq">cos(−B) = cos B</div><div class="math eq">sin(−B) = −sin B</div><div class="math eq">tan(−B) = −tan B</div><p class="small">The tangent fact requires cos B ≠ 0.</p></div></aside><main id="case-content"><section class="stage-section" data-step="0" aria-labelledby="title-0"><span class="case-badge">Clue 01 — Know the target</span><h2 id="title-0" tabindex="-1">Can subtraction become addition?</h2>
+<div class="concept-card"><p>Let <span class="math">A</span> and <span class="math">B</span> be any two real angles. We want to find <span class="math">sin(A − B)</span>, <span class="math">cos(A − B)</span>, and <span class="math">tan(A − B)</span> using functions of the separate angles.</p><p>Our first suspect is <span class="math">sin(A − B)</span>. What do we already know? The sine of a <strong>sum</strong>.</p></div>
+<div class="formula-box math"><div class="eq">sin(A + B) = sin A cos B + cos A sin B</div></div>
+<p>Detective, can you write <span class="math">A − B</span> as the sum of two angles?</p>
+<div class="question-card"><label for="substitution"><span class="math">A − B = A + B′. What must B′ equal?</span></label><input class="input-field" id="substitution" placeholder="Use A and B" autocomplete="off"><p class="feedback" id="substitution-feedback" aria-live="polite"></p><button class="action-btn mt-2" data-check="substitution">Check this clue</button></div>
+<details class="details-card"><summary>Open the substitution envelope</summary><div class="formula-box math"><div class="eq">B′ = −B</div><div class="eq">A − B = A + (−B) = A + B′</div></div><p>We have changed the form of the expression. Now the addition formula can do the work.</p></details>
+<div class="detective-hint"><strong>Detective’s Note:</strong> We use addition identities already established for real angles. No acute-angle triangle restriction is needed here. Tangent will require a domain check.</div>
+</section><section class="stage-section" data-step="1" hidden aria-labelledby="title-1"><span class="case-badge">Clue 02 — Read the orientation</span><h2 id="title-1" tabindex="-1">What does a negative angle mean?</h2>
+<p>When we defined an angle, we included its <strong>orientation</strong>: the direction of rotation from the initial ray.</p>
+<div class="concept-card"><p>By convention, anticlockwise rotation is positive and clockwise rotation is negative.</p><p>The angle <span class="math">−A</span> has the same magnitude as <span class="math">A</span>, with the direction reversed. Likewise, <span class="math">B′ = −B</span> reverses the rotation of <span class="math">B</span>. If <span class="math">B</span> is already negative, <span class="math">−B</span> is positive.</p></div>
+<p>Inspect the unit-circle exhibit. Reversing the angle reflects its endpoint across the horizontal axis: the horizontal coordinate stays the same and the vertical coordinate changes sign.</p>
+<div class="formula-box math"><div class="eq">cos(−B) = cos B</div><div class="eq">sin(−B) = −sin B</div></div>
+<p>Since tangent is sine divided by cosine, wherever it is defined,</p>
+<div class="formula-box math"><div class="eq">tan(−B) = <span class="frac"><span>sin(−B)</span><span>cos(−B)</span></span></div><div class="eq">= <span class="frac"><span>−sin B</span><span>cos B</span></span> = −tan B</div></div>
+<div class="question-card"><label for="orientation">If B = −40°, what is −B?</label><input class="input-field" id="orientation" placeholder="Enter an angle in degrees" autocomplete="off"><p class="feedback" id="orientation-feedback" aria-live="polite"></p><button class="action-btn mt-2" data-check="orientation">Check this clue</button></div>
+<div class="question-card"><label for="orientation-notes">Field notes: Why does cosine keep its sign while sine changes sign?</label><textarea class="field-notes" id="orientation-notes" placeholder="Record your reasoning here…"></textarea></div>
+</section><section class="stage-section" data-step="2" hidden aria-labelledby="title-2"><span class="case-badge">Clue 03 — The sine deduction</span><h2 id="title-2" tabindex="-1">Find sin(A − B)</h2>
+<p>Set <span class="math">B′ = −B</span>. The difference is now a sum, so apply the familiar sine addition identity.</p>
+<div class="formula-box math"><div class="eq">sin(A − B) = sin(A + B′)</div><div class="eq">= sin A cos B′ + cos A sin B′</div><div class="eq">= sin A cos(−B) + cos A sin(−B)</div></div>
+<div class="evidence"><strong>Evidence to substitute:</strong> <span class="math">cos(−B) = cos B</span> and <span class="math">sin(−B) = −sin B</span>.</div>
+<div class="question-card"><label for="sine-sign">What sign connects the two products in the final sine formula?</label><input class="input-field" id="sine-sign" placeholder="Type + or −" autocomplete="off"><p class="feedback" id="sine-sign-feedback" aria-live="polite"></p><button class="action-btn mt-2" data-check="sine-sign">Check this clue</button></div>
+<details class="details-card"><summary>Open the sine proof</summary><div class="formula-box math"><div class="eq">sin(A − B) = sin A cos B + cos A (−sin B)</div><div class="eq"><span class="boxed">sin(A − B) = sin A cos B − cos A sin B</span></div></div><p>The negative sign comes from the oddness of sine. This identity holds for all real A and B.</p></details>
+<div class="question-card"><label for="sine-notes">Field notes: Explain the proof in one sentence, starting with “Replace B by…”</label><textarea class="field-notes" id="sine-notes" placeholder="Record your reasoning here…"></textarea></div>
+</section><section class="stage-section" data-step="3" hidden aria-labelledby="title-3"><span class="case-badge">Clue 04 — The cosine deduction</span><h2 id="title-3" tabindex="-1">Find cos(A − B)</h2>
+<p>Repeat the same move: <span class="math">B′ = −B</span>. First recall the cosine addition identity.</p>
+<div class="formula-box math"><div class="eq">cos(A + B′) = cos A cos B′ − sin A sin B′</div></div>
+<p>Now substitute the angle <span class="math">−B</span>.</p>
+<div class="formula-box math"><div class="eq">cos(A − B) = cos(A + B′)</div><div class="eq">= cos A cos(−B) − sin A sin(−B)</div></div>
+<div class="question-card"><label for="cosine-sign">After using sin(−B) = −sin B, what sign connects the two products?</label><input class="input-field" id="cosine-sign" placeholder="Type + or −" autocomplete="off"><p class="feedback" id="cosine-sign-feedback" aria-live="polite"></p><button class="action-btn mt-2" data-check="cosine-sign">Check this clue</button></div>
+<details class="details-card"><summary>Clue — Track both negative signs</summary><p>The addition formula already contains a minus sign. Replacing sin(−B) by −sin B introduces another. What happens when you subtract a negative product?</p></details>
+<details class="details-card"><summary>Open the cosine proof</summary><div class="formula-box math"><div class="eq">cos(A − B) = cos A cos B − sin A (−sin B)</div><div class="eq"><span class="boxed">cos(A − B) = cos A cos B + sin A sin B</span></div></div><p>Two negative signs produce the plus sign. This identity holds for all real A and B.</p></details>
+<div class="question-card"><label for="cosine-notes">Field notes: Why does sine have a minus sign but cosine has a plus sign?</label><textarea class="field-notes" id="cosine-notes" placeholder="Record your reasoning here…"></textarea></div>
+</section><section class="stage-section" data-step="4" hidden aria-labelledby="title-4"><span class="case-badge">Clue 05 — The tangent deduction</span><h2 id="title-4" tabindex="-1">Find tan(A − B)</h2>
+<p>Use <span class="math">B′ = −B</span> once more. Recall the tangent addition identity, where its terms and quotient are defined.</p>
+<div class="formula-box math"><div class="eq">tan(A + B′) = <span class="frac"><span>tan A + tan B′</span><span>1 − tan A tan B′</span></span></div></div>
+<p>Substitute <span class="math">B′ = −B</span> and use <span class="math">tan(−B) = −tan B</span>.</p>
+<div class="formula-box math"><div class="eq">tan(A − B) = <span class="frac"><span>tan A + tan(−B)</span><span>1 − tan A tan(−B)</span></span></div><div class="eq">= <span class="frac"><span>tan A − tan B</span><span>1 − tan A (−tan B)</span></span></div></div>
+<div class="question-card"><label for="tangent-sign">What sign belongs in the denominator: 1 □ tan A tan B?</label><input class="input-field" id="tangent-sign" placeholder="Type + or −" autocomplete="off"><p class="feedback" id="tangent-sign-feedback" aria-live="polite"></p><button class="action-btn mt-2" data-check="tangent-sign">Check this clue</button></div>
+<details class="details-card"><summary>Open the tangent proof</summary><div class="formula-box math"><div class="eq"><span class="boxed">tan(A − B) = <span class="frac"><span>tan A − tan B</span><span>1 + tan A tan B</span></span></span></div></div><p>The numerator subtracts tan B; the two negative signs in the denominator give a plus.</p></details>
+<div class="warning-card"><strong>Check the domain before closing this case.</strong><p>The formula written in terms of tan A and tan B requires</p><div class="formula-box math"><div class="eq">cos A ≠ 0, &nbsp; cos B ≠ 0,</div><div class="eq">1 + tan A tan B ≠ 0.</div></div><p>Equivalently, A, B, and A − B must each avoid π/2 + kπ, for any integer k. Under the first two conditions, the last condition is exactly cos(A − B) ≠ 0.</p></div>
+<details class="details-card"><summary>Cross-check with the sine and cosine results</summary><div class="formula-box math"><div class="eq">tan(A − B) = <span class="frac"><span>sin(A − B)</span><span>cos(A − B)</span></span></div><div class="eq">= <span class="frac"><span>sin A cos B − cos A sin B</span><span>cos A cos B + sin A sin B</span></span></div></div><p>This ratio is valid whenever cos(A − B) ≠ 0. Dividing the numerator and denominator by cos A cos B gives the tangent formula, provided cos A cos B ≠ 0.</p></details>
+</section><section class="stage-section" data-step="5" hidden aria-labelledby="title-5"><span class="case-badge">Clue 06 — Close the case</span><h2 id="title-5" tabindex="-1">One substitution. Three identities.</h2>
+<div class="logic-card"><strong>The common method:</strong> Write A − B as A + B′, set B′ = −B, use an addition identity, and apply the negative-angle facts.</div>
+<div class="formula-box math"><div class="eq"><strong>Sine</strong></div><div class="eq">sin(A − B) = sin A cos B − cos A sin B</div></div>
+<div class="formula-box math"><div class="eq"><strong>Cosine</strong></div><div class="eq">cos(A − B) = cos A cos B + sin A sin B</div></div>
+<p class="small">The sine and cosine identities hold for all real A and B.</p>
+<div class="formula-box math"><div class="eq"><strong>Tangent</strong></div><div class="eq">tan(A − B) = <span class="frac"><span>tan A − tan B</span><span>1 + tan A tan B</span></span></div></div>
+<p class="small">For the tangent formula: cos A ≠ 0, cos B ≠ 0, and cos(A − B) ≠ 0.</p>
+<div class="question-card"><label for="check-zero">Sanity check: if A = B and tan A exists, what does the tangent difference formula give?</label><input class="input-field" id="check-zero" placeholder="Enter a number" autocomplete="off"><p class="feedback" id="check-zero-feedback" aria-live="polite"></p><button class="action-btn mt-2" data-check="check-zero">Check this clue</button></div>
+<details class="details-card"><summary>One last trap — Can tan(A − B) exist when tan A does not?</summary><p>Yes. Take A = π/2 and B = π/4. Then tan(A − B) = tan(π/4) = 1, but tan A is undefined. The formula written using tan A and tan B cannot be used for this pair.</p></details>
+<div class="question-card"><label for="final-report">Final Detective Report: Reconstruct all three proofs and state the tangent conditions.</label><textarea class="field-notes" id="final-report" placeholder="Record your reasoning here…"></textarea></div>
+<div class="detective-hint"><strong>Case Closed:</strong> Reversing the second angle turns our known addition identities into difference identities. Every sign has an explanation.</div>
+</section></main></div><footer><button class="action-btn secondary" id="back" type="button">Previous clue</button><div class="status-bar" id="progress" aria-live="polite"></div><button class="action-btn" id="next" type="button">Next clue →</button></footer></div><script>(()=>{'use strict';const names=['The substitution','Orientation','Sine','Cosine','Tangent','Case closed'];let current=0;const nav=document.getElementById('stage-nav');const back=document.getElementById('back');const next=document.getElementById('next');function show(i,focus){current=i;document.querySelectorAll('.stage-section').forEach((s,j)=>s.hidden=j!==i);[...nav.children].forEach((b,j)=>{if(j===i)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});back.disabled=i===0;next.hidden=i===5;next.textContent=i<5?names[i+1]+' →':'Next clue';document.getElementById('progress').textContent='Clue '+(i+1)+' of 6';if(focus)document.getElementById('title-'+i).focus()}names.forEach((n,i)=>{const b=document.createElement('button');b.type='button';b.textContent=(i+1)+'. '+n;b.onclick=()=>show(i,true);nav.append(b)});back.onclick=()=>show(Math.max(0,current-1),true);next.onclick=()=>show(Math.min(5,current+1),true);
+const rules={substitution:[['-b','(-b)'],'Correct. B′ = −B, so A − B = A + (−B).','Which angle added to A subtracts B?'],orientation:[['40','+40','40°','+40°','40degrees','+40degrees'],'Correct. The opposite of −40° is +40°.','Reverse the sign of −40°.'], 'sine-sign':[['-','minus','negative'],'Correct. sin(−B) contributes the minus sign.','Cosine stays the same, but sin(−B) = −sin B.'],'cosine-sign':[['+','plus','positive'],'Correct. Subtracting a negative product gives a plus.','Track the minus in the addition formula and the minus from sin(−B).'],'tangent-sign':[['+','plus','positive'],'Correct. 1 − tan A(−tan B) = 1 + tan A tan B.','The denominator contains two negative signs.'],'check-zero':[['0','zero'],'Correct. The numerator is zero and the denominator is 1 + tan² A > 0.','Set B = A in the numerator. What is tan A − tan A?']};
+function check(id){const input=document.getElementById(id),out=document.getElementById(id+'-feedback'),r=rules[id];const value=input.value.trim().toLowerCase().replace(/−/g,'-').replace(/\s/g,'');const ok=r[0].includes(value);out.textContent=!value?'Enter your answer, then check the clue.':ok?r[1]:r[2];out.className='feedback '+(!value?'':ok?'good':'retry');input.className='input-field '+(!value?'':ok?'good':'retry');input.setAttribute('aria-invalid',String(!!value&&!ok))}
+document.querySelectorAll('[data-check]').forEach(b=>{b.onclick=()=>check(b.dataset.check);document.getElementById(b.dataset.check).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check(b.dataset.check)}})});show(0,false);})();</script></body></html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Detective: Distribute an Intersection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      background-color:#e2e8f0;
+      color:#1e293b;
+      font-family:'Inter',sans-serif;
+      background-image:radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size:20px 20px;
+    }
+    .case-file {
+      font-family:'Courier Prime',monospace;
+      line-height:1.8;
+      font-size:1.08rem;
+      background-color:#fdfbf7;
+      box-shadow:0 10px 25px rgba(0,0,0,.1);
+    }
+    .hole {
+      font-family:'Inter',sans-serif;
+      font-size:.95rem;
+      border:2px dashed #94a3b8;
+      border-radius:.25rem;
+      padding:.125rem .5rem;
+      margin:0 .25rem;
+      transition:all .2s;
+      outline:none;
+      background-color:#f1f5f9;
+    }
+    .hole:focus { border-color:#4f46e5; border-style:solid; background:#fff; }
+    .hole.correct { border-color:#16a34a; border-style:solid; background:#f0fdf4; color:#15803d; }
+    .hole.incorrect { border-color:#dc2626; border-style:solid; background:#fef2f2; color:#b91c1c; }
+    .hole-text { width:170px; text-align:center; }
+    .hole-select { max-width:100%; width:auto; cursor:pointer; text-overflow:ellipsis; }
+    .field-notes {
+      width:100%;
+      min-height:88px;
+      font-family:'Courier Prime',monospace;
+      background:#fefce8;
+      border:1px solid #fde047;
+      border-left:4px solid #eab308;
+      padding:.75rem;
+      margin:.5rem 0;
+      border-radius:.25rem;
+      resize:vertical;
+      font-size:.95rem;
+      color:#3f3f46;
+      box-shadow:inset 0 2px 4px rgba(0,0,0,.05);
+    }
+    .field-notes::placeholder { color:#a1a1aa; font-style:italic; }
+    .detective-hint {
+      display:none;
+      background:#fffbeb;
+      border-left:4px solid #f59e0b;
+      padding:.55rem;
+      margin-top:.5rem;
+      font-size:.9rem;
+      font-family:'Inter',sans-serif;
+      color:#b45309;
+    }
+    .feedback-icon { margin-left:4px; font-size:1.1rem; vertical-align:middle; }
+    .stamp {
+      position:absolute;
+      top:20px;
+      right:20px;
+      border:4px solid #dc2626;
+      color:#dc2626;
+      font-size:1.4rem;
+      font-weight:bold;
+      padding:.25rem 1rem;
+      transform:rotate(-15deg);
+      opacity:.2;
+      pointer-events:none;
+    }
+    .evidence {
+      background:#eef2ff;
+      border-left:4px solid #6366f1;
+      padding:.8rem 1rem;
+      margin:1rem 0;
+      font-family:'Inter',sans-serif;
+      font-size:.96rem;
+    }
+    .question-card {
+      background:#fff;
+      border:1px solid #e2e8f0;
+      padding:1rem;
+      margin:1rem 0;
+      border-radius:.25rem;
+    }
+    .mini-label {
+      font-family:'Inter',sans-serif;
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:700;
+      color:#64748b;
+    }
+    .logic-card {
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      border-left:4px solid #22c55e;
+      padding:1rem;
+      margin:1rem 0;
+      font-family:'Inter',sans-serif;
+    }
+    .warning-card {
+      background:#fef2f2;
+      border:1px solid #fecaca;
+      border-left:4px solid #ef4444;
+      padding:1rem;
+      margin:1rem 0;
+      font-family:'Inter',sans-serif;
+    }
+    .set-chip {
+      display:inline-block;
+      background:#f8fafc;
+      border:1px solid #cbd5e1;
+      border-radius:.35rem;
+      padding:.2rem .5rem;
+      margin:.15rem;
+      font-family:'Inter',sans-serif;
+      font-size:.9rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex justify-center items-start">
+  <div class="max-w-4xl w-full case-file rounded-sm relative mt-4">
+    <div class="stamp">CASE FILE</div>
+
+    <div class="bg-slate-800 text-slate-100 p-6 rounded-t-sm border-b-4 border-slate-900">
+      <h1 class="text-3xl font-bold font-sans tracking-wide">MATH DETECTIVE: CASE FILE #3</h1>
+      <p class="mt-2 font-mono text-slate-400">Subject: Distribute an Intersection</p>
+      <p class="text-sm font-sans mt-2"><strong>Mission:</strong> Prove
+        \(A\cap(B\cup C)=(A\cap B)\cup(A\cap C)\), and identify exactly why the distribution works.</p>
+    </div>
+
+    <div class="bg-indigo-900 text-indigo-100 p-4 font-sans text-sm shadow-inner">
+      <strong>Detective Briefing:</strong> By now, union, intersection, membership, and the two-subset method should be familiar. This case moves faster. Your job is to recognize the logical structure hidden inside the set notation.
+    </div>
+
+    <!-- GLOBAL VIEW -->
+    <div class="p-6 md:p-10 border-b border-slate-200 bg-white">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">The Global View: What Is This Law Really Saying?</h2>
+
+      <div class="evidence">
+        <div class="mini-label">Think of A as a filter</div>
+        Start with everything that lies in <strong>either \(B\) or \(C\)</strong>. Now keep only the elements that also lie in \(A\).
+        <br><br>
+        There are only two ways an element can survive that filter:
+        it is in <strong>\(A\) and \(B\)</strong>, or it is in <strong>\(A\) and \(C\)</strong>.
+      </div>
+
+      <p class="mb-4">Which sentence best captures the law before we prove it?</p>
+      <div class="question-card">
+        <select id="hole1" class="hole hole-select text-sm">
+          <option value="">[Select the Global Picture]</option>
+          <option value="branches">Being in A and in at least one of B or C splits into two possible branches: A with B, or A with C.</option>
+          <option value="allthree">Every element must be in A, B, and C simultaneously.</option>
+          <option value="ignorea">Once an element is in B or C, membership in A no longer matters.</option>
+        </select><span id="feedback1" class="feedback-icon"></span>
+      </div>
+      <div id="hint1" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Read \(A\cap(B\cup C)\) aloud: “in A AND (in B OR in C).”</div>
+
+      <div class="logic-card">
+        <div class="mini-label">Logic fingerprint</div>
+        If
+        \[
+          P: x\in A,\qquad Q:x\in B,\qquad R:x\in C,
+        \]
+        then the set identity is powered by
+        \[
+          P\land(Q\lor R)\iff (P\land Q)\lor(P\land R).
+        \]
+        This is the logic behind the proof.<br><br><strong>Remark:</strong> If you do not know this logical notation yet, you can simply ignore this box and continue with the set proof.
+      </div>
+    </div>
+
+    <!-- FIRST INCLUSION -->
+    <div class="p-6 md:p-10 border-b border-slate-200">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Act 1: First Trail — Prove \(A\cap(B\cup C)\subseteq(A\cap B)\cup(A\cap C)\)</h2>
+
+      <p class="mb-4"><strong>Begin:</strong> Let \(x\in A\cap(B\cup C)\).</p>
+
+      <p class="mb-4">We do not need to re-learn the definition of intersection. Decode the statement in one move:</p>
+      <div class="question-card">
+        <select id="hole2" class="hole hole-select text-sm">
+          <option value="">[Select the Correct Decode]</option>
+          <option value="aandunion">\(x\in A\) and \(x\in B\cup C\)</option>
+          <option value="aorunion">\(x\in A\) or \(x\in B\cup C\)</option>
+          <option value="allthree">\(x\in A\), \(x\in B\), and \(x\in C\)</option>
+        </select><span id="feedback2" class="feedback-icon"></span>
+      </div>
+      <div id="hint2" class="detective-hint">🕵️ <strong>Detective's Note:</strong> The outer operation is an intersection.</div>
+
+      <p class="mb-4">The second part, \(x\in B\cup C\), gives us two possible cases. Which logical statement now describes everything we know?</p>
+      <div class="question-card">
+        <select id="hole3" class="hole hole-select text-sm">
+          <option value="">[Select the Full Logical Statement]</option>
+          <option value="distribution">\(x\in A\) and \((x\in B\text{ or }x\in C)\)</option>
+          <option value="threeor">\(x\in A\) or \(x\in B\) or \(x\in C\)</option>
+          <option value="threeand">\(x\in A\) and \(x\in B\) and \(x\in C\)</option>
+        </select><span id="feedback3" class="feedback-icon"></span>
+      </div>
+      <div id="hint3" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Do not lose the parentheses. The fact “\(x\in A\)” must remain true in either branch.</div>
+
+      <p class="mb-4">Now distribute the logical “and.” What follows?</p>
+      <div class="question-card">
+        <select id="hole4" class="hole hole-select text-sm">
+          <option value="">[Select the Distributed Form]</option>
+          <option value="correct">\((x\in A\text{ and }x\in B)\) or \((x\in A\text{ and }x\in C)\)</option>
+          <option value="dropa">\((x\in A\text{ and }x\in B)\) or \(x\in C\)</option>
+          <option value="all">\(x\in A\) and \(x\in B\) and \(x\in C\)</option>
+        </select><span id="feedback4" class="feedback-icon"></span>
+      </div>
+      <div id="hint4" class="detective-hint">🕵️ <strong>Detective's Note:</strong> The condition \(x\in A\) belongs to both branches. Distribution does not allow it to disappear from the second branch.</div>
+
+      <div class="logic-card">
+        <div class="mini-label">The decisive step</div>
+        \[
+          x\in A\ \land\ (x\in B\lor x\in C)
+          \Rightarrow
+          (x\in A\land x\in B)\lor(x\in A\land x\in C).
+        \]
+        This is the conceptual heart of the proof.
+      </div>
+
+      <p class="mb-4">Translate each branch back into set notation:</p>
+      <div class="question-card">
+        <select id="hole5" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="memberships">\(x\in A\cap B\) or \(x\in A\cap C\)</option>
+          <option value="wronginter">\(x\in(A\cap B)\cap(A\cap C)\)</option>
+          <option value="drop">\(x\in A\cap B\) or \(x\in C\)</option>
+        </select><span id="feedback5" class="feedback-icon"></span>
+      </div>
+      <div id="hint5" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Each “and” becomes an intersection.</div>
+
+      <p class="mb-4">And “one branch or the other” means:</p>
+      <div class="question-card">
+        <select id="hole6" class="hole hole-select text-sm">
+          <option value="">[Select the Destination]</option>
+          <option value="union">\(x\in(A\cap B)\cup(A\cap C)\)</option>
+          <option value="intersection">\(x\in(A\cap B)\cap(A\cap C)\)</option>
+          <option value="bc">\(x\in B\cup C\)</option>
+        </select><span id="feedback6" class="feedback-icon"></span>
+      </div>
+      <div id="hint6" class="detective-hint">🕵️ <strong>Detective's Note:</strong> “Or” translates to union.</div>
+
+      <p class="font-bold text-lg bg-green-50 p-4 border-l-4 border-green-500">
+        Therefore \(A\cap(B\cup C)\subseteq(A\cap B)\cup(A\cap C)\).
+      </p>
+
+      <div class="mb-6 mt-5 border-l-4 border-indigo-400 pl-4 bg-indigo-50 py-2 pr-2">
+        <label class="block text-sm font-bold text-indigo-700 mb-1">📝 Detective's Explanation</label>
+        <textarea class="field-notes" placeholder="Explain the key step in words: why does being in A and in (B or C) force x into one of the two branches A∩B or A∩C?"></textarea>
+      </div>
+    </div>
+
+    <!-- CONVERSE -->
+    <div class="p-6 md:p-10 bg-white border-b border-slate-200">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Act 2: Reverse Trail — Prove \((A\cap B)\cup(A\cap C)\subseteq A\cap(B\cup C)\)</h2>
+
+      <p class="mb-4"><strong>Begin the converse:</strong> Let \(x\in(A\cap B)\cup(A\cap C)\).</p>
+
+      <p class="mb-4">This means one of two branches is true. What is the correct unpacking?</p>
+      <div class="question-card">
+        <select id="hole7" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="branches">\((x\in A\text{ and }x\in B)\) or \((x\in A\text{ and }x\in C)\)</option>
+          <option value="all">\(x\in A\), \(x\in B\), and \(x\in C\)</option>
+          <option value="aor">\(x\in A\) or \((x\in B\text{ and }x\in C)\)</option>
+        </select><span id="feedback7" class="feedback-icon"></span>
+      </div>
+      <div id="hint7" class="detective-hint">🕵️ <strong>Detective's Note:</strong> First decode the outer union; then decode the two intersections.</div>
+
+      <p class="mb-4">What crucial fact is true in <em>both</em> branches?</p>
+      <div class="question-card">
+        <select id="hole8" class="hole hole-select text-sm">
+          <option value="">[Select the Common Evidence]</option>
+          <option value="ina">\(x\in A\)</option>
+          <option value="inb">\(x\in B\)</option>
+          <option value="inc">\(x\in C\)</option>
+          <option value="all">\(x\in A\cap B\cap C\)</option>
+        </select><span id="feedback8" class="feedback-icon"></span>
+      </div>
+      <div id="hint8" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Compare the two branches and look for the repeated condition.</div>
+
+      <p class="mb-4">What else can we conclude, regardless of which branch occurred?</p>
+      <div class="question-card">
+        <select id="hole9" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="borc">\(x\in B\) or \(x\in C\), hence \(x\in B\cup C\)</option>
+          <option value="bandc">\(x\in B\cap C\)</option>
+          <option value="neither">\(x\notin B\cup C\)</option>
+        </select><span id="feedback9" class="feedback-icon"></span>
+      </div>
+      <div id="hint9" class="detective-hint">🕵️ <strong>Detective's Note:</strong> The first branch supplies B; the second supplies C. Either way, membership in the union follows.</div>
+
+      <p class="mb-4">So we now have \(x\in A\) and \(x\in B\cup C\). Therefore:</p>
+      <div class="question-card">
+        <select id="hole10" class="hole hole-select text-sm">
+          <option value="">[Select the Final Step]</option>
+          <option value="target">\(x\in A\cap(B\cup C)\)</option>
+          <option value="union">\(x\in A\cup(B\cap C)\)</option>
+          <option value="three">\(x\in A\cap B\cap C\)</option>
+        </select><span id="feedback10" class="feedback-icon"></span>
+      </div>
+      <div id="hint10" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Two facts connected by “and” become an intersection.</div>
+
+      <p class="font-bold text-lg bg-green-50 p-4 border-l-4 border-green-500">
+        Hence \((A\cap B)\cup(A\cap C)\subseteq A\cap(B\cup C)\).
+      </p>
+
+      <div class="mb-6 mt-5 border-l-4 border-indigo-400 pl-4 bg-indigo-50 py-2 pr-2">
+        <label class="block text-sm font-bold text-indigo-700 mb-1">📝 Reverse-Trail Observation</label>
+        <textarea class="field-notes" placeholder="Why is x∈A guaranteed no matter which side of the union x came from? Explain without simply repeating the symbols."></textarea>
+      </div>
+    </div>
+
+    <!-- CONCEPTUAL STRUCTURE -->
+    <div class="p-6 md:p-10 bg-slate-50 border-b border-slate-200">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Act 3: What Exactly Was Distributed?</h2>
+
+      <p class="mb-4">The notation can make the proof look algebraic, but the real mechanism is logical. Which operation plays the role of “and,” and which plays the role of “or”?</p>
+      <div class="question-card">
+        <select id="hole11" class="hole hole-select text-sm">
+          <option value="">[Select the Matching]</option>
+          <option value="correct">Intersection corresponds to AND; union corresponds to OR.</option>
+          <option value="reverse">Intersection corresponds to OR; union corresponds to AND.</option>
+          <option value="same">Both intersection and union correspond to AND.</option>
+        </select><span id="feedback11" class="feedback-icon"></span>
+      </div>
+      <div id="hint11" class="detective-hint">🕵️ <strong>Detective's Note:</strong> To belong to an intersection you must satisfy both conditions; to belong to a union at least one condition is enough.</div>
+
+      <p class="mb-4">Which statement best explains why the factor \(A\) appears twice on the right-hand side?</p>
+      <div class="question-card">
+        <select id="hole12" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="bothbranches">Because membership in A is required whichever branch—B or C—makes the union true.</option>
+          <option value="duplicate">Because set notation always requires writing every set twice.</option>
+          <option value="optional">Because membership in A is optional in the second branch.</option>
+        </select><span id="feedback12" class="feedback-icon"></span>
+      </div>
+      <div id="hint12" class="detective-hint">🕵️ <strong>Detective's Note:</strong> In \(A\cap(B\cup C)\), A is not tied only to B; it is a requirement for the whole parenthesized union.</div>
+
+      <div class="evidence">
+        <div class="mini-label">Proof skeleton</div>
+        \[
+        \begin{aligned}
+        x\in A\cap(B\cup C)
+        &\Rightarrow x\in A\ \text{and}\ (x\in B\ \text{or}\ x\in C)\\
+        &\Rightarrow (x\in A\ \text{and}\ x\in B)\ \text{or}\ (x\in A\ \text{and}\ x\in C)\\
+        &\Rightarrow x\in(A\cap B)\cup(A\cap C).
+        \end{aligned}
+        \]
+        The converse reverses the same logical structure.
+      </div>
+    </div>
+
+    <!-- FALSE SHORTCUT -->
+    <div class="p-6 md:p-10 bg-white border-b border-slate-200">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Act 4: Is This True?</h2>
+
+      <div class="warning-card">
+        <div class="mini-label">Claim under investigation</div>
+        Someone writes
+        \[
+          A\cap(B\cup C)=(A\cap B)\cup C.
+        \]
+        Is this true for all sets?
+      </div>
+
+      <p class="mb-4">What should we notice before checking an example?</p>
+      <div class="question-card">
+        <select id="hole13" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="cunchecked">On the right, every element of C is included, even if it is not in A.</option>
+          <option value="bmissing">The set B has completely disappeared.</option>
+          <option value="unionbad">A union can never appear after an intersection.</option>
+        </select><span id="feedback13" class="feedback-icon"></span>
+      </div>
+      <div id="hint13" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Look at an element of C. On the left, must it also be in A?</div>
+
+      <div class="evidence">
+        <div class="mini-label">Counterexample</div>
+        Take
+        \[
+          A=\{1\},\qquad B=\{1\},\qquad C=\{2\}.
+        \]
+        Then
+        \[
+          B\cup C=\{1,2\},
+        \]
+        so
+        \[
+          A\cap(B\cup C)=\{1\}.
+        \]
+        But
+        \[
+          A\cap B=\{1\},
+        \]
+        so
+        \[
+          (A\cap B)\cup C=\{1,2\}.
+        \]
+        Therefore
+        \[
+          A\cap(B\cup C)\neq(A\cap B)\cup C.
+        \]
+        So the statement is <strong>not true in general</strong>.
+      </div>
+
+      <div class="logic-card">
+        <div class="mini-label">Why does it fail?</div>
+        On the left, an element from \(C\) must also be in \(A\).
+        On the right, every element of \(C\) is included automatically.
+        <br><br>
+        So the correct distribution is
+        \[
+          (A\cap B)\cup\boxed{(A\cap C)},
+        \]
+        not merely \((A\cap B)\cup C\).
+      </div>
+
+      <p class="mb-4">What does this tell us about union and intersection?</p>
+      <div class="question-card">
+        <select id="hole17" class="hole hole-select text-sm">
+          <option value="">[Select]</option>
+          <option value="distinct">Union and intersection are different operations. We cannot move brackets freely when the operations are mixed. We must use the correct distributive law.</option>
+          <option value="same">Union and intersection behave exactly like the same operation, so parentheses never matter.</option>
+          <option value="nounion">Intersection distributes over union only because union can be ignored.</option>
+        </select><span id="feedback17" class="feedback-icon"></span>
+      </div>
+      <div id="hint17" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Brackets can be moved freely for repeated unions or repeated intersections. When union and intersection are mixed, we need the correct distributive law.</div>
+
+      <div class="mb-6 mt-5 border-l-4 border-indigo-400 pl-4 bg-indigo-50 py-2 pr-2">
+        <label class="block text-sm font-bold text-indigo-700 mb-1">📝 Chief Inspector's Counterexample Report</label>
+        <textarea class="field-notes" placeholder="Explain why these two sets can be different. What happens to an element of C that is not in A?"></textarea>
+      </div>
+    </div>
+
+    <!-- FINAL -->
+    <div class="p-6 md:p-10 bg-slate-50">
+      <h2 class="text-xl font-bold font-sans text-slate-800 mb-4 uppercase tracking-wider">Final Report: Close the Case</h2>
+
+      <p class="mb-4">We proved both subset directions. What may we conclude?</p>
+      <div class="question-card">
+        <select id="hole18" class="hole hole-select text-sm">
+          <option value="">[Select Final Deduction]</option>
+          <option value="equal">The two sets are equal.</option>
+          <option value="cardinality">We must separately count the elements of the two sets.</option>
+          <option value="oneway">Only the first inclusion is needed.</option>
+        </select><span id="feedback18" class="feedback-icon"></span>
+      </div>
+      <div id="hint18" class="detective-hint">🕵️ <strong>Detective's Note:</strong> Mutual inclusion is the criterion for equality of sets.</div>
+
+      <p class="mb-4 text-lg font-bold">
+        Therefore,
+        \[
+          \boxed{A\cap(B\cup C)=(A\cap B)\cup(A\cap C)}.
+        \]
+      </p>
+
+      <div class="evidence">
+        <div class="mini-label">Key idea</div>
+        <strong>“A must survive in every branch.”</strong><br>
+        When \(A\) is intersected with a union, the condition “be in \(A\)” must appear in both parts.
+      </div>
+
+      <div class="mb-6 mt-5 border-l-4 border-indigo-400 pl-4 bg-indigo-50 py-2 pr-2">
+        <label class="block text-sm font-bold text-indigo-700 mb-1">📝 Chief Inspector's Final Proof</label>
+        <textarea class="field-notes" placeholder="Write the complete proof using both subset directions. Show clearly where the two cases appear."></textarea>
+      </div>
+    </div>
+
+    <div class="bg-slate-200 p-6 rounded-b-sm flex flex-col md:flex-row justify-between items-center gap-4 border-t-4 border-slate-300">
+      <div id="overall-feedback" class="text-lg font-bold font-sans text-slate-700">Awaiting Detective's Final Report...</div>
+      <button onclick="evaluateProof()" class="bg-slate-800 hover:bg-indigo-700 text-white font-bold py-3 px-8 shadow-lg transition-colors font-sans uppercase tracking-wider rounded-sm border-2 border-slate-900">Submit Findings</button>
+    </div>
+  </div>
+
+  <script>
+    const proofSchema = {
+      hole1:{type:'select',validAnswer:'branches'},
+      hole2:{type:'select',validAnswer:'aandunion'},
+      hole3:{type:'select',validAnswer:'distribution'},
+      hole4:{type:'select',validAnswer:'correct'},
+      hole5:{type:'select',validAnswer:'memberships'},
+      hole6:{type:'select',validAnswer:'union'},
+      hole7:{type:'select',validAnswer:'branches'},
+      hole8:{type:'select',validAnswer:'ina'},
+      hole9:{type:'select',validAnswer:'borc'},
+      hole10:{type:'select',validAnswer:'target'},
+      hole11:{type:'select',validAnswer:'correct'},
+      hole12:{type:'select',validAnswer:'bothbranches'},
+      hole13:{type:'select',validAnswer:'cunchecked'},
+      hole17:{type:'select',validAnswer:'distinct'},
+      hole18:{type:'select',validAnswer:'equal'}
+    };
+
+    function evaluateProof(){
+      let correctCount=0;
+      const totalHoles=Object.keys(proofSchema).length;
+
+      document.querySelectorAll('.field-notes').forEach(note=>{
+        note.style.borderColor=note.value.trim().length>10?'#86efac':'#fde047';
+      });
+
+      for(const [id,rules] of Object.entries(proofSchema)){
+        const element=document.getElementById(id);
+        const number=id.replace('hole','');
+        const feedbackEl=document.getElementById('feedback'+number);
+        const hintEl=document.getElementById('hint'+number);
+        const isCorrect=element.value===rules.validAnswer;
+
+        element.classList.remove('correct','incorrect');
+        if(isCorrect){
+          element.classList.add('correct');
+          feedbackEl.textContent='✅';
+          hintEl.style.display='none';
+          correctCount++;
+        } else if((element.value||'').trim()!==''){
+          element.classList.add('incorrect');
+          feedbackEl.textContent='❌';
+          hintEl.style.display='block';
+        } else {
+          feedbackEl.textContent='';
+          hintEl.style.display='none';
+        }
+      }
+
+      const fieldNotes=[...document.querySelectorAll('.field-notes')];
+      const notesFilled=fieldNotes.filter(n=>n.value.trim().length>10).length;
+      const noteMessage=notesFilled===fieldNotes.length
+        ? '<br><span class="text-sm text-blue-600 font-normal block mt-2">All written field observations are filled in for teacher review.</span>'
+        : `<br><span class="text-sm text-slate-500 font-normal block mt-2">${fieldNotes.length-notesFilled} written field observation(s) still need your explanation.</span>`;
+
+      const overall=document.getElementById('overall-feedback');
+      if(correctCount===totalHoles){
+        overall.innerHTML=`<span class="text-green-700">🕵️ Case Closed! You uncovered why intersection distributes over union.</span>${noteMessage}`;
+      } else {
+        overall.innerHTML=`<span class="text-red-600">⚠️ Case still open: ${correctCount}/${totalHoles} objective clues correct. Revisit the highlighted evidence.</span>${noteMessage}`;
+      }
+      window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+    }
+  </script>
+</body>
+</html>

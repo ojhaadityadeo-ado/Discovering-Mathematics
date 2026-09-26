@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 43 — The Sum of Squares Identity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;background-image:radial-gradient(#cbd5e1 1px,transparent 1px);background-size:20px 20px;font-family:Inter,Arial,sans-serif}
+    .case-file{max-width:896px;margin:12px auto;position:relative;overflow:hidden;border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;font:17px/1.8 "Courier Prime",monospace}
+    .stamp{position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);opacity:.2;pointer-events:none}
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}.mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:760px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}.briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}.act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}.evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}.success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}[hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}.notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .math-block{overflow-x:auto;padding:3px 0}.table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}.graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}.graph-head .mini-label{display:block;margin-bottom:4px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}.control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}.control-row label{min-width:205px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .school-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#e2e8f0}.school-box{background:#fff;padding:18px}.school-box:first-child{border-top:4px solid #4f46e5}.school-box:last-child{border-top:4px solid #ea580c}.school-box h3{margin:0 0 10px}.token-row{display:flex;gap:7px;flex-wrap:wrap}.token{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:34px;padding:0 9px;border-radius:999px;background:#4338ca;color:#fff;font:700 13px Inter,Arial,sans-serif}.token.b{background:#c2410c}
+    .team-sample{padding:9px 10px;margin:7px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;font:13px/1.6 Inter,Arial,sans-serif}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}.count-strip{padding:14px 20px;background:#eef2ff;font:600 16px/1.8 Inter,Arial,sans-serif;text-align:center}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    .micro{background:#fffbeb;border-left:4px solid #eab308;padding:12px 16px;margin:16px 0}.micro>p{margin:0}.micro summary{font:600 14px/1.8 Inter,Arial,sans-serif;color:#854d0e;cursor:pointer}.micro details p{font:15px/1.85 Inter,Arial,sans-serif}
+    fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}.choice{display:flex!important;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}.choice:has(input:checked){background:#eef2ff;border-color:#6366f1}.choice input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}.clue-feedback:empty{display:none}.clue-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+    .reason{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 24px;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}.reason summary{color:#3730a3;font-weight:600;cursor:pointer}
+    .step-box{margin:16px 0;padding:16px 18px;background:#fff;border:1px solid #cbd5e1;border-left:4px solid #4f46e5;border-radius:4px;font:15px/1.85 Inter,Arial,sans-serif}.step-box strong{color:#312e81}.why{margin-top:9px;padding:10px 12px;background:#f8fafc;border-left:3px solid #94a3b8;font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}.actions button{padding:12px 16px;font:600 14px Inter,Arial,sans-serif;border:1px solid #475569;border-radius:4px;cursor:pointer}.actions .primary{background:#1e293b;color:white}.score{font:600 14px/1.8 Inter,Arial,sans-serif}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}.stamp{display:none}header,.briefing,.act,.report,footer{padding:23px 19px}.lead-question{font-size:17px}.control-row label{min-width:100%}.school-grid{grid-template-columns:1fr}}
+    @media print{body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}.lab-controls,.actions{display:none}.graph-card,.question-card,.step-box,.notes-box{break-inside:avoid}.field-notes{min-height:80px}details>summary{display:none}.reason{break-inside:auto}.clue-feedback,.detective-hint{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style>
+</head>
+<body><main class="case-file">
+<div class="stamp" aria-hidden="true">CASE FILE</div>
+<header>
+  <h1>MATH DETECTIVE: CASE FILE #43</h1>
+  <p class="subject">Subject: The Sum of Squares Identity</p>
+  <p class="mission"><strong>Mission:</strong> Count an n-person joint team from two schools in two different ways. Organize the teams by how many students come from the first school, explain why a square appears, then verify the identity by comparing the coefficient of \(t^n\).</p>
+</header>
+<div class="briefing"><p><strong>The case:</strong> School A sends n students and School B sends n students. From all 2n students, exactly n must be chosen for one joint team. How many teams are possible?</p></div>
+<p class="small-note" style="padding:10px 30px">Follow 7 clues and the small-step questions. Try each clue before opening its reasoning. The two-school team lab works offline; equation formatting and display fonts use an internet connection.</p>
+<noscript><div class="evidence warning-evidence">JavaScript is needed for the team lab and answer checking. The written proof and expandable answers still work.</div></noscript>
+
+<section class="act" aria-labelledby="act1"><h2 id="act1">Act 1: Count the final team directly</h2>
+<p>There are n students from School A and n students from School B, so there are</p>
+<div class="math-block">\[n+n=2n\]</div>
+<p>students altogether. We want one team containing exactly n students.</p>
+<div class="question-card"><fieldset><legend>Clue 1 · What is the immediate count?</legend>
+<label class="choice"><input type="radio" name="q1" value="0"><span>A. \(\binom{2n}{n}\)</span></label>
+<label class="choice"><input type="radio" name="q1" value="1"><span>B. \(2\binom nn\)</span></label>
+<label class="choice"><input type="radio" name="q1" value="2"><span>C. \(n^2\)</span></label>
+</fieldset><p class="clue-feedback" id="feedback1" aria-live="polite"></p><div class="detective-hint" id="hint1" hidden><strong>Follow this clue:</strong> Ignore the school labels for a moment. How many ways can we choose n people from one pool of 2n?</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>Once the 2n students are viewed as one combined pool, a valid outcome is simply an n-person subset. Therefore the direct count is</p><div class="math-block">\[\boxed{\binom{2n}{n}}.\]</div></details>
+</section>
+
+<section class="act white" aria-labelledby="act2"><h2 id="act2">Act 2: Sort teams by their composition</h2>
+<p>Now count the same teams in a more structured way. Let r be the number of selected students from School A.</p>
+<div class="question-card"><fieldset><legend>Clue 2 · If r students come from School A, how many must come from School B?</legend>
+<label class="choice"><input type="radio" name="q2" value="0"><span>A. r</span></label>
+<label class="choice"><input type="radio" name="q2" value="1"><span>B. \(n-r\)</span></label>
+<label class="choice"><input type="radio" name="q2" value="2"><span>C. \(2n-r\)</span></label>
+</fieldset><p class="clue-feedback" id="feedback2" aria-live="polite"></p><div class="detective-hint" id="hint2" hidden><strong>Follow this clue:</strong> The final team must contain n students in total.</div></div>
+<p>If r places are filled by School A, the remaining number of places is</p>
+<div class="math-block">\[n-r.\]</div>
+<p>For this fixed value of r:</p>
+<div class="math-block">\[
+\underbrace{\binom nr}_{\text{choose r from School A}}
+\qquad\text{and}\qquad
+\underbrace{\binom n{n-r}}_{\text{choose n-r from School B}}.
+\]</div>
+<div class="micro"><p><strong>Small step 1.</strong> Why can r range all the way from 0 to n?</p><details><summary>Open the answer</summary><p>A valid team may contain no students from School A, all n students from School A, or anything in between. So every integer r from 0 through n is possible.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act3"><h2 id="act3">Act 3: Why multiply—and why does a square appear?</h2>
+<div class="question-card"><fieldset><legend>Clue 3 · Why is the count for one fixed r a product?</legend>
+<label class="choice"><input type="radio" name="q3" value="0"><span>A. Because every School A choice can be combined with every School B choice.</span></label>
+<label class="choice"><input type="radio" name="q3" value="1"><span>B. Because we are counting the same students twice.</span></label>
+<label class="choice"><input type="radio" name="q3" value="2"><span>C. Because multiplication is always used with binomial coefficients.</span></label>
+</fieldset><p class="clue-feedback" id="feedback3" aria-live="polite"></p><div class="detective-hint" id="hint3" hidden><strong>Follow this clue:</strong> First choose the School A part, then independently choose the School B part.</div></div>
+<p>The schools are disjoint groups. Once we choose an r-person subset from School A and an \((n-r)\)-person subset from School B, their union is one unique final team. Conversely, the final team uniquely tells us both school-specific selections.</p>
+<div class="math-block">\[\text{teams with r from A}=\binom nr\binom n{n-r}.\]</div>
+
+<div class="question-card"><fieldset><legend>Clue 4 · Where does the square come from?</legend>
+<label class="choice"><input type="radio" name="q4" value="0"><span>A. We choose the exact same subset twice.</span></label>
+<label class="choice"><input type="radio" name="q4" value="1"><span>B. \(\binom n{n-r}=\binom nr\), so the two different school counts happen to be equal.</span></label>
+<label class="choice"><input type="radio" name="q4" value="2"><span>C. Every final team is counted twice.</span></label>
+</fieldset><p class="clue-feedback" id="feedback4" aria-live="polite"></p><div class="detective-hint" id="hint4" hidden><strong>Follow this clue:</strong> Recall the symmetry identity for binomial coefficients.</div></div>
+<p>By symmetry of binomial coefficients,</p>
+<div class="math-block">\[\binom n{n-r}=\binom nr.\]</div>
+<p>Therefore</p>
+<div class="math-block">\[
+\binom nr\binom n{n-r}=\binom nr\binom nr=\binom nr^2.
+\]</div>
+<div class="evidence warning-evidence"><strong>Keep the meaning clear:</strong> the square does <em>not</em> mean one subset is selected twice. One choice comes from School A and one from School B. Their numbers are equal because of binomial symmetry.</div>
+</section>
+
+<section class="act white" aria-labelledby="act4"><h2 id="act4">Act 4: Add all possible compositions</h2>
+<p>Every final team has one definite value of r: the number of its members who came from School A. Different r-values cannot describe the same team.</p>
+<div class="question-card"><fieldset><legend>Clue 5 · Why can we sum from r=0 to r=n?</legend>
+<label class="choice"><input type="radio" name="q5" value="0"><span>A. The r-cases are disjoint and together cover every n-person team.</span></label>
+<label class="choice"><input type="radio" name="q5" value="1"><span>B. Each team appears once for every r.</span></label>
+<label class="choice"><input type="radio" name="q5" value="2"><span>C. Because the two schools contain the same students.</span></label>
+</fieldset><p class="clue-feedback" id="feedback5" aria-live="polite"></p><div class="detective-hint" id="hint5" hidden><strong>Follow this clue:</strong> Count how many School A students appear in one fixed final team.</div></div>
+<p>Adding the counts of all composition classes gives</p>
+<div class="math-block">\[
+\sum_{r=0}^{n}\binom nr\binom n{n-r}.
+\]</div>
+<p>Using symmetry inside every term,</p>
+<div class="math-block">\[
+\sum_{r=0}^{n}\binom nr\binom n{n-r}
+=\sum_{r=0}^{n}\binom nr^2.
+\]</div>
+<p>But Act 1 counted the same collection directly as \(\binom{2n}{n}\). Therefore</p>
+<div class="math-block">\[\boxed{\sum_{r=0}^{n}\binom nr^2=\binom{2n}{n}}.\]</div>
+
+<div class="graph-card" id="visual-lab">
+  <div class="graph-head"><span class="mini-label">Two-school team lab · one collection, many composition classes</span>Choose r students from School A and n-r from School B</div>
+  <div class="lab-controls">
+    <div class="control-row"><label for="n">Students per school n: <output id="n-value">4</output></label><input type="range" id="n" min="0" max="6" value="4" step="1"></div>
+    <div class="control-row"><label for="r">Students from School A r: <output id="r-value">2</output></label><input type="range" id="r" min="0" max="4" value="2" step="1"></div>
+  </div>
+  <div class="formula-live" id="formula-live"></div>
+  <div class="school-grid">
+    <div class="school-box"><h3>School A selection</h3><div class="token-row" id="school-a"></div><p id="count-a"></p></div>
+    <div class="school-box"><h3>School B selection</h3><div class="token-row" id="school-b"></div><p id="count-b"></p></div>
+  </div>
+  <div class="table-wrap" style="padding:0 18px"><table><thead><tr><th>r</th><th>from A</th><th>from B</th><th>product</th><th>square form</th></tr></thead><tbody id="composition-rows"></tbody></table></div>
+  <div class="count-strip" id="count-strip"></div>
+  <div style="padding:0 18px 14px"><h3 style="margin-bottom:8px">Sample teams for the selected r</h3><div id="team-samples"></div></div>
+  <p class="lab-message" id="lab-status"></p>
+</div>
+
+<div class="micro"><p><strong>Small step 2.</strong> In the lab, why does changing r rearrange the teams into a different row without changing the grand total?</p><details><summary>Open the answer</summary><p>The value of r only tells us which composition class we are looking at. All classes together partition the same collection of n-person teams chosen from the same 2n students.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act5"><h2 id="act5">Act 5: Stress-test the ends—and the empty case</h2>
+<h3>Endpoint r=0</h3>
+<p>No one is chosen from School A, so all n team members come from School B.</p>
+<div class="math-block">\[\binom n0^2=1.\]</div>
+<h3>Endpoint r=n</h3>
+<p>All n team members come from School A and none from School B.</p>
+<div class="math-block">\[\binom nn^2=1.\]</div>
+<div class="question-card"><fieldset><legend>Clue 6 · What do the two end terms represent?</legend>
+<label class="choice"><input type="radio" name="q6" value="0"><span>A. The two pure-school teams: all from B and all from A.</span></label>
+<label class="choice"><input type="radio" name="q6" value="1"><span>B. Two copies of the same team.</span></label>
+<label class="choice"><input type="radio" name="q6" value="2"><span>C. Invalid cases that should be removed.</span></label>
+</fieldset><p class="clue-feedback" id="feedback6" aria-live="polite"></p><div class="detective-hint" id="hint6" hidden><strong>Follow this clue:</strong> Ask what r=0 and r=n say about the School A portion of the team.</div></div>
+<h3>Extra check: n=0</h3>
+<p>There are no students at either school, and we must choose a team of size 0. The empty team is the one valid outcome:</p>
+<div class="math-block">\[\sum_{r=0}^{0}\binom0r^2=\binom00^2=1=\binom00.\]</div>
+<div class="micro"><p><strong>Small step 3.</strong> Does the identity require n≥1?</p><details><summary>Open the answer</summary><p>No. The identity also holds for n=0. Both sides equal 1, corresponding to the unique empty team.</p></details></div>
+</section>
+
+<section class="act white" aria-labelledby="act6"><h2 id="act6">Act 6: Coefficient proof, one step at a time</h2>
+<p>The double-counting proof already establishes the identity. Now verify it algebraically by comparing the coefficient of \(t^n\).</p>
+
+<div class="step-box"><strong>Step 1 · Write each factor using the binomial theorem.</strong>
+<div class="math-block">\[
+(1+t)^n=\sum_{r=0}^{n}\binom nr t^r.
+\]</div>
+<p>For the second copy, use a different index:</p>
+<div class="math-block">\[
+(1+t)^n=\sum_{s=0}^{n}\binom ns t^s.
+\]</div>
+<div class="why"><strong>Why use r and s?</strong> The two factors make two independent choices of exponents. Using different letters lets us track which exponent came from which factor.</div></div>
+
+<div class="micro"><p><strong>Small step 4.</strong> If we multiply one term \(\binom nr t^r\) by one term \(\binom ns t^s\), what power of t appears?</p><details><summary>Open the answer</summary><p>The powers multiply as \(t^r t^s=t^{r+s}\). So the resulting exponent is r+s.</p></details></div>
+
+<div class="step-box"><strong>Step 2 · Multiply the two binomial expansions.</strong>
+<div class="math-block">\[
+(1+t)^n(1+t)^n
+=\left(\sum_{r=0}^{n}\binom nr t^r\right)
+ \left(\sum_{s=0}^{n}\binom ns t^s\right).
+\]</div>
+<p>A typical product term is</p>
+<div class="math-block">\[\binom nr\binom ns t^{r+s}.\]</div></div>
+
+<div class="micro"><p><strong>Small step 5.</strong> Which pairs of exponents contribute specifically to the coefficient of \(t^n\)?</p><details><summary>Open the answer</summary><p>Exactly those pairs satisfying \(r+s=n\). Equivalently, once r is chosen, s must equal n-r.</p></details></div>
+
+<div class="step-box"><strong>Step 3 · Extract the coefficient of t^n on the left.</strong>
+<p>To obtain \(t^n\), we must choose exponent r from the first factor and exponent \(n-r\) from the second. Therefore</p>
+<div class="math-block">\[
+[t^n]\big((1+t)^n(1+t)^n\big)
+=\sum_{r=0}^{n}\binom nr\binom n{n-r}.
+\]</div>
+<div class="why"><strong>Why do we add these products?</strong> Every pair \((r,n-r)\) produces another contribution to the same power \(t^n\). Coefficients of like powers add.</div></div>
+
+<div class="micro"><p><strong>Small step 6.</strong> Why do no other r-values need to be considered?</p><details><summary>Open the answer</summary><p>Because r already ranges from 0 to n. For each such r, the required partner n-r also lies from 0 to n. These are exactly all pairs of allowed exponents whose sum is n.</p></details></div>
+
+<div class="step-box"><strong>Step 4 · Turn the left coefficient into the square sum.</strong>
+<p>Use binomial symmetry:</p>
+<div class="math-block">\[\binom n{n-r}=\binom nr.\]</div>
+<p>Hence</p>
+<div class="math-block">\[
+[t^n]\big((1+t)^n(1+t)^n\big)
+=\sum_{r=0}^{n}\binom nr^2.
+\]</div></div>
+
+<div class="micro"><p><strong>Small step 7.</strong> Why is this square still a product of two different choices in the coefficient calculation?</p><details><summary>Open the answer</summary><p>The first factor contributes \(\binom nr\); the second contributes \(\binom n{n-r}\). They come from different factors. Symmetry tells us their numerical values are equal, which lets the product be written as a square.</p></details></div>
+
+<div class="step-box"><strong>Step 5 · Simplify the product before reading the right-hand coefficient.</strong>
+<div class="math-block">\[
+(1+t)^n(1+t)^n=(1+t)^{2n}.
+\]</div>
+<p>Now apply the binomial theorem once more:</p>
+<div class="math-block">\[
+(1+t)^{2n}=\sum_{k=0}^{2n}\binom{2n}{k}t^k.
+\]</div>
+<div class="why"><strong>What is the coefficient of \(t^n\)?</strong> Set k=n. It is \(\binom{2n}{n}\).</div></div>
+
+<div class="micro"><p><strong>Small step 8.</strong> Why are we allowed to equate the two coefficients of \(t^n\)?</p><details><summary>Open the answer</summary><p>The two expressions are the same polynomial. Equal polynomials have equal coefficients for every power of t, so their \(t^n\) coefficients must match.</p></details></div>
+
+<div class="step-box"><strong>Step 6 · Equate the two t^n coefficients.</strong>
+<div class="math-block">\[
+\sum_{r=0}^{n}\binom nr\binom n{n-r}=\binom{2n}{n}.
+\]</div>
+<p>Finally use \(\binom n{n-r}=\binom nr\):</p>
+<div class="math-block">\[
+\boxed{\sum_{r=0}^{n}\binom nr^2=\binom{2n}{n}}.
+\]</div></div>
+
+<h3>Full coefficient proof in one continuous chain</h3>
+<div class="math-block">\[
+\begin{aligned}
+(1+t)^n(1+t)^n
+&=\left(\sum_{r=0}^{n}\binom nr t^r\right)
+  \left(\sum_{s=0}^{n}\binom ns t^s\right)\\[4pt]
+&=(1+t)^{2n}.
+\end{aligned}
+\]</div>
+<p>Comparing coefficients of \(t^n\),</p>
+<div class="math-block">\[
+\begin{aligned}
+\sum_{r=0}^{n}\binom nr\binom n{n-r}
+&=\binom{2n}{n},\\[4pt]
+\sum_{r=0}^{n}\binom nr^2
+&=\binom{2n}{n}.
+\end{aligned}
+\]</div>
+<div class="micro"><p><strong>Small step 9.</strong> What is the algebraic proof doing that mirrors the two-school counting proof?</p><details><summary>Open the answer</summary><p>The first polynomial factor records how many students are chosen from School A, and the second records how many are chosen from School B. Extracting \(t^n\) keeps exactly those pairs of choices whose sizes add to n.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act7"><h2 id="act7">Act 7: What should we remember?</h2>
+<div class="question-card"><fieldset><legend>Clue 7 · What is the central reason the identity works?</legend>
+<label class="choice"><input type="radio" name="q7" value="0"><span>A. Both sides count the same n-person teams: once directly, once by the number chosen from School A.</span></label>
+<label class="choice"><input type="radio" name="q7" value="1"><span>B. Squaring any binomial coefficient always produces a central binomial coefficient.</span></label>
+<label class="choice"><input type="radio" name="q7" value="2"><span>C. The two schools must have identical student names.</span></label>
+</fieldset><p class="clue-feedback" id="feedback7" aria-live="polite"></p><div class="detective-hint" id="hint7" hidden><strong>Follow this clue:</strong> Ask what collection is being counted in Act 1 and again in Acts 2–4.</div></div>
+<div class="evidence success-evidence"><p><strong>The main idea:</strong> count one collection in two ways.</p><p><strong>Directly:</strong> choose n students from the combined 2n students, giving \(\binom{2n}{n}\).</p><p><strong>By composition:</strong> for each r, choose r from School A and n-r from School B, giving \(\binom nr\binom n{n-r}\).</p><p><strong>Why the square appears:</strong> \(\binom n{n-r}=\binom nr\), although the two selections come from different schools.</p></div>
+<div class="notes-box"><label for="notes">Your detective note · Explain both proofs in your own words. In the counting proof, explain what r records. In the coefficient proof, explain why r+(n-r)=n is the key condition.</label><textarea class="field-notes" id="notes" placeholder="Counting proof: r is the number chosen from School A... Coefficient proof: a term contributes to t^n only when..."></textarea></div>
+</section>
+
+<section class="report" aria-labelledby="report"><h2 id="report">Final case report</h2>
+<div class="evidence success-evidence">
+<p>For every nonnegative integer n,</p>
+<div class="math-block">\[\boxed{\sum_{r=0}^{n}\binom nr^2=\binom{2n}{n}}.\]</div>
+<p><strong>Combinatorial meaning:</strong> both sides count n-person teams chosen from two disjoint schools of n students each.</p>
+<p><strong>Why we multiply:</strong> a School A selection and a School B selection can be combined independently, and their union uniquely determines the pair.</p>
+<p><strong>Why we sum:</strong> every final team has exactly one value of r, the number of School A students it contains.</p>
+<p><strong>Why a square appears:</strong> the two factors count selections from different schools but have equal numerical values by binomial symmetry.</p>
+<p><strong>Why the algebra agrees:</strong> the coefficient of \(t^n\) in the product of two binomial expansions collects exactly the terms whose exponents add to n.</p>
+</div>
+<div class="actions"><button class="primary" id="check" type="button">Check my clues</button><button id="show-reasons" type="button">Open all explanations</button><button id="print" type="button">Print / Save as PDF</button></div>
+<p class="score" id="score" aria-live="polite">Choose an answer to each of the 7 clues, then check your reasoning.</p>
+</section>
+<footer><span>CASE FILE #43 · COUNT THE SAME TEAM DIRECTLY AND BY ITS SCHOOL COMPOSITION</span></footer>
+</main>
+<script>
+'use strict';
+const answerKeys=[0,1,0,1,0,0,0];
+const answerReasons=[
+  'There are 2n students altogether, and an outcome is an n-person subset of that combined pool.',
+  'If r of the n places are filled by School A, exactly n-r places remain for School B.',
+  'Each School A choice can be paired with each School B choice, and the union uniquely determines both selections.',
+  'The two school-specific counts are numerically equal because C(n,n-r)=C(n,r), even though they refer to different groups.',
+  'Every team has one unique number r of School A members, so the composition classes are disjoint and exhaustive.',
+  'At r=0 the whole team comes from School B; at r=n the whole team comes from School A. Each case gives one team.',
+  'Both sides count the same n-person teams, directly and by the number of students chosen from School A.'
+];
+const byId=id=>document.getElementById(id);
+function choose(n,r){
+  if(!Number.isInteger(n)||!Number.isInteger(r)||n<0||r<0||r>n)return 0;
+  r=Math.min(r,n-r);let c=1;
+  for(let i=1;i<=r;i++)c=c*(n-i+1)/i;
+  return Math.round(c);
+}
+function combinations(items,k){
+  if(k<0||k>items.length)return [];
+  const out=[];
+  function visit(start,a){
+    if(a.length===k){out.push(a.slice());return;}
+    for(let i=start;i<items.length;i++){a.push(items[i]);visit(i+1,a);a.pop();}
+  }
+  visit(0,[]);return out;
+}
+function updateLab(){
+  const n=Number(byId('n').value);
+  const r=Math.min(n,Number(byId('r').value));
+  byId('r').max=String(n);byId('r').value=String(r);
+  byId('n-value').textContent=n;byId('r-value').textContent=r;
+  const A=Array.from({length:n},(_,i)=>'A'+(i+1));
+  const B=Array.from({length:n},(_,i)=>'B'+(i+1));
+  byId('school-a').innerHTML=A.map(x=>'<span class="token">'+x+'</span>').join('')||'<span class="small-note">No students</span>';
+  byId('school-b').innerHTML=B.map(x=>'<span class="token b">'+x+'</span>').join('')||'<span class="small-note">No students</span>';
+  const ca=choose(n,r), cb=choose(n,n-r), prod=ca*cb;
+  byId('count-a').innerHTML='Choose <strong>'+r+'</strong>: C('+n+','+r+') = <strong>'+ca+'</strong>';
+  byId('count-b').innerHTML='Choose <strong>'+(n-r)+'</strong>: C('+n+','+(n-r)+') = <strong>'+cb+'</strong>';
+  byId('formula-live').textContent='For r = '+r+':  C('+n+','+r+') C('+n+','+(n-r)+') = '+ca+' × '+cb+' = '+prod+' = C('+n+','+r+')²';
+  let rows='',sum=0;
+  for(let k=0;k<=n;k++){
+    const a=choose(n,k),b=choose(n,n-k),p=a*b;sum+=p;
+    rows+='<tr'+(k===r?' style="background:#eef2ff;font-weight:700"':'')+'><td>'+k+'</td><td>'+a+'</td><td>'+b+'</td><td>'+p+'</td><td>'+a+'² = '+(a*a)+'</td></tr>';
+  }
+  byId('composition-rows').innerHTML=rows;
+  const aGroups=combinations(A,r), bGroups=combinations(B,n-r);
+  const samples=[];
+  outer: for(const ag of aGroups){for(const bg of bGroups){samples.push('{'+ag.concat(bg).join(', ')+'}');if(samples.length>=18)break outer;}}
+  const totalClass=aGroups.length*bGroups.length;
+  byId('team-samples').innerHTML=samples.map(x=>'<div class="team-sample">'+x+'</div>').join('')+(totalClass>samples.length?'<p class="small-note">… '+(totalClass-samples.length)+' more teams in this r-class.</p>':'') || '<div class="team-sample">∅</div>';
+  byId('count-strip').textContent='Sum of all composition classes = '+sum+' = C('+(2*n)+','+n+') = '+choose(2*n,n);
+  byId('lab-status').textContent='The highlighted row contains exactly the teams with '+r+' from School A and '+(n-r)+' from School B. Every n-person team appears in exactly one row.';
+}
+function checkClues(){
+  let correct=0,unanswered=0;
+  answerKeys.forEach((key,i)=>{
+    const q=i+1,chosen=document.querySelector('input[name="q'+q+'"]:checked'),out=byId('feedback'+q),hint=byId('hint'+q);
+    if(!chosen){unanswered++;out.textContent='Choose an option, then check again.';out.style.color='#92400e';hint.hidden=true;}
+    else if(Number(chosen.value)===key){correct++;out.textContent='Correct. '+answerReasons[i];out.style.color='#15803d';hint.hidden=true;}
+    else{out.textContent='Not yet. Use the clue below and try again.';out.style.color='#b91c1c';hint.hidden=false;}
+  });
+  byId('score').textContent=correct+' / 7 correct. '+(unanswered?unanswered+' still unanswered. ':'')+(correct===7?'Case solved: you have checked the double count, the square, the endpoints, and the coefficient proof.':'Review the clues and check again whenever you are ready.');
+}
+byId('n').addEventListener('input',()=>{byId('r').value=Math.min(Number(byId('r').value),Number(byId('n').value));updateLab();});
+byId('r').addEventListener('input',updateLab);
+byId('check').addEventListener('click',checkClues);
+byId('show-reasons').addEventListener('click',()=>document.querySelectorAll('.reason,.micro details').forEach(d=>d.open=true));
+byId('print').addEventListener('click',()=>window.print());
+let printStates=[];
+window.addEventListener('beforeprint',()=>{printStates=Array.from(document.querySelectorAll('details'),d=>[d,d.open]);document.querySelectorAll('.reason,.micro details').forEach(d=>d.open=true);});
+window.addEventListener('afterprint',()=>printStates.forEach(([d,open])=>d.open=open));
+updateLab();
+</script>
+</body></html>

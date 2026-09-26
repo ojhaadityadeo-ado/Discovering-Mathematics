@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- ADDED-INQUIRY-START -->
+<style>
+.added-clue{margin:22px 0;background:white;border:1px solid #cbd5e1;border-radius:4px;padding:17px}
+.added-clue fieldset{border:0;padding:0;margin:0;min-width:0}
+.added-clue legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}
+.added-clue .added-choice{display:flex;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;margin-bottom:9px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}
+.added-clue .added-choice:has(input:checked){background:#eef2ff;border-color:#6366f1}
+.added-clue input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}
+.added-clue .added-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+.added-clue .added-feedback:empty{display:none}
+.added-clue details{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 0;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}
+.added-clue summary{color:#3730a3;font-weight:600;cursor:pointer}
+@media(max-width:650px){.added-clue{padding:14px}.added-clue legend{font-size:17px}}
+@media print{.added-clue{break-inside:avoid}.added-clue button,.added-clue .added-feedback{display:none}}
+</style>
+<!-- ADDED-INQUIRY-END -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 23 — Angle Bisectors of Two Intersecting Lines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;
+      background-image:radial-gradient(#cbd5e1 1px,transparent 1px);
+      background-size:20px 20px;font-family:Inter,Arial,sans-serif
+    }
+    .case-file{
+      max-width:896px;margin:12px auto;position:relative;overflow:hidden;
+      border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;
+      font:17px/1.8 "Courier Prime",monospace
+    }
+    .stamp{
+      position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;
+      font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);
+      opacity:.2;pointer-events:none
+    }
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}
+    .mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:720px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}
+    .briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}
+    .act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}
+    p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}
+    .evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}
+    .success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .question-card label{display:block;font-weight:bold;margin-bottom:9px}
+    .answer-line{display:flex;align-items:center;gap:8px}
+    .hole{min-width:0;width:100%;padding:9px 10px;font:14px Inter,Arial,sans-serif;border:2px dashed #94a3b8;border-radius:4px;background:#f1f5f9;color:#1e293b;cursor:pointer}
+    .hole:focus{outline:3px solid #c7d2fe;border-color:#4f46e5;background:#fff}
+    .hole.correct{border:2px solid #16a34a;background:#f0fdf4;color:#15803d}
+    .hole.incorrect{border:2px solid #dc2626;background:#fef2f2;color:#b91c1c}
+    .feedback-icon{width:25px;flex-shrink:0;font:20px Inter,Arial,sans-serif}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}
+    [hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}
+    .notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .condition-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+    .condition{background:#fff;border:1px solid #cbd5e1;border-top:4px solid #6366f1;padding:13px;font:14px/1.75 Inter,Arial,sans-serif}
+    .condition strong{display:block;margin-bottom:6px}
+    .math-block{overflow-x:auto;padding:3px 0}
+    .table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}
+    th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}
+    th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}
+    .graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}
+    .graph-head .mini-label{display:block;margin-bottom:4px}
+    .case-buttons{display:flex;gap:8px;flex-wrap:wrap;padding:13px 18px;border-bottom:1px solid #e2e8f0}
+    .case-buttons button,.control-row button{padding:8px 12px;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc;color:#334155;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    .case-buttons button[aria-pressed="true"]{background:#4338ca;color:#fff;border-color:#4338ca}
+    button:focus-visible{outline:3px solid #a5b4fc;outline-offset:3px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}
+    .control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}
+    .control-row label{min-width:180px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}
+    .control-row button{background:#fff;color:#4338ca}
+    .legend{padding:10px 18px;display:flex;gap:15px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;font:12px/1.7 Inter,Arial,sans-serif}
+    .swatch{display:inline-block;width:15px;height:4px;margin-right:5px;vertical-align:middle}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .output-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#e2e8f0}
+    .output-cell{padding:12px 13px;background:#f8fafc;font:12px/1.7 Inter,Arial,sans-serif}
+    .output-cell strong{display:block;font-size:17px;color:#312e81;font-variant-numeric:tabular-nums}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}
+    figure{margin:0}svg{display:block;width:100%;height:auto;background:#fff}
+    svg text{font:14px Inter,Arial,sans-serif;fill:#475569}.plot-label{font-size:16px;font-weight:600;fill:#1e293b}
+    .axis{stroke:#cbd5e1;stroke-width:1.2}.grid-line{stroke:#e2e8f0;stroke-width:1}
+    .line-one{fill:none;stroke:#4f46e5;stroke-width:4;stroke-linecap:round}
+    .line-two{fill:none;stroke:#2563eb;stroke-width:4;stroke-linecap:round}
+    .bis-plus{fill:none;stroke:#16a34a;stroke-width:3;stroke-dasharray:9 5}
+    .bis-minus{fill:none;stroke:#ea580c;stroke-width:3;stroke-dasharray:9 5}
+    .distance-one{fill:none;stroke:#0f766e;stroke-width:4;stroke-linecap:round}
+    .distance-two{fill:none;stroke:#db2777;stroke-width:4;stroke-linecap:round}
+    .op-line{fill:none;stroke:#64748b;stroke-width:2;stroke-dasharray:6 4}
+    .right-angle{fill:none;stroke:#0f172a;stroke-width:1.8}
+    .triangle-one{fill:#14b8a6;fill-opacity:.12}.triangle-two{fill:#ec4899;fill-opacity:.10}
+    .point-main{fill:#dc2626;stroke:#fff;stroke-width:2}.point-foot{fill:#fff;stroke:#0f172a;stroke-width:2}.point-origin{fill:#0f172a;stroke:#fff;stroke-width:2}
+    figcaption{padding:13px 18px;border-top:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif;background:#f8fafc}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    .parallel-picture .outer{stroke:#4f46e5;stroke-width:5}.parallel-picture .middle{stroke:#16a34a;stroke-width:4;stroke-dasharray:8 5}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    #overall-feedback{flex:1;min-width:210px;font-size:14px;line-height:1.8}
+    .primary-button{padding:12px 18px;border:2px solid #0f172a;background:#1e293b;color:#fff;border-radius:4px;font:700 13px Inter,Arial,sans-serif;cursor:pointer}
+    .primary-button:hover{background:#4338ca}.print-button{padding:12px 15px;background:#fff;color:#334155;border:1px solid #94a3b8;border-radius:4px;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){
+      body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}
+      header,.briefing,.act,.report,footer{padding:23px 19px}.stamp{display:none}h2{font-size:19px}
+      .condition-grid{grid-template-columns:1fr}.evidence,.question-card{padding:14px}.lead-question{font-size:17px}
+      .control-row label{min-width:100%}.output-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media print{
+      body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}
+      header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}
+      .case-buttons,.lab-controls,footer button{display:none}.graph-card,.question-card,.notes-box{break-inside:avoid}
+      .graph-card svg{max-height:300px}.field-notes{min-height:80px}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
+  </style>
+</head>
+<body>
+<main class="case-file">
+  <div class="stamp" aria-hidden="true">CASE FILE</div>
+  <header>
+    <h1>MATH DETECTIVE: CASE FILE #23</h1>
+    <p class="subject">Subject: Angle Bisectors of Two Intersecting Lines</p>
+    <p class="mission"><strong>Mission:</strong> Find why equal perpendicular distances mark the two angle bisectors, and turn that geometric fact into their equations.</p>
+  </header>
+  <div class="briefing"><p><strong>Detective Briefing:</strong> Two crossing lines make four angles. Instead of measuring those angles first, we will follow a point and compare its shortest distances from the two lines.</p></div>
+  <noscript><div class="evidence warning-evidence">Open this file in a browser with JavaScript enabled to use the visual lab and check your findings. Internet access is needed to format the equations.</div></noscript>
+
+  <section class="act" aria-labelledby="act1">
+    <h2 id="act1">Act 1: Check the Lines Before Using Them</h2>
+    <div class="evidence">
+      <div class="mini-label">The setting</div>
+      <div class="math-block">\[
+        L_1:A_1x+B_1y+C_1=0,
+        \qquad
+        L_2:A_2x+B_2y+C_2=0.
+      \]</div>
+      <p>The lines are distinct and nonparallel. They meet at one point, which we call O.</p>
+    </div>
+
+    <p class="lead-question">What must be true before either equation can describe a line?</p>
+    <div class="question-card">
+      <label for="hole1">Choose the condition and its full meaning.</label>
+      <div class="answer-line"><select id="hole1" class="hole" aria-describedby="hint1">
+        <option value="">Choose your finding…</option>
+        <option value="valid_lines">For each line, Aᵢ² + Bᵢ² &gt; 0. At least one of Aᵢ and Bᵢ is nonzero, so there is a nonzero normal and a positive denominator.</option>
+        <option value="both_positive">Aᵢ and Bᵢ must both be positive.</option>
+        <option value="only_c">Only Cᵢ needs to be nonzero.</option>
+      </select><span id="feedback1" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint1" class="detective-hint" hidden><strong>Detective hint:</strong> If both coefficients of x and y were zero, what set would the equation describe?</div>
+    </div>
+    <div class="math-block">\[
+      A_i^2+B_i^2&gt;0
+      \iff A_i\ne0\text{ or }B_i\ne0,
+      \qquad i=1,2.
+    \]</div>
+    <p>If \(A_i=B_i=0\), the equation becomes \(C_i=0\). It then describes either no points or the whole plane—not a line. The condition also makes \(\sqrt{A_i^2+B_i^2}\) positive, so division by it is allowed.</p>
+
+    <p class="lead-question">Why do we also need the lines to be nonparallel?</p>
+    <div class="question-card">
+      <label for="hole2">What does this assumption give us?</label>
+      <div class="answer-line"><select id="hole2" class="hole" aria-describedby="hint2">
+        <option value="">Choose your finding…</option>
+        <option value="one_intersection">The lines meet at exactly one point O and form four angular sectors.</option>
+        <option value="never_meet">The lines never meet.</option>
+        <option value="same_line">The equations must describe the same line.</option>
+      </select><span id="feedback2" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint2" class="detective-hint" hidden><strong>Detective hint:</strong> Picture two lines with different directions. How many times can they cross?</div>
+    </div>
+    <p>In coordinates, nonparallel means</p>
+    <div class="math-block">\[
+      A_1B_2-A_2B_1\ne0.
+    \]</div>
+    <p>This says the two normal vectors \((A_1,B_1)\) and \((A_2,B_2)\) are not multiples of each other. We will return to the parallel case at the end.</p>
+  </section>
+
+  <section class="act white" aria-labelledby="act2">
+    <h2 id="act2">Act 2: From an Angle Bisector to Equal Distances</h2>
+    <p>Choose a point \(P\ne O\) on one angle bisector. Drop perpendiculars from P to the two lines:</p>
+    <div class="math-block">\[
+      PH\perp L_1,
+      \qquad
+      PK\perp L_2.
+    \]</div>
+    <p class="lead-question">Why do PH and PK give the distances from P to the lines?</p>
+    <p>The distance from a point to a line is the length of its perpendicular segment. Therefore \(PH=d(P,L_1)\) and \(PK=d(P,L_2)\).</p>
+
+    <p class="lead-question">Why must the two perpendicular lengths be equal?</p>
+    <div class="question-card">
+      <label for="hole3">Which facts make triangles OPH and OPK congruent?</label>
+      <div class="answer-line"><select id="hole3" class="hole" aria-describedby="hint3">
+        <option value="">Choose your finding…</option>
+        <option value="forward_congruence">Both are right triangles, OP is common, and the angles at O are equal because OP is a bisector.</option>
+        <option value="all_triangles">All right triangles are congruent.</option>
+        <option value="feet_equal">H and K are automatically the same point.</option>
+      </select><span id="feedback3" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint3" class="detective-hint" hidden><strong>Detective hint:</strong> Find the two right angles, the shared side, and the equal angles made by the bisector.</div>
+    </div>
+    <p>The triangles have two equal angles and the same hypotenuse OP, so they are congruent. Their matching perpendicular sides are equal:</p>
+    <div class="math-block">\[
+      PH=PK.
+    \]</div>
+    <div class="evidence success-evidence"><div class="math-block">\[
+      P\text{ on an angle bisector}
+      \quad\Longrightarrow\quad
+      d(P,L_1)=d(P,L_2).
+    \]</div></div>
+  </section>
+
+  <section class="act" aria-labelledby="act3">
+    <h2 id="act3">Act 3: Does Equal Distance Force a Bisector?</h2>
+<!-- ADDED-INQUIRY-START -->
+<div class="added-clue" id="extra-1">
+<fieldset><legend>Extra clue 1 · We proved that every bisector point has equal distances. What must we check before saying the equal-distance set is exactly the bisectors?</legend>
+<label class="added-choice"><input type="radio" name="extra-1" value="0"><span>A. The same implication once more, using different letters.</span></label>
+<label class="added-choice"><input type="radio" name="extra-1" value="1"><span>B. That every equal-distance point lies on a bisector too.</span></label>
+<label class="added-choice"><input type="radio" name="extra-1" value="2"><span>C. That each bisector contains at least one equal-distance point.</span></label>
+</fieldset>
+<button type="button" class="print-button" id="extra-1-check">Check this clue</button>
+<p id="extra-1-feedback" class="added-feedback" role="status" aria-live="polite"></p>
+<p id="extra-1-hint" class="detective-hint" hidden><strong>Hint:</strong> The first direction puts bisector points inside the equal-distance set. Could that set contain extra points?</p>
+<details><summary>Open the reasoning</summary><p>We still need the converse: equal perpendicular distances must force a bisector. This rules out extra points and turns a one-way statement into an “if and only if” statement.</p></details>
+</div>
+<!-- ADDED-INQUIRY-END -->
+    <p>Now begin with the distance fact. Let \(P\ne O\) and suppose</p>
+    <div class="math-block">\[
+      PH=PK.
+    \]</div>
+    <p>Again, PH and PK are perpendicular to the two lines.</p>
+
+    <p class="lead-question">Can we now prove that OP cuts one of the angles into two equal parts?</p>
+    <div class="question-card">
+      <label for="hole4">Which congruence facts work in this direction?</label>
+      <div class="answer-line"><select id="hole4" class="hole" aria-describedby="hint4">
+        <option value="">Choose your finding…</option>
+        <option value="reverse_congruence">The triangles are right, OP is their common hypotenuse, and PH = PK gives one equal leg.</option>
+        <option value="equal_area">The triangles only have equal areas.</option>
+        <option value="parallel_feet">PH and PK must be parallel.</option>
+      </select><span id="feedback4" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint4" class="detective-hint" hidden><strong>Detective hint:</strong> Use the right-triangle hypotenuse-and-leg test.</div>
+    </div>
+    <p>The right triangles are congruent by the hypotenuse-and-leg test. Their matching angles at O are equal. Therefore the ray OP bisects the sector that contains P.</p>
+    <p>If \(P=O\), both distances are zero, and O lies on both complete bisector lines.</p>
+    <div class="evidence success-evidence"><div class="math-block">\[
+      \boxed{
+      P\text{ lies on an angle bisector}
+      \iff d(P,L_1)=d(P,L_2).}
+    \]</div><p>This geometric fact is the heart of the coordinate formula.</p></div>
+    <div class="notes-box"><label for="notes1">Field notes: Explain both directions in your own words. Why are there two different triangle tests?</label><textarea id="notes1" class="field-notes" placeholder="If P is on a bisector, the angles at O … In the converse, equal perpendicular legs …"></textarea></div>
+  </section>
+
+  <section class="act white" aria-labelledby="act4">
+    <h2 id="act4">Act 4: Turn Equal Distance into Equations</h2>
+    <p>Let \(P=(x,y)\). The point-to-line distance formula gives</p>
+    <div class="math-block">\[
+      d(P,L_1)=\frac{|A_1x+B_1y+C_1|}{\sqrt{A_1^2+B_1^2}},
+      \qquad
+      d(P,L_2)=\frac{|A_2x+B_2y+C_2|}{\sqrt{A_2^2+B_2^2}}.
+    \]</div>
+
+    <p class="lead-question">Why can we not simply compare the two numerators?</p>
+    <div class="question-card">
+      <label for="hole5">Why must each expression be divided by its normal length?</label>
+      <div class="answer-line"><select id="hole5" class="hole" aria-describedby="hint5">
+        <option value="">Choose your finding…</option>
+        <option value="normalise">The same line equation can be scaled. Dividing by √(Aᵢ² + Bᵢ²) removes that scale and gives a true distance.</option>
+        <option value="smaller_answer">Division is used only to make the numbers smaller.</option>
+        <option value="same_norm">Every line already has normal length 1.</option>
+      </select><span id="feedback5" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint5" class="detective-hint" hidden><strong>Detective hint:</strong> Multiply one line equation by 10. The line stays the same, but what happens to its raw numerator?</div>
+    </div>
+
+    <p>For shorter writing, set</p>
+    <div class="math-block">\[
+      E_1=\frac{A_1x+B_1y+C_1}{\sqrt{A_1^2+B_1^2}},
+      \qquad
+      E_2=\frac{A_2x+B_2y+C_2}{\sqrt{A_2^2+B_2^2}}.
+    \]</div>
+    <p>The values \(E_1,E_2\) are signed distances. Equal ordinary distances mean \(|E_1|=|E_2|\).</p>
+
+    <p class="lead-question">What two sign choices are hidden inside \(|E_1|=|E_2|\)?</p>
+    <div class="question-card">
+      <label for="hole6">Complete the real-number fact.</label>
+      <div class="answer-line"><select id="hole6" class="hole" aria-describedby="hint6">
+        <option value="">Choose your finding…</option>
+        <option value="plus_minus">E₁ = E₂ or E₁ = −E₂.</option>
+        <option value="only_plus">Only E₁ = E₂.</option>
+        <option value="four_signs">Four unrelated equations are needed.</option>
+      </select><span id="feedback6" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint6" class="detective-hint" hidden><strong>Detective hint:</strong> Which real numbers have the same distance from zero?</div>
+    </div>
+    <p>We can also see the two choices by squaring and factoring:</p>
+    <div class="math-block">\[
+      \begin{aligned}
+      |E_1|=|E_2|
+      &\iff E_1^2=E_2^2\\
+      &\iff (E_1-E_2)(E_1+E_2)=0\\
+      &\iff E_1=E_2\text{ or }E_1=-E_2.
+      \end{aligned}
+    \]</div>
+    <div class="evidence success-evidence"><div class="math-block">\[
+      \boxed{
+      \frac{A_1x+B_1y+C_1}{\sqrt{A_1^2+B_1^2}}
+      =\pm
+      \frac{A_2x+B_2y+C_2}{\sqrt{A_2^2+B_2^2}}.}
+    \]</div><p>The plus and minus choices give the two complete bisector lines.</p></div>
+
+    <div class="graph-card">
+      <div class="graph-head"><span class="mini-label">Visual lab · follow both perpendicular distances</span>Move P. The feet H and K stay on the original lines.</div>
+      <div class="case-buttons" aria-label="Choose two intersecting lines">
+        <button type="button" data-pair="cross" aria-pressed="true">Equal normal lengths</button>
+        <button type="button" data-pair="axes" aria-pressed="false">Coordinate axes</button>
+        <button type="button" data-pair="oblique" aria-pressed="false">Perpendicular pair</button>
+        <button type="button" data-pair="unequal" aria-pressed="false">Unequal normal lengths</button>
+      </div>
+      <div class="case-buttons" aria-label="Choose the form of the second line equation">
+        <button type="button" data-l2-sign="1" aria-pressed="true">Use the shown L₂ equation</button>
+        <button type="button" data-l2-sign="-1" aria-pressed="false">Multiply L₂ by −1</button>
+      </div>
+      <div class="lab-controls">
+        <div class="control-row"><label for="point-x-slider">Point x: <output id="point-x-value">3.5</output></label><input id="point-x-slider" type="range" min="-4" max="4" step="any" value="3.5"></div>
+        <div class="control-row"><label for="point-y-slider">Point y: <output id="point-y-value">2.5</output></label><input id="point-y-slider" type="range" min="-4" max="4" step="any" value="2.5"></div>
+        <div class="control-row">
+          <button id="point-on-plus" type="button">Put P on the + bisector</button>
+          <button id="point-on-minus" type="button">Put P on the − bisector</button>
+          <button id="point-at-o" type="button">Put P at O</button>
+          <button id="reset-lab" type="button">Reset lab</button>
+        </div>
+      </div>
+      <div id="lab-equations" class="formula-live"></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:#4f46e5"></span>L₁</span>
+        <span><span class="swatch" style="background:#2563eb"></span>L₂</span>
+        <span><span class="swatch" style="background:#16a34a"></span>+ bisector</span>
+        <span><span class="swatch" style="background:#ea580c"></span>− bisector</span>
+        <span><span class="swatch" style="background:#0f766e"></span>PH</span>
+        <span><span class="swatch" style="background:#db2777"></span>PK</span>
+      </div>
+      <figure>
+        <svg viewBox="0 0 760 600" role="img" aria-labelledby="lab-title lab-desc">
+          <title id="lab-title">Two intersecting lines, their angle bisectors, and the distances from P</title>
+          <desc id="lab-desc">A movable point P has perpendicular feet H and K on two intersecting lines. The two dashed lines are their angle bisectors.</desc>
+          <g aria-hidden="true">
+            <path d="M50 80 H710 M50 135 H710 M50 190 H710 M50 245 H710 M50 300 H710 M50 355 H710 M50 410 H710 M50 465 H710 M50 520 H710" class="grid-line"/>
+            <path d="M105 40 V560 M160 40 V560 M215 40 V560 M270 40 V560 M325 40 V560 M380 40 V560 M435 40 V560 M490 40 V560 M545 40 V560 M600 40 V560 M655 40 V560" class="grid-line"/>
+            <path d="M50 300 H710 M380 40 V560" class="axis"/>
+          </g>
+          <path id="triangle-one" class="triangle-one"/>
+          <path id="triangle-two" class="triangle-two"/>
+          <path id="lab-bis-plus" class="bis-plus"/>
+          <path id="lab-bis-minus" class="bis-minus"/>
+          <path id="lab-line1" class="line-one"/>
+          <path id="lab-line2" class="line-two"/>
+          <path id="lab-op" class="op-line"/>
+          <path id="lab-ph" class="distance-one"/>
+          <path id="lab-pk" class="distance-two"/>
+          <path id="lab-right-h" class="right-angle"/>
+          <path id="lab-right-k" class="right-angle"/>
+          <circle id="lab-o" r="6" class="point-origin"/>
+          <circle id="lab-p" r="7" class="point-main"/>
+          <circle id="lab-h" r="5" class="point-foot"/>
+          <circle id="lab-k" r="5" class="point-foot"/>
+          <text id="lab-o-label" class="plot-label">O</text>
+          <text id="lab-p-label" class="plot-label">P</text>
+          <text id="lab-h-label" class="plot-label">H</text>
+          <text id="lab-k-label" class="plot-label">K</text>
+          <text id="lab-line1-label" class="plot-label">L₁</text>
+          <text id="lab-line2-label" class="plot-label">L₂</text>
+          <text id="lab-plus-label" class="plot-label">+</text>
+          <text id="lab-minus-label" class="plot-label">−</text>
+        </svg>
+        <figcaption>The solid lines are the given lines. The dashed lines are the two bisectors. Equal segment lengths \(PH=PK\) occur exactly when P is on a dashed line.</figcaption>
+      </figure>
+      <div class="output-grid">
+        <div class="output-cell">Distance to L₁<strong id="read-d1">—</strong></div>
+        <div class="output-cell">Distance to L₂<strong id="read-d2">—</strong></div>
+        <div class="output-cell">Signed relation<strong id="read-sign">—</strong></div>
+        <div class="output-cell">Difference |d₁ − d₂|<strong id="read-gap">—</strong></div>
+      </div>
+      <div id="lab-message" class="lab-message" aria-live="polite"></div>
+    </div>
+    <div class="notes-box"><label for="notes2">Field notes: Move P off both bisectors, then place it on each one. What happens to PH, PK, E₁ and E₂?</label><textarea id="notes2" class="field-notes" placeholder="Away from the bisectors … On the + bisector … On the − bisector …"></textarea></div>
+  </section>
+
+  <section class="act" aria-labelledby="act5">
+    <h2 id="act5">Act 5: Why Two Bisector Lines—and Why Perpendicular?</h2>
+    <p class="lead-question">The original lines form four sectors. Why does the answer contain two lines, not four?</p>
+    <div class="question-card">
+      <label for="hole7">How do the four bisector rays join?</label>
+      <div class="answer-line"><select id="hole7" class="hole" aria-describedby="hint7">
+        <option value="">Choose your finding…</option>
+        <option value="opposite_rays">The bisector rays of opposite sectors join through O to make one complete line. Two opposite pairs give two lines.</option>
+        <option value="all_one">All four rays form one line.</option>
+        <option value="four_lines">Each ray must be counted as a different complete line.</option>
+      </select><span id="feedback7" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint7" class="detective-hint" hidden><strong>Detective hint:</strong> Two rays pointing in opposite directions from the same point make one straight line.</div>
+    </div>
+
+<!-- ADDED-INQUIRY-START -->
+<div class="added-clue" id="extra-2">
+<fieldset><legend>Extra clue 2 · Before using vectors, what immediate observation can prove that the two bisectors are perpendicular?</legend>
+<label class="added-choice"><input type="radio" name="extra-2" value="0"><span>A. All four original sectors must be right angles.</span></label>
+<label class="added-choice"><input type="radio" name="extra-2" value="1"><span>B. Each bisector is perpendicular to both original lines.</span></label>
+<label class="added-choice"><input type="radio" name="extra-2" value="2"><span>C. Adjacent sector angles add to 180°, so their halves add to 90°.</span></label>
+</fieldset>
+<button type="button" class="print-button" id="extra-2-check">Check this clue</button>
+<p id="extra-2-feedback" class="added-feedback" role="status" aria-live="polite"></p>
+<p id="extra-2-hint" class="detective-hint" hidden><strong>Hint:</strong> Choose two sectors next to each other. Together they make a straight angle.</p>
+<details><summary>Open the reasoning</summary><p>If the adjacent angles are \(\alpha\) and \(180^\circ-\alpha\), the angle between their bisector rays is \(\alpha/2+(180^\circ-\alpha)/2=90^\circ\). The complete bisector lines therefore meet at a right angle. The vector calculation below confirms the same fact.</p></details>
+</div>
+<!-- ADDED-INQUIRY-END -->
+    <p>Now define the unit normal vectors</p>
+    <div class="math-block">\[
+      \mathbf n_1=\frac{(A_1,B_1)}{\sqrt{A_1^2+B_1^2}},
+      \qquad
+      \mathbf n_2=\frac{(A_2,B_2)}{\sqrt{A_2^2+B_2^2}}.
+    \]</div>
+    <p class="lead-question">Why are these vectors both normal and unit?</p>
+    <p>They are normal because each is perpendicular to its line. They are unit vectors because each has length 1. The two bisector equations have normal vectors \(\mathbf n_1-\mathbf n_2\) and \(\mathbf n_1+\mathbf n_2\).</p>
+
+    <p class="lead-question">What makes the two bisectors perpendicular?</p>
+    <div class="question-card">
+      <label for="hole8">Find the key dot product.</label>
+      <div class="answer-line"><select id="hole8" class="hole" aria-describedby="hint8">
+        <option value="">Choose your finding…</option>
+        <option value="zero_dot">(n₁ − n₂) · (n₁ + n₂) = |n₁|² − |n₂|² = 1 − 1 = 0.</option>
+        <option value="same_normal">The two bisectors have the same normal vector.</option>
+        <option value="parallel_normals">Their normal vectors are nonzero multiples of each other.</option>
+      </select><span id="feedback8" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint8" class="detective-hint" hidden><strong>Detective hint:</strong> Expand the dot product. The two middle terms cancel, and both unit normals have length 1.</div>
+    </div>
+    <div class="math-block">\[
+      (\mathbf n_1-\mathbf n_2)\cdot(\mathbf n_1+\mathbf n_2)
+      =|\mathbf n_1|^2-|\mathbf n_2|^2=0.
+    \]</div>
+    <p>Recall that \(\mathbf u\cdot\mathbf v=|\mathbf u|\,|\mathbf v|\cos\theta\). The two normals here are nonzero because the original lines are nonparallel. Their dot product is zero, so the angle between them is \(90^\circ\). Rotating both normals by \(90^\circ\) gives the directions of their lines, and keeps that right angle.</p>
+    <div class="evidence success-evidence"><div class="math-block">\[
+      \boxed{\text{The two angle-bisector lines are perpendicular.}}
+    \]</div></div>
+  </section>
+
+  <section class="act white" aria-labelledby="act6">
+    <h2 id="act6">Act 6: Does the Plus Sign Always Mean “Internal”?</h2>
+<!-- ADDED-INQUIRY-START -->
+<div class="added-clue" id="extra-3">
+<fieldset><legend>Extra clue 3 · Someone says the plus equation always gives the internal bisector. What quick test can we use?</legend>
+<label class="added-choice"><input type="radio" name="extra-3" value="0"><span>A. Multiply one original line equation by −1 and see whether the plus and minus labels exchange.</span></label>
+<label class="added-choice"><input type="radio" name="extra-3" value="1"><span>B. Move the intersection O and assume the labels stay fixed.</span></label>
+<label class="added-choice"><input type="radio" name="extra-3" value="2"><span>C. Keep only the plus equation because distances cannot be negative.</span></label>
+</fieldset>
+<button type="button" class="print-button" id="extra-3-check">Check this clue</button>
+<p id="extra-3-feedback" class="added-feedback" role="status" aria-live="polite"></p>
+<p id="extra-3-hint" class="detective-hint" hidden><strong>Hint:</strong> Changing an equation's sign keeps its line but reverses its signed-distance expression.</p>
+<details><summary>Open the reasoning</summary><p>Replacing \(E_2\) by \(-E_2\) keeps the two original lines and both geometric bisectors. It exchanges the equations called “plus” and “minus.” So the sign alone cannot name the internal bisector of a chosen angle.</p></details>
+</div>
+<!-- ADDED-INQUIRY-END -->
+    <p>No. First, two complete lines make several sectors. We must name the angle before “internal” has a clear meaning.</p>
+    <p>There is also an equation reason. Replace the equation of \(L_2\) by its negative. This does not change any point on the line, but it changes \(E_2\) to \(-E_2\):</p>
+    <div class="math-block">\[
+      E_1=E_2
+      \quad\longleftrightarrow\quad
+      E_1=-(-E_2).
+    \]</div>
+    <p>So the same geometric bisector moves from the plus case to the minus case. Use the two equation-form buttons in the visual lab to see the green and orange labels exchange while the two geometric bisectors stay where they are.</p>
+    <div class="evidence warning-evidence"><p><strong>To choose the bisector of one named angle:</strong> pick a point or a direction inside that angle, then check which of the two equations it satisfies. Do not decide from the sign alone.</p></div>
+  </section>
+
+  <section class="act" aria-labelledby="act7">
+    <h2 id="act7">Act 7: What Changes for Parallel Lines?</h2>
+    <p>Take the distinct parallel lines</p>
+    <div class="math-block">\[
+      x=0,
+      \qquad
+      x=4.
+    \]</div>
+    <p>A point \((x,y)\) is equally far from them when</p>
+    <div class="math-block">\[
+      |x|=|x-4|.
+    \]</div>
+    <p>Squaring both sides gives \(x^2=(x-4)^2\), so \(x=2\). The equal-distance set is one middle parallel line.</p>
+    <div class="graph-card parallel-picture">
+      <div class="graph-head"><span class="mini-label">Edge case · equal distance between parallels</span>The green line sits halfway between the two given lines.</div>
+      <figure>
+        <svg viewBox="0 0 760 300" role="img" aria-label="The line x equals 2 midway between x equals 0 and x equals 4">
+          <path d="M160 35 V250 M600 35 V250" class="outer"/>
+          <path d="M380 35 V250" class="middle"/>
+          <path d="M160 150 H380 M380 150 H600" class="op-line"/>
+          <text x="160" y="278" text-anchor="middle" class="plot-label">x = 0</text>
+          <text x="380" y="278" text-anchor="middle" class="plot-label">x = 2</text>
+          <text x="600" y="278" text-anchor="middle" class="plot-label">x = 4</text>
+          <text x="270" y="137" text-anchor="middle">2 units</text>
+          <text x="490" y="137" text-anchor="middle">2 units</text>
+        </svg>
+        <figcaption>Parallel lines do not form angular sectors. Their equal-distance locus is the single line midway between them.</figcaption>
+      </figure>
+    </div>
+    <p>If the two original lines are the same line, every point has equal distance from them. This is why the words <strong>distinct and nonparallel</strong> are needed for the usual two-bisector result.</p>
+  </section>
+
+  <section class="report" aria-labelledby="report-title">
+    <h2 id="report-title">Final Report: The Full Chain of Ideas</h2>
+    <div class="math-block">\[
+      \boxed{
+      \frac{A_1x+B_1y+C_1}{\sqrt{A_1^2+B_1^2}}
+      =\pm
+      \frac{A_2x+B_2y+C_2}{\sqrt{A_2^2+B_2^2}}.}
+    \]</div>
+    <div class="table-wrap"><table aria-label="Main ideas in the angle-bisector proof">
+      <thead><tr><th>Step</th><th>What it tells us</th></tr></thead>
+      <tbody>
+        <tr><td>Valid, nonparallel lines</td><td>Each normal is nonzero, the denominators are positive, and the lines meet at one point O.</td></tr>
+        <tr><td>Geometry</td><td>A point is on a bisector exactly when its two perpendicular distances are equal.</td></tr>
+        <tr><td>Normalising</td><td>Division by the normal length turns each equation value into a true signed distance.</td></tr>
+        <tr><td>Absolute values</td><td>\(|E_1|=|E_2|\) becomes \(E_1=E_2\) or \(E_1=-E_2\).</td></tr>
+        <tr><td>Two complete lines</td><td>Opposite bisector rays join, so four sectors give two bisector lines.</td></tr>
+        <tr><td>Unit normals</td><td>The normals \(\mathbf n_1-\mathbf n_2\) and \(\mathbf n_1+\mathbf n_2\) have zero dot product, so the bisectors are perpendicular.</td></tr>
+        <tr><td>Signs</td><td>Changing one line equation to its negative swaps the plus and minus labels, not the geometry.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="notes-box"><label for="notes3">Your final explanation: Begin with perpendicular distances and finish with the two boxed equations. Include why we divide by each normal length and why the answer has a ± sign.</label><textarea id="notes3" class="field-notes" placeholder="The perpendicular triangles show … Therefore equal distances mean … The distance formula gives … The denominators … Equal absolute values …"></textarea></div>
+  </section>
+
+  <footer>
+    <div id="overall-feedback" role="status" aria-live="polite">Awaiting your findings: 8 clues to check. Written notes are for discussion, not an automatic score.</div>
+    <button id="submit-findings" type="button" class="primary-button">Submit Findings</button>
+    <button id="print-case" type="button" class="print-button">Print Case File</button>
+  </footer>
+<!-- ADDED-INQUIRY-START -->
+<script>
+(function(){
+ const keys=[1,2,0];
+ function check(i){
+  const id='extra-'+(i+1),card=document.getElementById(id);
+  const chosen=card.querySelector('input[type="radio"]:checked');
+  const ok=!!chosen&&Number(chosen.value)===keys[i];
+  const feedback=document.getElementById(id+"-feedback");
+  feedback.textContent=!chosen?"Choose an answer first.":ok?"✓ Correct. Open the reasoning and explain why.":"Not yet. Use the hint and try again.";
+  feedback.style.color=ok?"#15803d":"#9a3412";
+  document.getElementById(id+"-hint").hidden=!chosen||ok;
+  card.dataset.checked="true";
+ }
+ keys.forEach(function(key,i){
+  const id='extra-'+(i+1),card=document.getElementById(id);
+  document.getElementById(id+"-check").addEventListener("click",function(){check(i);});
+  card.querySelectorAll('input[type="radio"]').forEach(function(input){
+   input.addEventListener("change",function(){if(card.dataset.checked)check(i);});
+  });
+ });
+ document.getElementById("submit-findings").addEventListener("click",function(){keys.forEach(function(_,i){check(i);});});
+ let saved=[];
+ window.addEventListener("beforeprint",function(){saved=Array.from(document.querySelectorAll(".added-clue details")).map(function(d){return [d,d.open];});saved.forEach(function(pair){pair[0].open=true;});});
+ window.addEventListener("afterprint",function(){saved.forEach(function(pair){pair[0].open=pair[1];});});
+})();
+</script>
+<!-- ADDED-INQUIRY-END -->
+</main>
+<script>
+  const proofSchema={
+    hole1:{validAnswer:'valid_lines'},
+    hole2:{validAnswer:'one_intersection'},
+    hole3:{validAnswer:'forward_congruence'},
+    hole4:{validAnswer:'reverse_congruence'},
+    hole5:{validAnswer:'normalise'},
+    hole6:{validAnswer:'plus_minus'},
+    hole7:{validAnswer:'opposite_rays'},
+    hole8:{validAnswer:'zero_dot'}
+  };
+  let findingsChecked=false;
+
+  function evaluateProof(){
+    let correct=0,unanswered=0;
+    Object.entries(proofSchema).forEach(function(entry){
+      const id=entry[0],n=id.replace('hole',''),field=document.getElementById(id);
+      const empty=field.value==='',right=field.value===entry[1].validAnswer;
+      field.classList.toggle('correct',right);
+      field.classList.toggle('incorrect',!empty&&!right);
+      field.setAttribute('aria-invalid',String(!empty&&!right));
+      document.getElementById('feedback'+n).textContent=empty?'':(right?'✓':'✗');
+      document.getElementById('hint'+n).hidden=empty||right;
+      if(right)correct++;
+      if(empty)unanswered++;
+    });
+    const notes=Array.from(document.querySelectorAll('.field-notes'));
+    const filled=notes.filter(function(n){return n.value.trim().length>0;}).length;
+    let message=correct+' of 8 clues correct.';
+    if(correct===8)message+=' Case closed! Your proof should connect equal perpendicular distances to the ± equations.';
+    else if(unanswered)message+=' '+unanswered+' still unanswered. Try those and use the hints beside wrong answers.';
+    else message+=' Read the hints and try the marked clues again.';
+    message+=' Written notes: '+filled+' of 3 spaces filled. These are for discussion, not an automatic score.';
+    textAt('overall-feedback',message);
+    findingsChecked=true;
+  }
+
+  function put(id,attrs){
+    const node=document.getElementById(id);
+    Object.keys(attrs).forEach(function(k){node.setAttribute(k,attrs[k]);});
+  }
+  function textAt(id,value){document.getElementById(id).textContent=value;}
+  function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+  function formatNumber(v){
+    const rounded=Math.abs(v)<0.0000005?0:Number(v.toFixed(4));
+    return String(rounded).replace('-','−');
+  }
+  function equationText(A,B,C){
+    const terms=[];
+    function add(value,symbol){
+      if(Math.abs(value)<1e-10)return;
+      const sign=value<0?'−':'+',magnitude=Math.abs(value);
+      const coefficient=symbol&&Math.abs(magnitude-1)<1e-10?'':formatNumber(magnitude);
+      terms.push({sign:sign,text:coefficient+symbol});
+    }
+    add(A,'x');add(B,'y');add(C,'');
+    if(!terms.length)return '0 = 0';
+    return terms.map(function(term,i){
+      if(i===0)return (term.sign==='−'?'−':'')+term.text;
+      return ' '+term.sign+' '+term.text;
+    }).join('')+' = 0';
+  }
+  function clipLine(A,B,C,bounds){
+    const points=[],eps=1e-9;
+    function add(x,y){
+      if(x<bounds.xmin-eps||x>bounds.xmax+eps||y<bounds.ymin-eps||y>bounds.ymax+eps)return;
+      if(!points.some(function(p){return Math.hypot(p.x-x,p.y-y)<1e-7;}))points.push({x:x,y:y});
+    }
+    if(Math.abs(B)>eps){
+      add(bounds.xmin,(-A*bounds.xmin-C)/B);
+      add(bounds.xmax,(-A*bounds.xmax-C)/B);
+    }
+    if(Math.abs(A)>eps){
+      add((-B*bounds.ymin-C)/A,bounds.ymin);
+      add((-B*bounds.ymax-C)/A,bounds.ymax);
+    }
+    if(points.length<2)throw new Error('Line does not cross the graph window.');
+    let pair=[points[0],points[1]],best=-1;
+    for(let i=0;i<points.length;i++)for(let j=i+1;j<points.length;j++){
+      const distance=Math.hypot(points[i].x-points[j].x,points[i].y-points[j].y);
+      if(distance>best){best=distance;pair=[points[i],points[j]];}
+    }
+    return pair;
+  }
+  function pathBetween(pair,mapX,mapY){
+    return 'M'+mapX(pair[0].x)+' '+mapY(pair[0].y)+' L'+mapX(pair[1].x)+' '+mapY(pair[1].y);
+  }
+  function segment(a,b,mapX,mapY){
+    return 'M'+mapX(a.x)+' '+mapY(a.y)+' L'+mapX(b.x)+' '+mapY(b.y);
+  }
+  function polygonPath(points,mapX,mapY){
+    return points.map(function(p,i){return (i?'L':'M')+mapX(p.x)+' '+mapY(p.y);}).join(' ')+' Z';
+  }
+  function pointOnPair(pair,t){
+    return {
+      x:pair[0].x+t*(pair[1].x-pair[0].x),
+      y:pair[0].y+t*(pair[1].y-pair[0].y)
+    };
+  }
+  function rightAnglePath(vertex,a,b,size,mapX,mapY){
+    const ax=a.x-vertex.x,ay=a.y-vertex.y,bx=b.x-vertex.x,by=b.y-vertex.y;
+    const al=Math.hypot(ax,ay),bl=Math.hypot(bx,by);
+    if(al<1e-8||bl<1e-8)return '';
+    const u={x:ax/al,y:ay/al},v={x:bx/bl,y:by/bl};
+    const p1={x:vertex.x+size*u.x,y:vertex.y+size*u.y};
+    const p2={x:p1.x+size*v.x,y:p1.y+size*v.y};
+    const p3={x:vertex.x+size*v.x,y:vertex.y+size*v.y};
+    return 'M'+mapX(p1.x)+' '+mapY(p1.y)+' L'+mapX(p2.x)+' '+mapY(p2.y)+' L'+mapX(p3.x)+' '+mapY(p3.y);
+  }
+
+  const pairPresets={
+    cross:{
+      l1:{A:1,B:-1,C:0},l2:{A:1,B:1,C:-4},
+      start:{x:3.5,y:2.5}
+    },
+    axes:{
+      l1:{A:1,B:0,C:0},l2:{A:0,B:1,C:0},
+      start:{x:2.8,y:1.3}
+    },
+    oblique:{
+      l1:{A:2,B:-1,C:-1},l2:{A:1,B:2,C:-2},
+      start:{x:2.7,y:2.8}
+    },
+    unequal:{
+      l1:{A:3,B:4,C:-5},l2:{A:1,B:-2,C:1},
+      start:{x:-1.5,y:2.5}
+    }
+  };
+  let pairChoice='cross',l2Sign=1;
+
+  function pairData(key,x,y,secondSign){
+    const preset=pairPresets[key];
+    if(!preset)throw new Error('Unknown line pair.');
+    const L1={A:preset.l1.A,B:preset.l1.B,C:preset.l1.C};
+    const L2={A:secondSign*preset.l2.A,B:secondSign*preset.l2.B,C:secondSign*preset.l2.C};
+    const norm1=Math.hypot(L1.A,L1.B),norm2=Math.hypot(L2.A,L2.B);
+    if(norm1===0||norm2===0)throw new Error('A line has a zero normal.');
+    const det=L1.A*L2.B-L2.A*L1.B;
+    if(Math.abs(det)<1e-10)throw new Error('The visual lab requires nonparallel lines.');
+    const O={
+      x:(L1.B*L2.C-L2.B*L1.C)/det,
+      y:(L2.A*L1.C-L1.A*L2.C)/det
+    };
+    const n1={x:L1.A/norm1,y:L1.B/norm1},n2={x:L2.A/norm2,y:L2.B/norm2};
+    const s1=(L1.A*x+L1.B*y+L1.C)/norm1;
+    const s2=(L2.A*x+L2.B*y+L2.C)/norm2;
+    const P={x:x,y:y};
+    const H={x:x-s1*n1.x,y:y-s1*n1.y};
+    const K={x:x-s2*n2.x,y:y-s2*n2.y};
+    const plus={A:n1.x-n2.x,B:n1.y-n2.y,C:L1.C/norm1-L2.C/norm2};
+    const minus={A:n1.x+n2.x,B:n1.y+n2.y,C:L1.C/norm1+L2.C/norm2};
+    const d1=Math.abs(s1),d2=Math.abs(s2),tol=1e-7;
+    return {
+      key:key,L1:L1,L2:L2,norm1:norm1,norm2:norm2,det:det,O:O,n1:n1,n2:n2,
+      P:P,H:H,K:K,s1:s1,s2:s2,d1:d1,d2:d2,plus:plus,minus:minus,
+      onPlus:Math.abs(s1-s2)<tol,onMinus:Math.abs(s1+s2)<tol,
+      atO:Math.hypot(x-O.x,y-O.y)<tol
+    };
+  }
+  function currentData(){
+    const x=clamp(Number(document.getElementById('point-x-slider').value),-4,4);
+    const y=clamp(Number(document.getElementById('point-y-slider').value),-4,4);
+    return pairData(pairChoice,x,y,l2Sign);
+  }
+
+  function updateLab(){
+    const d=currentData();
+    const mapX=function(x){return 380+55*x;};
+    const mapY=function(y){return 300-55*y;};
+    const bounds={xmin:-6,xmax:6,ymin:-4.72,ymax:4.72};
+    const line1Pair=clipLine(d.L1.A,d.L1.B,d.L1.C,bounds);
+    const line2Pair=clipLine(d.L2.A,d.L2.B,d.L2.C,bounds);
+    const plusPair=clipLine(d.plus.A,d.plus.B,d.plus.C,bounds);
+    const minusPair=clipLine(d.minus.A,d.minus.B,d.minus.C,bounds);
+
+    put('lab-line1',{d:pathBetween(line1Pair,mapX,mapY)});
+    put('lab-line2',{d:pathBetween(line2Pair,mapX,mapY)});
+    put('lab-bis-plus',{d:pathBetween(plusPair,mapX,mapY)});
+    put('lab-bis-minus',{d:pathBetween(minusPair,mapX,mapY)});
+    put('lab-op',{d:d.atO?'':segment(d.O,d.P,mapX,mapY)});
+    put('lab-ph',{d:segment(d.P,d.H,mapX,mapY)});
+    put('lab-pk',{d:segment(d.P,d.K,mapX,mapY)});
+    put('triangle-one',{d:d.atO?'':polygonPath([d.O,d.P,d.H],mapX,mapY)});
+    put('triangle-two',{d:d.atO?'':polygonPath([d.O,d.P,d.K],mapX,mapY)});
+    put('lab-right-h',{d:rightAnglePath(d.H,d.P,d.O,.24,mapX,mapY)});
+    put('lab-right-k',{d:rightAnglePath(d.K,d.P,d.O,.24,mapX,mapY)});
+
+    put('lab-o',{cx:mapX(d.O.x),cy:mapY(d.O.y),opacity:d.atO?0:1});
+    put('lab-p',{cx:mapX(d.P.x),cy:mapY(d.P.y)});
+    put('lab-h',{cx:mapX(d.H.x),cy:mapY(d.H.y),opacity:d.atO?0:1});
+    put('lab-k',{cx:mapX(d.K.x),cy:mapY(d.K.y),opacity:d.atO?0:1});
+    put('lab-o-label',{x:mapX(d.O.x)+10,y:mapY(d.O.y)+22});
+    put('lab-p-label',{x:mapX(d.P.x)+11,y:mapY(d.P.y)-12});
+    put('lab-h-label',{x:mapX(d.H.x)+9,y:mapY(d.H.y)+20});
+    put('lab-k-label',{x:mapX(d.K.x)-22,y:mapY(d.K.y)-10});
+    if(d.atO){
+      textAt('lab-p-label','P = O = H = K');
+      textAt('lab-o-label','');
+      textAt('lab-h-label','');
+      textAt('lab-k-label','');
+    }else{
+      textAt('lab-p-label','P');
+      textAt('lab-o-label','O');
+      textAt('lab-h-label','H');
+      textAt('lab-k-label','K');
+    }
+
+    const label1=pointOnPair(line1Pair,.08),label2=pointOnPair(line2Pair,.9);
+    const labelPlus=pointOnPair(plusPair,.18),labelMinus=pointOnPair(minusPair,.78);
+    put('lab-line1-label',{x:mapX(label1.x)+8,y:mapY(label1.y)-8});
+    put('lab-line2-label',{x:mapX(label2.x)+8,y:mapY(label2.y)-8});
+    put('lab-plus-label',{x:mapX(labelPlus.x)+8,y:mapY(labelPlus.y)-8});
+    put('lab-minus-label',{x:mapX(labelMinus.x)+8,y:mapY(labelMinus.y)-8});
+
+    textAt('point-x-value',formatNumber(d.P.x));
+    textAt('point-y-value',formatNumber(d.P.y));
+    textAt('read-d1',formatNumber(d.d1));
+    textAt('read-d2',formatNumber(d.d2));
+    textAt('read-gap',formatNumber(Math.abs(d.d1-d.d2)));
+    if(d.atO)textAt('read-sign','E₁ = E₂ = 0');
+    else if(d.onPlus)textAt('read-sign','E₁ = E₂');
+    else if(d.onMinus)textAt('read-sign','E₁ = −E₂');
+    else textAt('read-sign','E₁ ≠ ±E₂');
+    textAt('lab-equations','L₁: '+equationText(d.L1.A,d.L1.B,d.L1.C)+'     L₂: '+equationText(d.L2.A,d.L2.B,d.L2.C)+'     P = ('+formatNumber(d.P.x)+', '+formatNumber(d.P.y)+')');
+
+    let message;
+    if(d.atO){
+      message='P is O. Both perpendicular distances are 0, so P lies on both bisector lines.';
+    }else if(d.onPlus){
+      message='PH = PK = '+formatNumber(d.d1)+'. Here E₁ = E₂, so P lies on the green + bisector.';
+    }else if(d.onMinus){
+      message='PH = PK = '+formatNumber(d.d1)+'. Here E₁ = −E₂, so P lies on the orange − bisector.';
+    }else{
+      message='PH = '+formatNumber(d.d1)+' and PK = '+formatNumber(d.d2)+'. The distances are not equal, so P is not on either bisector.';
+    }
+    if(l2Sign<0)message+=' The L₂ equation has been multiplied by −1: its line and ordinary distance are unchanged, but the + and − labels swap.';
+    textAt('lab-message',message);
+    textAt('lab-desc','For P at ('+formatNumber(d.P.x)+', '+formatNumber(d.P.y)+'), the distance to L1 is '+formatNumber(d.d1)+' and the distance to L2 is '+formatNumber(d.d2)+'.');
+    return d;
+  }
+
+  function setPoint(point){
+    document.getElementById('point-x-slider').value=String(clamp(point.x,-4,4));
+    document.getElementById('point-y-slider').value=String(clamp(point.y,-4,4));
+    return updateLab();
+  }
+  function pointOnBisector(which){
+    const d=currentData(),line=which==='plus'?d.plus:d.minus;
+    const length=Math.hypot(line.A,line.B);
+    const direction={x:-line.B/length,y:line.A/length};
+    return setPoint({x:d.O.x+1.6*direction.x,y:d.O.y+1.6*direction.y});
+  }
+  function showPair(key){
+    if(!pairPresets[key])return;
+    pairChoice=key;
+    l2Sign=1;
+    document.querySelectorAll('[data-pair]').forEach(function(button){
+      button.setAttribute('aria-pressed',String(button.dataset.pair===key));
+    });
+    document.querySelectorAll('[data-l2-sign]').forEach(function(button){
+      button.setAttribute('aria-pressed',String(Number(button.dataset.l2Sign)===1));
+    });
+    return setPoint(pairPresets[key].start);
+  }
+  function showL2Sign(sign){
+    l2Sign=sign===-1?-1:1;
+    document.querySelectorAll('[data-l2-sign]').forEach(function(button){
+      button.setAttribute('aria-pressed',String(Number(button.dataset.l2Sign)===l2Sign));
+    });
+    return updateLab();
+  }
+
+  document.getElementById('point-x-slider').addEventListener('input',updateLab);
+  document.getElementById('point-y-slider').addEventListener('input',updateLab);
+  document.getElementById('point-on-plus').addEventListener('click',function(){pointOnBisector('plus');});
+  document.getElementById('point-on-minus').addEventListener('click',function(){pointOnBisector('minus');});
+  document.getElementById('point-at-o').addEventListener('click',function(){setPoint(currentData().O);});
+  document.getElementById('reset-lab').addEventListener('click',function(){showPair('cross');});
+  document.querySelectorAll('[data-pair]').forEach(function(button){
+    button.addEventListener('click',function(){showPair(button.dataset.pair);});
+  });
+  document.querySelectorAll('[data-l2-sign]').forEach(function(button){
+    button.addEventListener('click',function(){showL2Sign(Number(button.dataset.l2Sign));});
+  });
+  Object.keys(proofSchema).forEach(function(id){
+    document.getElementById(id).addEventListener('change',function(){if(findingsChecked)evaluateProof();});
+  });
+  document.querySelectorAll('.field-notes').forEach(function(note){
+    note.addEventListener('input',function(){if(findingsChecked)evaluateProof();});
+  });
+  document.getElementById('submit-findings').addEventListener('click',evaluateProof);
+  document.getElementById('print-case').addEventListener('click',function(){window.print();});
+  updateLab();
+</script>
+</body>
+</html>

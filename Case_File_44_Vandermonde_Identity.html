@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 44 — Vandermonde's Identity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;background-image:radial-gradient(#cbd5e1 1px,transparent 1px);background-size:20px 20px;font-family:Inter,Arial,sans-serif}
+    .case-file{max-width:896px;margin:12px auto;position:relative;overflow:hidden;border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;font:17px/1.8 "Courier Prime",monospace}
+    .stamp{position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);opacity:.2;pointer-events:none}
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}.mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:760px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}.briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}.act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}.evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}.success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}[hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}.notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .math-block{overflow-x:auto;padding:3px 0}.table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}.graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}.graph-head .mini-label{display:block;margin-bottom:4px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}.control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}.control-row label{min-width:225px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}.control-row button{padding:8px 12px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;color:#4338ca;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .dept-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#e2e8f0}.dept-box{background:#fff;padding:18px}.dept-box:first-child{border-top:4px solid #4f46e5}.dept-box:last-child{border-top:4px solid #ea580c}.dept-box h3{margin:0 0 10px}.token-row{display:flex;gap:7px;flex-wrap:wrap}.token{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:34px;padding:0 9px;border-radius:999px;background:#4338ca;color:#fff;font:700 13px Inter,Arial,sans-serif}.token.b{background:#c2410c}
+    .committee{padding:9px 10px;margin:7px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;font:13px/1.6 Inter,Arial,sans-serif}.current-row td{background:#eef2ff;font-weight:600}.zero-row td{color:#64748b;background:#f8fafc}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}.count-strip{padding:14px 20px;background:#eef2ff;font:600 16px/1.8 Inter,Arial,sans-serif;text-align:center}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    .micro{background:#fffbeb;border-left:4px solid #eab308;padding:12px 16px;margin:16px 0}.micro>p{margin:0}.micro summary{font:600 14px/1.8 Inter,Arial,sans-serif;color:#854d0e;cursor:pointer}.micro details p{font:15px/1.85 Inter,Arial,sans-serif}
+    fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}.choice{display:flex!important;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}.choice:has(input:checked){background:#eef2ff;border-color:#6366f1}.choice input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}.clue-feedback:empty{display:none}.clue-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+    .reason{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 24px;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}.reason summary{color:#3730a3;font-weight:600;cursor:pointer}
+    .step-box{margin:16px 0;padding:16px 18px;background:#fff;border:1px solid #cbd5e1;border-left:4px solid #4f46e5;border-radius:4px;font:15px/1.85 Inter,Arial,sans-serif}.step-box strong{color:#312e81}.why{margin-top:9px;padding:10px 12px;background:#f8fafc;border-left:3px solid #94a3b8;font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}.actions button{padding:12px 16px;font:600 14px Inter,Arial,sans-serif;border:1px solid #475569;border-radius:4px;cursor:pointer}.actions .primary{background:#1e293b;color:white}.score{font:600 14px/1.8 Inter,Arial,sans-serif}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}.stamp{display:none}header,.briefing,.act,.report,footer{padding:23px 19px}.lead-question{font-size:17px}.control-row label{min-width:100%}.dept-grid{grid-template-columns:1fr}}
+    @media print{body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}.lab-controls,.actions{display:none}.graph-card,.question-card,.step-box,.notes-box{break-inside:avoid}.field-notes{min-height:80px}details>summary{display:none}.reason{break-inside:auto}.clue-feedback,.detective-hint{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style>
+</head>
+<body><main class="case-file">
+<div class="stamp" aria-hidden="true">CASE FILE</div>
+<header>
+  <h1>MATH DETECTIVE: CASE FILE #44</h1>
+  <p class="subject">Subject: Vandermonde's Identity</p>
+  <p class="mission"><strong>Mission:</strong> Count one r-person committee from two departments in two ways. Track how many members come from the first department, determine the truly feasible values of k, then verify the identity by comparing coefficients in a product of binomial expansions.</p>
+</header>
+<div class="briefing"><p><strong>The case:</strong> Department A has m employees and Department B has n employees. The departments are disjoint, and one joint committee of exactly r people is required. How many committees can be formed?</p></div>
+<p class="small-note" style="padding:10px 30px">Follow 7 clues and the small-step questions. Try each clue before opening its reasoning. The Vandermonde lab works offline; equation formatting and display fonts use an internet connection.</p>
+<noscript><div class="evidence warning-evidence">JavaScript is needed for the committee lab and answer checking. The written proof and expandable answers still work.</div></noscript>
+
+<section class="act" aria-labelledby="act1"><h2 id="act1">Act 1: Count the committee globally</h2>
+<p>Department A contributes m people and Department B contributes n. Because the departments are disjoint, the combined pool contains</p>
+<div class="math-block">\[m+n\]</div>
+<p>people. We want one committee containing exactly r people.</p>
+<div class="question-card"><fieldset><legend>Clue 1 · What is the immediate global count?</legend>
+<label class="choice"><input type="radio" name="q1" value="0"><span>A. \(\binom{m+n}{r}\)</span></label>
+<label class="choice"><input type="radio" name="q1" value="1"><span>B. \(\binom mr+\binom nr\)</span></label>
+<label class="choice"><input type="radio" name="q1" value="2"><span>C. \(mn\)</span></label>
+</fieldset><p class="clue-feedback" id="feedback1" aria-live="polite"></p><div class="detective-hint" id="hint1" hidden><strong>Follow this clue:</strong> Ignore department labels for one moment. How many people are in the union, and how many must be chosen?</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>Once the two disjoint departments are merged into one pool, the problem is simply: choose r people from m+n. Therefore the direct count is \(\binom{m+n}{r}\).</p></details>
+<div class="micro"><p><strong>Small step 1.</strong> Why must the departments be treated as disjoint groups?</p><details><summary>Open the answer</summary><p>If the same person belonged to both groups and were counted twice, the combined pool would not have m+n distinct people. Vandermonde's committee interpretation assumes two disjoint source groups.</p></details></div>
+</section>
+
+<section class="act white" aria-labelledby="act2"><h2 id="act2">Act 2: Record one extra piece of information</h2>
+<p class="lead-question">Instead of ignoring department labels, what can we record about each final committee?</p>
+<p>Let k be the number of committee members who come from Department A.</p>
+<div class="question-card"><fieldset><legend>Clue 2 · If k members come from Department A, how many must come from Department B?</legend>
+<label class="choice"><input type="radio" name="q2" value="0"><span>A. r−k</span></label>
+<label class="choice"><input type="radio" name="q2" value="1"><span>B. n−k</span></label>
+<label class="choice"><input type="radio" name="q2" value="2"><span>C. another independent number</span></label>
+</fieldset><p class="clue-feedback" id="feedback2" aria-live="polite"></p><div class="detective-hint" id="hint2" hidden><strong>Follow this clue:</strong> The final committee size is fixed at r.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>There are r places altogether. If k of them are already filled by Department A, exactly r−k places remain for Department B. The second number is forced; it is not an independent choice.</p></details>
+<p>For one fixed value of k:</p>
+<div class="math-block">\[\binom mk\]</div>
+<p>chooses the Department A members, while</p>
+<div class="math-block">\[\binom n{r-k}\]</div>
+<p>chooses the Department B members.</p>
+<div class="question-card"><fieldset><legend>Clue 3 · Why do these two counts multiply?</legend>
+<label class="choice"><input type="radio" name="q3" value="0"><span>A. Every valid A-selection can be combined with every valid B-selection.</span></label>
+<label class="choice"><input type="radio" name="q3" value="1"><span>B. The same people are being chosen twice.</span></label>
+<label class="choice"><input type="radio" name="q3" value="2"><span>C. Multiplication is automatic whenever binomial coefficients appear.</span></label>
+</fieldset><p class="clue-feedback" id="feedback3" aria-live="polite"></p><div class="detective-hint" id="hint3" hidden><strong>Follow this clue:</strong> First choose the A-part of the committee; then choose the B-part.</div></div>
+<p>Thus the number of committees with exactly k members from Department A is</p>
+<div class="math-block">\[\binom mk\binom n{r-k}.\]</div>
+<div class="micro"><p><strong>Small step 2.</strong> Why does the union of the two selected subgroups identify one unique final committee?</p><details><summary>Open the answer</summary><p>The source groups are disjoint. So from the final committee we can recover exactly which selected members came from A and which came from B. No information is lost when the two subgroup selections are united.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act3"><h2 id="act3">Act 3: Which k-values are actually possible?</h2>
+<p>The convenient sum will run from k=0 to k=r, but not every one of those values must be feasible when m or n is small.</p>
+<p>Department A can supply k members only if</p>
+<div class="math-block">\[0\le k\le m.\]</div>
+<p>Department B can supply r−k members only if</p>
+<div class="math-block">\[0\le r-k\le n.\]</div>
+<div class="question-card"><fieldset><legend>Clue 4 · What range satisfies both departments at once?</legend>
+<label class="choice"><input type="radio" name="q4" value="0"><span>A. \(\max(0,r-n)\le k\le\min(m,r)\)</span></label>
+<label class="choice"><input type="radio" name="q4" value="1"><span>B. \(0\le k\le m+n\)</span></label>
+<label class="choice"><input type="radio" name="q4" value="2"><span>C. \(r\le k\le m\)</span></label>
+</fieldset><p class="clue-feedback" id="feedback4" aria-live="polite"></p><div class="detective-hint" id="hint4" hidden><strong>Follow this clue:</strong> Rewrite \(r-k\le n\) as a lower bound on k, and combine all lower and upper bounds.</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>From \(r-k\le n\) we get \(k\ge r-n\). Together with k≥0, the lower bound is \(\max(0,r-n)\). The upper conditions are k≤m and k≤r, so the upper bound is \(\min(m,r)\).</p></details>
+<div class="math-block">\[\boxed{\max(0,r-n)\le k\le\min(m,r)}.\]</div>
+<div class="micro"><p><strong>Small step 3.</strong> If m=3, n=5 and r=6, what k-values are feasible?</p><details><summary>Open the answer</summary><p>The lower bound is \(\max(0,6-5)=1\), and the upper bound is \(\min(3,6)=3\). So k=1,2,3 are feasible.</p></details></div>
+<p>With the standard zero convention, impossible choices contribute zero:</p>
+<div class="math-block">\[\binom ab=0\qquad\text{when }b<0\text{ or }b>a.\]</div>
+<p>That is why the compact version can safely be written from k=0 to k=r.</p>
+</section>
+
+<section class="act white" aria-labelledby="act4"><h2 id="act4">Act 4: Add the composition classes</h2>
+<p>Every r-person committee has exactly one value of k: the number of its members from Department A. Therefore different k-values describe non-overlapping classes, and together the classes contain every possible committee.</p>
+<div class="question-card"><fieldset><legend>Clue 5 · Why are we allowed to sum the products over k?</legend>
+<label class="choice"><input type="radio" name="q5" value="0"><span>A. Every committee has one unique A-count k, so the classes are disjoint and exhaustive.</span></label>
+<label class="choice"><input type="radio" name="q5" value="1"><span>B. Every committee appears once for every possible k.</span></label>
+<label class="choice"><input type="radio" name="q5" value="2"><span>C. Binomial coefficients may always be added after multiplying them.</span></label>
+</fieldset><p class="clue-feedback" id="feedback5" aria-live="polite"></p><div class="detective-hint" id="hint5" hidden><strong>Follow this clue:</strong> Take one fixed committee and count how many of its members belong to Department A.</div></div>
+<p>Counting by composition gives</p>
+<div class="math-block">\[\sum_{k=0}^{r}\binom mk\binom n{r-k}.\]</div>
+<p>Act 1 counted the same collection directly as \(\binom{m+n}{r}\). Hence</p>
+<div class="math-block">\[\boxed{\sum_{k=0}^{r}\binom mk\binom n{r-k}=\binom{m+n}{r}}.\]</div>
+<p>The feasible-range version is</p>
+<div class="math-block">\[\sum_{k=\max(0,r-n)}^{\min(m,r)}\binom mk\binom n{r-k}=\binom{m+n}{r}.\]</div>
+<div class="evidence success-evidence"><strong>The main counting idea:</strong> one joint committee can be counted globally, or split according to how many members came from Department A. Vandermonde's identity says those two descriptions count the same collection.</div>
+
+<div class="graph-card" id="visual-lab">
+  <div class="graph-head"><span class="mini-label">Vandermonde lab · one committee pool, many composition classes</span>Change m, n and r; then inspect one value of k</div>
+  <div class="lab-controls">
+    <div class="control-row"><label for="m">Department A size m: <output id="m-value">4</output></label><input type="range" id="m" min="0" max="6" value="4" step="1"></div>
+    <div class="control-row"><label for="n">Department B size n: <output id="n-value">5</output></label><input type="range" id="n" min="0" max="6" value="5" step="1"></div>
+    <div class="control-row"><label for="r">Committee size r: <output id="r-value">4</output></label><input type="range" id="r" min="0" max="11" value="4" step="1"></div>
+    <div class="control-row"><label for="k">Members from A, k: <output id="k-value">2</output></label><input type="range" id="k" min="0" max="4" value="2" step="1"><button type="button" id="squares-case">Load sum-of-squares case</button></div>
+  </div>
+  <div class="formula-live" id="formula-live"></div>
+  <div class="dept-grid">
+    <div class="dept-box"><h3>Department A</h3><div class="token-row" id="dept-a"></div><p id="count-a"></p></div>
+    <div class="dept-box"><h3>Department B</h3><div class="token-row" id="dept-b"></div><p id="count-b"></p></div>
+  </div>
+  <div class="table-wrap" style="padding:0 18px"><table><thead><tr><th>k</th><th>choose from A</th><th>choose from B</th><th>product</th><th>status</th></tr></thead><tbody id="composition-rows"></tbody></table></div>
+  <div class="count-strip" id="count-strip"></div>
+  <div style="padding:0 18px 14px"><h3 style="margin-bottom:8px">Sample committees for the selected k</h3><div id="committee-samples"></div></div>
+  <p class="lab-message" id="lab-status"></p>
+</div>
+<div class="micro"><p><strong>Small step 4.</strong> What do the zero rows in the lab mean?</p><details><summary>Open the answer</summary><p>They represent proposed splits that ask one department for an impossible number of people. The zero convention lets those terms remain in the compact sum without changing its value.</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act5"><h2 id="act5">Act 5: Recover the sum-of-squares identity</h2>
+<p>Vandermonde's identity contains the previous sum-of-squares result as a special case.</p>
+<p>Set both department sizes equal to N and choose a committee of size N:</p>
+<div class="math-block">\[m=n=N,\qquad r=N.\]</div>
+<p>Then Vandermonde becomes</p>
+<div class="math-block">\[\sum_{k=0}^{N}\binom Nk\binom N{N-k}=\binom{2N}{N}.\]</div>
+<div class="question-card"><fieldset><legend>Clue 6 · Why does this turn into a sum of squares?</legend>
+<label class="choice"><input type="radio" name="q6" value="0"><span>A. Because \(\binom N{N-k}=\binom Nk\) by binomial symmetry.</span></label>
+<label class="choice"><input type="radio" name="q6" value="1"><span>B. Because each committee is counted twice.</span></label>
+<label class="choice"><input type="radio" name="q6" value="2"><span>C. Because N−k always equals k.</span></label>
+</fieldset><p class="clue-feedback" id="feedback6" aria-live="polite"></p><div class="detective-hint" id="hint6" hidden><strong>Follow this clue:</strong> Recall \(\binom Na=\binom N{N-a}\).</div></div>
+<p>Using symmetry term by term,</p>
+<div class="math-block">\[\binom N{N-k}=\binom Nk,\]</div>
+<p>so</p>
+<div class="math-block">\[\boxed{\sum_{k=0}^{N}\binom Nk^2=\binom{2N}{N}}.\]</div>
+<div class="micro"><p><strong>Small step 5.</strong> Does Vandermonde require the two source groups to have equal sizes?</p><details><summary>Open the answer</summary><p>No. Equal group sizes are only the special choice that produces the square-sum identity. Vandermonde itself allows any nonnegative m and n.</p></details></div>
+</section>
+
+<section class="act white" aria-labelledby="act6"><h2 id="act6">Act 6: Stress-test an impossible committee</h2>
+<p>Suppose r&gt;m+n. Then the requested committee is larger than the entire combined pool.</p>
+<div class="question-card"><fieldset><legend>Clue 7 · What happens to both sides when r&gt;m+n?</legend>
+<label class="choice"><input type="radio" name="q7" value="0"><span>A. Both sides are zero.</span></label>
+<label class="choice"><input type="radio" name="q7" value="1"><span>B. The left side is positive but the right side is zero.</span></label>
+<label class="choice"><input type="radio" name="q7" value="2"><span>C. The identity stops being meaningful.</span></label>
+</fieldset><p class="clue-feedback" id="feedback7" aria-live="polite"></p><div class="detective-hint" id="hint7" hidden><strong>Follow this clue:</strong> Can any split k and r−k fit inside groups of total size m+n?</div></div>
+<details class="reason"><summary>Open the reasoning</summary><p>The right side is \(\binom{m+n}{r}=0\). On the left, every proposed split requires too many people from at least one department, so every product contains a zero binomial coefficient. The whole sum is also zero.</p></details>
+<div class="micro"><p><strong>Small step 6.</strong> What happens at r=0?</p><details><summary>Open the answer</summary><p>There is exactly one committee: the empty committee. The only nonzero split is k=0, giving \(\binom m0\binom n0=1\), while the right side is \(\binom{m+n}{0}=1\).</p></details></div>
+</section>
+
+<section class="act" aria-labelledby="act7"><h2 id="act7">Act 7: Coefficient proof, one step at a time</h2>
+<p>The counting proof already proves the identity. Now verify it algebraically using</p>
+<div class="math-block">\[(1+t)^m(1+t)^n=(1+t)^{m+n}.\]</div>
+
+<div class="step-box"><strong>Step 1 · Expand each factor separately.</strong>
+<div class="math-block">\[(1+t)^m=\sum_{k=0}^{m}\binom mk t^k,\]</div>
+<p>and use a different index for the second factor:</p>
+<div class="math-block">\[(1+t)^n=\sum_{j=0}^{n}\binom nj t^j.\]</div>
+<div class="why"><strong>Why use k and j?</strong> The two factors make independent exponent choices. Separate index letters prevent us from accidentally treating them as the same choice.</div></div>
+
+<div class="micro"><p><strong>Small step 7.</strong> What power of t appears when \(\binom mk t^k\) is multiplied by \(\binom nj t^j\)?</p><details><summary>Open the answer</summary><p>The powers multiply as \(t^kt^j=t^{k+j}\), so the exponent is k+j and the coefficient contribution is \(\binom mk\binom nj\).</p></details></div>
+
+<div class="step-box"><strong>Step 2 · Multiply the two expansions.</strong>
+<div class="math-block">\[
+(1+t)^m(1+t)^n
+=\left(\sum_{k=0}^{m}\binom mk t^k\right)
+ \left(\sum_{j=0}^{n}\binom nj t^j\right).
+\]</div>
+<p>A typical product term is</p>
+<div class="math-block">\[\binom mk\binom nj t^{k+j}.\]</div></div>
+
+<div class="micro"><p><strong>Small step 8.</strong> Which pairs of exponents contribute to the coefficient of \(t^r\)?</p><details><summary>Open the answer</summary><p>Exactly the pairs satisfying \(k+j=r\). Once k is chosen, j is forced to be r−k.</p></details></div>
+
+<div class="step-box"><strong>Step 3 · Replace j by r−k.</strong>
+<p>For the terms that produce \(t^r\),</p>
+<div class="math-block">\[j=r-k.\]</div>
+<p>So the coefficient contribution associated with k is</p>
+<div class="math-block">\[\binom mk\binom n{r-k}.\]</div>
+<div class="why"><strong>Why is the second index not independent?</strong> We are no longer looking at every product term; we are selecting only those whose exponents add to the fixed target r.</div></div>
+
+<div class="micro"><p><strong>Small step 9.</strong> Which inequalities make one such term genuinely feasible?</p><details><summary>Open the answer</summary><p>We need \(0\le k\le m\) and \(0\le r-k\le n\). Equivalently, \(\max(0,r-n)\le k\le\min(m,r)\).</p></details></div>
+
+<div class="step-box"><strong>Step 4 · Add every contribution to t^r.</strong>
+<p>Coefficients of the same power add, so</p>
+<div class="math-block">\[
+[t^r]\big((1+t)^m(1+t)^n\big)
+=\sum_{k=0}^{r}\binom mk\binom n{r-k}.
+\]</div>
+<div class="why"><strong>Why is the compact range 0≤k≤r allowed?</strong> If k&gt;m or r−k&gt;n, the corresponding binomial coefficient is zero. Impossible exponent choices therefore contribute nothing.</div></div>
+
+<div class="micro"><p><strong>Small step 10.</strong> If we instead wrote only the nonzero terms, what would the limits be?</p><details><summary>Open the answer</summary><p>They would be \(k=\max(0,r-n)\) through \(k=\min(m,r)\). This is the same feasible range found combinatorially.</p></details></div>
+
+<div class="step-box"><strong>Step 5 · Simplify the product before reading the right coefficient.</strong>
+<p>Powers with the same base add exponents:</p>
+<div class="math-block">\[(1+t)^m(1+t)^n=(1+t)^{m+n}.\]</div>
+<p>By the binomial theorem,</p>
+<div class="math-block">\[(1+t)^{m+n}=\sum_{q=0}^{m+n}\binom{m+n}{q}t^q.\]</div>
+<p>Therefore</p>
+<div class="math-block">\[[t^r](1+t)^{m+n}=\binom{m+n}{r}.\]</div></div>
+
+<div class="micro"><p><strong>Small step 11.</strong> Why may we equate the two coefficient expressions?</p><details><summary>Open the answer</summary><p>The two polynomial expressions are equal for every t. Equal polynomials have equal coefficients of each power, including the coefficient of \(t^r\).</p></details></div>
+
+<div class="step-box"><strong>Step 6 · Equate the coefficients of t^r.</strong>
+<div class="math-block">\[
+\sum_{k=0}^{r}\binom mk\binom n{r-k}
+=\binom{m+n}{r}.
+\]</div>
+<p>Thus</p>
+<div class="math-block">\[\boxed{\sum_{k=0}^{r}\binom mk\binom n{r-k}=\binom{m+n}{r}}.\]</div>
+</div>
+
+<h3>Full coefficient calculation in one chain</h3>
+<div class="math-block">\[
+\begin{aligned}
+(1+t)^m(1+t)^n
+&=\left(\sum_{k=0}^{m}\binom mk t^k\right)
+  \left(\sum_{j=0}^{n}\binom nj t^j\right),\\[4pt]
+[t^r]\big((1+t)^m(1+t)^n\big)
+&=\sum_{k=0}^{r}\binom mk\binom n{r-k},\\[4pt]
+(1+t)^m(1+t)^n
+&=(1+t)^{m+n},\\[4pt]
+[t^r](1+t)^{m+n}
+&=\binom{m+n}{r}.
+\end{aligned}
+\]</div>
+<div class="notes-box"><label for="notes">Your detective note · Explain Vandermonde's identity without algebra. Then explain why the coefficient proof forces the second exponent to be r−k.</label><textarea class="field-notes" id="notes" placeholder="Without algebra: count the same r-person committee by... For the coefficient proof: to make t^r, the exponents must..."></textarea></div>
+</section>
+
+<section class="report" aria-labelledby="report"><h2 id="report">Final case report</h2>
+<div class="evidence success-evidence">
+<p>For nonnegative integers m and n, using the usual zero convention for impossible binomial choices,</p>
+<div class="math-block">\[\boxed{\sum_{k=0}^{r}\binom mk\binom n{r-k}=\binom{m+n}{r}}.\]</div>
+<p><strong>Why it makes sense:</strong> choose r people from two disjoint departments. Globally there are \(\binom{m+n}{r}\) committees.</p>
+<p><strong>Why each summand appears:</strong> if exactly k members come from Department A, then r−k must come from Department B, giving \(\binom mk\binom n{r-k}\).</p>
+<p><strong>Why the terms add:</strong> every committee has one unique value of k.</p>
+<p><strong>True feasible range:</strong> \(\max(0,r-n)\le k\le\min(m,r)\). The zero convention lets us write the cleaner range 0≤k≤r.</p>
+<p><strong>Special case:</strong> m=n=N and r=N gives the sum-of-squares identity.</p>
+<p><strong>Why the algebra agrees:</strong> the coefficient of \(t^r\) in the product comes from exponent pairs k and r−k.</p>
+</div>
+<div class="actions"><button class="primary" id="check" type="button">Check my clues</button><button id="show-reasons" type="button">Open all explanations</button><button id="print" type="button">Print / Save as PDF</button></div>
+<p class="score" id="score" aria-live="polite">Choose an answer to each of the 7 clues, then check your reasoning.</p>
+</section>
+<footer><span>CASE FILE #44 · ONE COMMITTEE, TWO DEPARTMENTS, ONE UNIQUE SPLIT</span></footer>
+</main>
+<script>
+'use strict';
+const answerKeys=[0,0,0,0,0,0,0];
+const answerReasons=[
+  'The two disjoint departments form one pool of m+n people, from which r are chosen.',
+  'The total size is fixed at r, so after k places are filled from A, exactly r−k remain for B.',
+  'For fixed k, any valid A-subset can be paired with any valid B-subset, and their union is unique.',
+  'The lower bound is max(0,r−n) and the upper bound is min(m,r).',
+  'Each committee has one unique number k of members from Department A, so the classes partition the full collection.',
+  'With equal group sizes N and r=N, binomial symmetry turns C(N,N−k) into C(N,k).',
+  'If r exceeds m+n, no committee exists; every split is impossible, so both sides are zero.'
+];
+const byId=id=>document.getElementById(id);
+function choose(n,r){
+  if(!Number.isInteger(n)||!Number.isInteger(r)||n<0||r<0||r>n)return 0;
+  r=Math.min(r,n-r);let c=1;
+  for(let i=1;i<=r;i++)c=c*(n-i+1)/i;
+  return Math.round(c);
+}
+function groups(n,r){
+  if(r<0||r>n)return [];
+  const result=[];
+  function visit(start,a){
+    if(a.length===r){result.push(a.slice());return;}
+    for(let i=start;i<n;i++){a.push(i);visit(i+1,a);a.pop();}
+  }
+  visit(0,[]);return result;
+}
+function feasible(m,n,r,k){return k>=0&&k<=m&&r-k>=0&&r-k<=n;}
+function labelPeople(prefix,indices){return indices.map(i=>prefix+(i+1));}
+function renderTokens(prefix,count,cls=''){
+  if(count===0)return '<span class="small-note">No employees</span>';
+  return Array.from({length:count},(_,i)=>'<span class="token '+cls+'">'+prefix+(i+1)+'</span>').join('');
+}
+function updateLab(){
+  const m=Number(byId('m').value),n=Number(byId('n').value);
+  const maxR=m+n+2;
+  byId('r').max=String(maxR);
+  let r=Math.min(maxR,Number(byId('r').value));
+  byId('r').value=String(r);
+  byId('k').max=String(r);
+  let k=Math.min(r,Number(byId('k').value));
+  byId('k').value=String(k);
+  byId('m-value').textContent=m;byId('n-value').textContent=n;byId('r-value').textContent=r;byId('k-value').textContent=k;
+  byId('dept-a').innerHTML=renderTokens('A',m);
+  byId('dept-b').innerHTML=renderTokens('B',n,'b');
+  const aCount=choose(m,k),bCount=choose(n,r-k),term=aCount*bCount;
+  byId('count-a').innerHTML='Selected from A: <strong>'+k+'</strong>. Choices: <strong>'+aCount+'</strong> = C('+m+','+k+').';
+  byId('count-b').innerHTML='Selected from B: <strong>'+(r-k)+'</strong>. Choices: <strong>'+bCount+'</strong> = C('+n+','+(r-k)+').';
+  const low=Math.max(0,r-n),high=Math.min(m,r);
+  const rows=[];let sum=0;
+  for(let x=0;x<=r;x++){
+    const ca=choose(m,x),cb=choose(n,r-x),p=ca*cb;sum+=p;
+    const ok=feasible(m,n,r,x);
+    rows.push('<tr class="'+(x===k?'current-row ':'')+(ok?'':'zero-row')+'"><td>'+x+'</td><td>C('+m+','+x+') = '+ca+'</td><td>C('+n+','+(r-x)+') = '+cb+'</td><td>'+p+'</td><td>'+(ok?'feasible':'zero by convention')+'</td></tr>');
+  }
+  byId('composition-rows').innerHTML=rows.join('');
+  const global=choose(m+n,r);
+  byId('formula-live').textContent='Σ C('+m+', k) C('+n+', '+r+'−k) = C('+(m+n)+', '+r+')   →   '+sum+' = '+global;
+  const rangeText=low<=high?(low+' to '+high):'none';
+  byId('count-strip').textContent='Feasible k range: '+rangeText+'     |     sum of composition classes = '+sum+'     |     global count = '+global;
+  const aGroups=groups(m,k),bGroups=groups(n,r-k);const samples=[];
+  if(aGroups.length&&bGroups.length){
+    outer: for(const a of aGroups){for(const b of bGroups){const names=[...labelPeople('A',a),...labelPeople('B',b)];samples.push('<div class="committee">{ '+(names.length?names.join(', '):'empty committee')+' }</div>');if(samples.length>=20)break outer;}}
+  }
+  byId('committee-samples').innerHTML=samples.join('')||'<p class="small-note">No committees for this selected k; this is an impossible split.</p>';
+  byId('lab-status').textContent=feasible(m,n,r,k)
+    ? 'For k='+k+', the product '+aCount+' × '+bCount+' = '+term+' counts exactly the committees with that composition.'
+    : 'For k='+k+', at least one department is asked for too many people, so this term is 0. The compact sum may still include it.';
+}
+function checkClues(){
+  let correct=0,unanswered=0;
+  answerKeys.forEach((key,i)=>{
+    const q=i+1,chosen=document.querySelector('input[name="q'+q+'"]:checked'),out=byId('feedback'+q),hint=byId('hint'+q);
+    if(!chosen){unanswered++;out.textContent='Choose an option, then check again.';out.style.color='#92400e';hint.hidden=true;}
+    else if(Number(chosen.value)===key){correct++;out.textContent='Correct. '+answerReasons[i];out.style.color='#15803d';hint.hidden=true;}
+    else{out.textContent='Not yet. Use the clue below and try again.';out.style.color='#b91c1c';hint.hidden=false;}
+  });
+  byId('score').textContent=correct+' / 7 correct. '+(unanswered?unanswered+' still unanswered. ':'')+(correct===7?'Case solved: you have checked the double count, the feasible range, the special case, and the coefficient proof.':'Review the clues and check again whenever you are ready.');
+}
+['m','n','r','k'].forEach(id=>byId(id).addEventListener('input',updateLab));
+byId('squares-case').addEventListener('click',()=>{byId('m').value='4';byId('n').value='4';byId('r').value='4';byId('k').value='2';updateLab();});
+byId('check').addEventListener('click',checkClues);
+byId('show-reasons').addEventListener('click',()=>document.querySelectorAll('.reason,.micro details').forEach(d=>d.open=true));
+byId('print').addEventListener('click',()=>window.print());
+let printStates=[];
+window.addEventListener('beforeprint',()=>{printStates=Array.from(document.querySelectorAll('details'),d=>[d,d.open]);document.querySelectorAll('.reason,.micro details').forEach(d=>d.open=true);});
+window.addEventListener('afterprint',()=>printStates.forEach(([d,open])=>d.open=open));
+updateLab();
+</script>
+</body></html>

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- ADDED-INQUIRY-START -->
+<style>
+.added-clue{margin:22px 0;background:white;border:1px solid #cbd5e1;border-radius:4px;padding:17px}
+.added-clue fieldset{border:0;padding:0;margin:0;min-width:0}
+.added-clue legend{font-weight:bold;font-size:18px;line-height:1.65;margin-bottom:14px}
+.added-clue .added-choice{display:flex;gap:12px;align-items:flex-start;font:14px/1.7 Inter,Arial,sans-serif;padding:12px;margin-bottom:9px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer}
+.added-clue .added-choice:has(input:checked){background:#eef2ff;border-color:#6366f1}
+.added-clue input{flex:0 0 auto;margin-top:5px;accent-color:#4338ca}
+.added-clue .added-feedback{font:600 14px/1.7 Inter,Arial,sans-serif}
+.added-clue .added-feedback:empty{display:none}
+.added-clue details{font:15px/1.9 Inter,Arial,sans-serif;margin:16px 0 0;padding:12px 16px;background:#f1f5f9;border-left:3px solid #818cf8}
+.added-clue summary{color:#3730a3;font-weight:600;cursor:pointer}
+@media(max-width:650px){.added-clue{padding:14px}.added-clue legend{font-size:17px}}
+@media print{.added-clue{break-inside:avoid}.added-clue button,.added-clue .added-feedback{display:none}}
+</style>
+<!-- ADDED-INQUIRY-END -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math Detective: Case File 24 — Circle Tangent and Radius</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.MathJax={
+      tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+      options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;padding:32px 16px;color:#1e293b;background:#e2e8f0;
+      background-image:radial-gradient(#cbd5e1 1px,transparent 1px);
+      background-size:20px 20px;font-family:Inter,Arial,sans-serif
+    }
+    .case-file{
+      max-width:896px;margin:12px auto;position:relative;overflow:hidden;
+      border-radius:4px;background:#fdfbf7;box-shadow:0 10px 25px #0000001a;
+      font:17px/1.8 "Courier Prime",monospace
+    }
+    .stamp{
+      position:absolute;top:20px;right:20px;border:4px solid #dc2626;color:#dc2626;
+      font-size:22px;font-weight:bold;padding:4px 16px;transform:rotate(-15deg);
+      opacity:.2;pointer-events:none
+    }
+    header{padding:28px 32px;background:#1e293b;color:#f1f5f9;border-bottom:4px solid #0f172a}
+    h1{margin:0;font:700 clamp(23px,4.5vw,31px)/1.35 Inter,Arial,sans-serif;letter-spacing:1px}
+    .subject{color:#cbd5e1;margin:10px 0 7px}
+    .mission{font:14px/1.75 Inter,Arial,sans-serif;margin:0;max-width:725px}
+    .briefing{background:#312e81;color:#e0e7ff;padding:18px 32px;font:14px/1.75 Inter,Arial,sans-serif}
+    .briefing p{margin:0}
+    .act,.report{padding:32px 40px;border-bottom:1px solid #e2e8f0}
+    .act.white{background:#fff}.report{background:#f8fafc}
+    h2{margin:0 0 20px;font:700 21px/1.5 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.7px}
+    h3{font:700 17px/1.6 Inter,Arial,sans-serif;margin:24px 0 10px}
+    p{margin:13px 0}.lead-question{font-weight:bold;font-size:19px}
+    .mini-label{font:700 11px/1.6 Inter,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+    .evidence{padding:17px 20px;margin:18px 0;background:#eef2ff;border-left:4px solid #6366f1;font:15px/1.85 Inter,Arial,sans-serif}
+    .evidence p:first-child{margin-top:0}.evidence p:last-child{margin-bottom:0}
+    .warning-evidence{background:#fff7ed;border-left-color:#f97316}
+    .success-evidence{background:#f0fdf4;border-left-color:#22c55e}
+    .question-card{background:#fff;border:1px solid #e2e8f0;padding:17px;margin:18px 0;border-radius:4px}
+    .question-card label{display:block;font-weight:bold;margin-bottom:9px}
+    .answer-line{display:flex;align-items:center;gap:8px}
+    .hole{min-width:0;width:100%;padding:9px 10px;font:14px Inter,Arial,sans-serif;border:2px dashed #94a3b8;border-radius:4px;background:#f1f5f9;color:#1e293b;cursor:pointer}
+    .hole:focus{outline:3px solid #c7d2fe;border-color:#4f46e5;background:#fff}
+    .hole.correct{border:2px solid #16a34a;background:#f0fdf4;color:#15803d}
+    .hole.incorrect{border:2px solid #dc2626;background:#fef2f2;color:#b91c1c}
+    .feedback-icon{width:25px;flex-shrink:0;font:20px Inter,Arial,sans-serif}
+    .detective-hint{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 13px;margin-top:12px;font:14px/1.7 Inter,Arial,sans-serif;color:#92400e}
+    [hidden]{display:none!important}
+    .notes-box{background:#eef2ff;border-left:4px solid #818cf8;padding:13px 16px;margin:23px 0 5px}
+    .notes-box label{display:block;font:600 14px/1.75 Inter,Arial,sans-serif;color:#312e81}
+    .field-notes{display:block;width:100%;min-height:100px;padding:12px;margin:9px 0 0;background:#fefce8;border:1px solid #fde047;border-left:4px solid #eab308;border-radius:4px;font:16px/1.7 "Courier Prime",monospace;color:#3f3f46;resize:vertical}
+    .field-notes:focus{outline:3px solid #fde68a}.field-notes::placeholder{color:#737373}
+    .condition-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+    .condition{background:#fff;border:1px solid #cbd5e1;border-top:4px solid #6366f1;padding:13px;font:14px/1.75 Inter,Arial,sans-serif}
+    .condition strong{display:block;margin-bottom:6px}
+    .math-block{overflow-x:auto;padding:3px 0}
+    .table-wrap{overflow-x:auto;margin:17px 0}
+    table{width:100%;border-collapse:collapse;font:14px/1.75 Inter,Arial,sans-serif}
+    th,td{text-align:left;padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top}
+    th{background:#f1f5f9;font-weight:600}
+    .graph-card{margin:20px 0;border:1px solid #cbd5e1;border-radius:5px;overflow:hidden;background:#fff}
+    .graph-head{padding:13px 18px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font:600 14px/1.7 Inter,Arial,sans-serif}
+    .graph-head .mini-label{display:block;margin-bottom:4px}
+    .case-buttons{display:flex;gap:8px;flex-wrap:wrap;padding:13px 18px;border-bottom:1px solid #e2e8f0}
+    .case-buttons button,.control-row button{padding:8px 12px;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc;color:#334155;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    .case-buttons button[aria-pressed="true"]{background:#4338ca;color:#fff;border-color:#4338ca}
+    button:focus-visible{outline:3px solid #a5b4fc;outline-offset:3px}
+    .lab-controls{padding:13px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif}
+    .control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}
+    .control-row label{min-width:190px;font-weight:600}.control-row input{flex:1;min-width:130px;accent-color:#4338ca}
+    .control-row button{background:#fff;color:#4338ca}
+    .legend{padding:10px 18px;display:flex;gap:15px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;font:12px/1.7 Inter,Arial,sans-serif}
+    .swatch{display:inline-block;width:15px;height:4px;margin-right:5px;vertical-align:middle}
+    .formula-live{padding:14px 18px;background:#eef2ff;color:#312e81;text-align:center;font:600 14px/1.8 Inter,Arial,sans-serif;border-bottom:1px solid #e2e8f0}
+    .output-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#e2e8f0}
+    .output-cell{padding:12px 13px;background:#f8fafc;font:12px/1.7 Inter,Arial,sans-serif}
+    .output-cell strong{display:block;font-size:17px;color:#312e81;font-variant-numeric:tabular-nums}
+    .lab-message{padding:13px 18px;background:#eef2ff;color:#312e81;font:14px/1.8 Inter,Arial,sans-serif}
+    figure{margin:0}svg{display:block;width:100%;height:auto;background:#fff}
+    svg text{font:14px Inter,Arial,sans-serif;fill:#475569}.plot-label{font-size:16px;font-weight:600;fill:#1e293b}
+    .axis{stroke:#cbd5e1;stroke-width:1.2}.grid-line{stroke:#e2e8f0;stroke-width:1}
+    .circle-main{fill:#eef2ff;fill-opacity:.48;stroke:#4f46e5;stroke-width:4}
+    .line-main{fill:none;stroke:#ea580c;stroke-width:4;stroke-linecap:round}
+    .line-tangent{fill:none;stroke:#16a34a;stroke-width:4;stroke-linecap:round}
+    .true-tangent{fill:none;stroke:#16a34a;stroke-width:2.5;stroke-dasharray:8 5}
+    .radius-line{fill:none;stroke:#4f46e5;stroke-width:4;stroke-linecap:round}
+    .distance-line{fill:none;stroke:#0f766e;stroke-width:4;stroke-linecap:round}
+    .along-line{fill:none;stroke:#ea580c;stroke-width:3;stroke-linecap:round}
+    .test-line{fill:none;stroke:#64748b;stroke-width:2.5;stroke-dasharray:6 4}
+    .right-angle{fill:none;stroke:#0f172a;stroke-width:1.8}
+    .triangle-fill{fill:#14b8a6;fill-opacity:.15}
+    .point-center{fill:#0f172a;stroke:#fff;stroke-width:2}
+    .point-foot{fill:#fff;stroke:#0f172a;stroke-width:2}
+    .point-test{fill:#dc2626;stroke:#fff;stroke-width:2}
+    .point-hit{fill:#16a34a;stroke:#fff;stroke-width:2}
+    .point-second{fill:#2563eb;stroke:#fff;stroke-width:2}
+    figcaption{padding:13px 18px;border-top:1px solid #e2e8f0;font:14px/1.8 Inter,Arial,sans-serif;background:#f8fafc}
+    .small-note{font:13px/1.8 Inter,Arial,sans-serif;color:#64748b}
+    footer{background:#e2e8f0;border-top:4px solid #cbd5e1;padding:23px 32px;display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-family:Inter,Arial,sans-serif}
+    #overall-feedback{flex:1;min-width:210px;font-size:14px;line-height:1.8}
+    .primary-button{padding:12px 18px;border:2px solid #0f172a;background:#1e293b;color:#fff;border-radius:4px;font:700 13px Inter,Arial,sans-serif;cursor:pointer}
+    .primary-button:hover{background:#4338ca}.print-button{padding:12px 15px;background:#fff;color:#334155;border:1px solid #94a3b8;border-radius:4px;font:600 13px Inter,Arial,sans-serif;cursor:pointer}
+    mjx-container[display="true"]{margin:15px 0!important}
+    @media(max-width:650px){
+      body{padding:10px 7px}.case-file{font-size:16px;margin-top:4px}
+      header,.briefing,.act,.report,footer{padding:23px 19px}.stamp{display:none}h2{font-size:19px}
+      .condition-grid{grid-template-columns:1fr}.evidence,.question-card{padding:14px}.lead-question{font-size:17px}
+      .control-row label{min-width:100%}.output-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media print{
+      body{padding:0;background:#fff}.case-file{max-width:none;margin:0;box-shadow:none;font-size:12px}
+      header,.briefing,.act,.report,footer{padding:18px 23px}h1{font-size:24px}h2{font-size:17px}
+      .case-buttons,.lab-controls,footer button{display:none}.graph-card,.question-card,.notes-box{break-inside:avoid}
+      .graph-card svg{max-height:300px}.field-notes{min-height:80px}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
+  </style>
+</head>
+<body>
+<main class="case-file">
+  <div class="stamp" aria-hidden="true">CASE FILE</div>
+  <header>
+    <h1>MATH DETECTIVE: CASE FILE #24</h1>
+    <p class="subject">Subject: Why a Circle’s Tangent Is Perpendicular to Its Radius</p>
+    <p class="mission"><strong>Mission:</strong> Use distance, a right triangle, and one carefully chosen point to explain both directions of the tangent–radius theorem.</p>
+  </header>
+  <div class="briefing"><p><strong>Detective Briefing:</strong> A line may cut a circle twice, touch it once, or miss it. Our first clue is not an intersection coordinate. It is the shortest distance from the center to the line.</p></div>
+  <noscript><div class="evidence warning-evidence">Open this file in a browser with JavaScript enabled to use the visual labs and check your findings. Internet access is needed to format the equations.</div></noscript>
+
+  <section class="act" aria-labelledby="act1">
+    <h2 id="act1">Act 1: Check the Setting</h2>
+    <div class="evidence">
+      <div class="mini-label">The claim</div>
+      <p>Let a circle have center O and radius \(R&gt;0\). Let P be on the circle.</p>
+      <div class="math-block">\[
+        \boxed{
+        \ell\text{ is tangent at }P
+        \iff
+        \ell\text{ passes through }P\text{ and }\ell\perp OP.}
+      \]</div>
+    </div>
+
+    <p class="lead-question">What do the conditions \(R&gt;0\) and “P is on the circle” tell us?</p>
+    <div class="question-card">
+      <label for="hole1">Choose the complete meaning.</label>
+      <div class="answer-line"><select id="hole1" class="hole" aria-describedby="hint1">
+        <option value="">Choose your finding…</option>
+        <option value="nonzero_radius_point">OP = R and OP is a nonzero radius, so it gives a direction from O to P.</option>
+        <option value="p_is_center">P must be the center O.</option>
+        <option value="zero_radius">The radius direction may be the zero vector.</option>
+      </select><span id="feedback1" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint1" class="detective-hint" hidden><strong>Detective hint:</strong> Every circle point is R units from O. What does \(R&gt;0\) then say about OP?</div>
+    </div>
+    <div class="math-block">\[
+      P\text{ on the circle}\Longrightarrow OP=R,
+      \qquad
+      R&gt;0\Longrightarrow OP\ne0.
+    \]</div>
+    <p>If P were not on the circle, a perpendicular through P need not touch the circle. If \(R=0\), the “circle” is only one point and there is no nonzero radius direction. These are not small details; the proof will use both facts.</p>
+
+    <h3>What does tangent mean here?</h3>
+    <p>For a circle, we may call a line tangent when it has exactly one common point with the circle. We will prove why this one-point case is tied to a perpendicular radius.</p>
+  </section>
+
+  <section class="act white" aria-labelledby="act2">
+    <h2 id="act2">Act 2: Find One Measurement for Three Situations</h2>
+    <p>Picture one line cutting the circle, one touching it, and one missing it.</p>
+    <p class="lead-question">What single measurement could tell these three cases apart?</p>
+    <div class="question-card">
+      <label for="hole2">Choose the useful measurement.</label>
+      <div class="answer-line"><select id="hole2" class="hole" aria-describedby="hint2">
+        <option value="">Choose your finding…</option>
+        <option value="center_distance">The perpendicular distance d from the center O to the line.</option>
+        <option value="line_length">The length of the line.</option>
+        <option value="slope_only">Only the slope of the line.</option>
+      </select><span id="feedback2" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint2" class="detective-hint" hidden><strong>Detective hint:</strong> A line is endless, and its slope changes when the picture is rotated. Look for its nearest point to O.</div>
+    </div>
+    <p>Let H be the perpendicular foot from O to a line \(\ell\), and write</p>
+    <div class="math-block">\[
+      OH=d.
+    \]</div>
+
+    <p class="lead-question">Why is H the point of \(\ell\) closest to O?</p>
+    <div class="question-card">
+      <label for="hole3">Take any point \(X\in\ell\). Which equation answers the question?</label>
+      <div class="answer-line"><select id="hole3" class="hole" aria-describedby="hint3">
+        <option value="">Choose your finding…</option>
+        <option value="pythagoras_closest">OX² = OH² + HX² = d² + HX², so OX ≥ d, with equality only at X = H.</option>
+        <option value="all_equal">Every point of the line is the same distance from O.</option>
+        <option value="hx_distance">HX alone is the distance from O to the line.</option>
+      </select><span id="feedback3" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint3" class="detective-hint" hidden><strong>Detective hint:</strong> Triangle OHX is right-angled at H. What nonnegative extra term appears?</div>
+    </div>
+    <div class="math-block">\[
+      OX^2=OH^2+HX^2=d^2+HX^2.
+    \]</div>
+    <p>Moving away from H in either direction makes \(HX^2\) positive, so the distance from O increases. The whole problem is now controlled by the smallest distance d.</p>
+  </section>
+
+  <section class="act" aria-labelledby="act3">
+    <h2 id="act3">Act 3: Let d Compete with R</h2>
+<!-- ADDED-INQUIRY-START -->
+<div class="added-clue" id="extra-1">
+<fieldset><legend>Extra clue 1 · We know OX² = d² + HX². To find where the line meets the circle, what condition should we add?</legend>
+<label class="added-choice"><input type="radio" name="extra-1" value="0"><span>A. HX must equal R, because X is on the line.</span></label>
+<label class="added-choice"><input type="radio" name="extra-1" value="1"><span>B. OX must equal R, because a circle consists of points R units from O.</span></label>
+<label class="added-choice"><input type="radio" name="extra-1" value="2"><span>C. d must equal zero, because every line meeting a circle passes through its center.</span></label>
+</fieldset>
+<button type="button" class="print-button" id="extra-1-check">Check this clue</button>
+<p id="extra-1-feedback" class="added-feedback" role="status" aria-live="polite"></p>
+<p id="extra-1-hint" class="detective-hint" hidden><strong>Hint:</strong> Which distance defines the circle: OX, HX or d?</p>
+<details><summary>Open the reasoning</summary><p>The line condition is already built into the choice of X. To put X on the circle too, require \(OX=R\). Then \(HX^2=R^2-d^2\), so we can count the possible points without finding their full coordinates.</p></details>
+</div>
+<!-- ADDED-INQUIRY-END -->
+    <p>A point X is on the circle exactly when \(OX=R\). Put this into the right-triangle equation:</p>
+    <div class="math-block">\[
+      R^2=d^2+HX^2
+      \quad\Longrightarrow\quad
+      HX^2=R^2-d^2.
+    \]</div>
+
+    <p class="lead-question">Can the sign of \(R^2-d^2\) decide the number of intersections?</p>
+    <div class="question-card">
+      <label for="hole4">Match all three cases.</label>
+      <div class="answer-line"><select id="hole4" class="hole" aria-describedby="hint4">
+        <option value="">Choose your finding…</option>
+        <option value="three_cases">d &lt; R gives two points; d = R gives one point H; d &gt; R gives no point.</option>
+        <option value="reversed_cases">d &lt; R gives no point; d &gt; R gives two points.</option>
+        <option value="always_two">Every line meets a circle twice.</option>
+      </select><span id="feedback4" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint4" class="detective-hint" hidden><strong>Detective hint:</strong> Ask when \(HX^2\) is positive, zero, or negative.</div>
+    </div>
+
+    <div class="table-wrap"><table aria-label="Number of circle-line intersections">
+      <thead><tr><th>Comparison</th><th>Value of \(HX^2\)</th><th>What the line does</th></tr></thead>
+      <tbody>
+        <tr><td>\(d&lt;R\)</td><td>Positive</td><td>There are two points on opposite sides of H, each with \(HX=\sqrt{R^2-d^2}\). The line cuts the circle twice.</td></tr>
+        <tr><td>\(d=R\)</td><td>Zero</td><td>Only \(HX=0\) works, so X must be H. The line touches once.</td></tr>
+        <tr><td>\(d&gt;R\)</td><td>Negative</td><td>No real length HX works, so the line misses the circle.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="evidence success-evidence"><div class="math-block">\[
+      \boxed{\ell\text{ is tangent to the circle}\iff d(O,\ell)=R.}
+    \]</div></div>
+
+    <div class="graph-card">
+      <div class="graph-head"><span class="mini-label">Visual lab 1 · one distance controls every case</span>Move the line, rotate it, and move X along it.</div>
+      <div class="case-buttons" aria-label="Choose how the line meets the circle">
+        <button type="button" data-meeting="secant" aria-pressed="false">Two intersections: d &lt; R</button>
+        <button type="button" data-meeting="tangent" aria-pressed="true">One intersection: d = R</button>
+        <button type="button" data-meeting="outside" aria-pressed="false">No intersection: d &gt; R</button>
+      </div>
+      <div class="lab-controls">
+        <div class="control-row"><label for="radius-slider">Circle radius R: <output id="radius-value">2.5</output></label><input id="radius-slider" type="range" min="1" max="3.5" step="0.05" value="2.5"></div>
+        <div class="control-row"><label for="distance-slider">Center-to-line distance d: <output id="distance-value">2.5</output></label><input id="distance-slider" type="range" min="0" max="4.5" step="0.01" value="2.5"></div>
+        <div class="control-row"><label for="line-angle-slider">Normal direction: <output id="line-angle-value">35°</output></label><input id="line-angle-slider" type="range" min="0" max="180" step="1" value="35"></div>
+        <div class="control-row"><label for="along-slider">Move X along \(\ell\): <output id="along-value">1.4</output></label><input id="along-slider" type="range" min="-4" max="4" step="any" value="1.4"></div>
+        <div class="control-row"><button id="x-at-h" type="button">Set X = H</button><button id="x-on-circle" type="button">Put X on the circle</button><button id="reset-classification" type="button">Reset lab</button></div>
+      </div>
+      <div id="classification-formula" class="formula-live"></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:#4f46e5"></span>Circle and radius R</span>
+        <span><span class="swatch" style="background:#ea580c"></span>Line \(\ell\) and HX</span>
+        <span><span class="swatch" style="background:#0f766e"></span>Shortest distance OH = d</span>
+        <span><span class="swatch" style="background:#64748b"></span>OX</span>
+      </div>
+      <figure>
+        <svg viewBox="0 0 760 600" role="img" aria-labelledby="classification-title classification-desc">
+          <title id="classification-title">A line meeting a circle according to its distance from the center</title>
+          <desc id="classification-desc">The perpendicular foot H is the line's closest point to the circle center O.</desc>
+          <g aria-hidden="true">
+            <path d="M50 80 H710 M50 135 H710 M50 190 H710 M50 245 H710 M50 300 H710 M50 355 H710 M50 410 H710 M50 465 H710 M50 520 H710" class="grid-line"/>
+            <path d="M105 40 V560 M160 40 V560 M215 40 V560 M270 40 V560 M325 40 V560 M380 40 V560 M435 40 V560 M490 40 V560 M545 40 V560 M600 40 V560 M655 40 V560" class="grid-line"/>
+            <path d="M50 300 H710 M380 40 V560" class="axis"/>
+          </g>
+          <path id="class-triangle" class="triangle-fill"/>
+          <circle id="class-circle" class="circle-main"/>
+          <path id="class-line" class="line-main"/>
+          <path id="class-oh" class="distance-line"/>
+          <path id="class-hx" class="along-line"/>
+          <path id="class-ox" class="test-line"/>
+          <path id="class-right" class="right-angle"/>
+          <circle id="class-o" r="6" class="point-center"/>
+          <circle id="class-h" r="5" class="point-foot"/>
+          <circle id="class-x" r="7" class="point-test"/>
+          <circle id="class-hit1" r="6" class="point-hit"/>
+          <circle id="class-hit2" r="6" class="point-hit"/>
+          <text id="class-o-label" class="plot-label">O</text>
+          <text id="class-h-label" class="plot-label">H</text>
+          <text id="class-x-label" class="plot-label">X</text>
+          <text id="class-hit1-label" class="plot-label"></text>
+          <text id="class-hit2-label" class="plot-label"></text>
+          <text id="class-line-label" class="plot-label">ℓ</text>
+        </svg>
+        <figcaption>The two green points, one green point, or no green point show the three possible intersection counts. The movable red point X shows \(OX^2=d^2+HX^2\).</figcaption>
+      </figure>
+      <div class="output-grid">
+        <div class="output-cell">Radius R<strong id="read-radius">—</strong></div>
+        <div class="output-cell">Smallest distance d<strong id="read-distance">—</strong></div>
+        <div class="output-cell">R² − d²<strong id="read-difference">—</strong></div>
+        <div class="output-cell">Circle intersections<strong id="read-count">—</strong></div>
+      </div>
+      <div id="classification-message" class="lab-message" aria-live="polite"></div>
+    </div>
+    <div class="notes-box"><label for="notes1">Field notes: Use \(HX^2=R^2-d^2\) to explain all three positions of the line.</label><textarea id="notes1" class="field-notes" placeholder="When d is less than R … When they are equal … When d is greater …"></textarea></div>
+  </section>
+
+  <section class="act white" aria-labelledby="act4">
+    <h2 id="act4">Act 4: Why Must a Tangent at P Be Perpendicular?</h2>
+    <p>Suppose \(\ell\) is tangent at P. It has exactly one circle point, P.</p>
+    <p>Our classification says a one-point line has \(d=R\). It also says its only circle point is the perpendicular foot H.</p>
+
+    <p class="lead-question">What must be true about H and P?</p>
+    <div class="question-card">
+      <label for="hole5">Finish the first direction of the proof.</label>
+      <div class="answer-line"><select id="hole5" class="hole" aria-describedby="hint5">
+        <option value="">Choose your finding…</option>
+        <option value="same_contact">H = P. Since OH is perpendicular to the line, OP is perpendicular to the tangent.</option>
+        <option value="different_points">H and P are two different circle points.</option>
+        <option value="parallel_radius">OP must be parallel to the tangent.</option>
+      </select><span id="feedback5" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint5" class="detective-hint" hidden><strong>Detective hint:</strong> The tangent has only one circle point, while the \(d=R\) case identifies that point as H.</div>
+    </div>
+    <div class="math-block">\[
+      H=P
+      \quad\Longrightarrow\quad
+      \boxed{OP\perp\ell.}
+    \]</div>
+  </section>
+
+  <section class="act" aria-labelledby="act5">
+    <h2 id="act5">Act 5: Check the Converse—and Uniqueness</h2>
+<!-- ADDED-INQUIRY-START -->
+<div class="added-clue" id="extra-2">
+<fieldset><legend>Extra clue 2 · P already lies on the circle. To prove the perpendicular through P is tangent, what must we check next?</legend>
+<label class="added-choice"><input type="radio" name="extra-2" value="0"><span>A. Every other point Q on the line is outside the circle.</span></label>
+<label class="added-choice"><input type="radio" name="extra-2" value="1"><span>B. At least one other point Q on the line is outside the circle.</span></label>
+<label class="added-choice"><input type="radio" name="extra-2" value="2"><span>C. The line passes through P; that fact alone proves tangency.</span></label>
+</fieldset>
+<button type="button" class="print-button" id="extra-2-check">Check this clue</button>
+<p id="extra-2-feedback" class="added-feedback" role="status" aria-live="polite"></p>
+<p id="extra-2-hint" class="detective-hint" hidden><strong>Hint:</strong> A tangent has exactly one circle point. Showing that one chosen Q is outside would not rule out all other intersections.</p>
+<details><summary>Open the reasoning</summary><p>Take an arbitrary \(Q\ne P\) on the perpendicular line. Proving \(OQ&gt;R\) for every such Q leaves P as the only circle point. Right triangle OPQ gives the comparison we need.</p></details>
+</div>
+<!-- ADDED-INQUIRY-END -->
+    <p>Now suppose \(\ell\) passes through P and \(\ell\perp OP\). Choose any other point \(Q\in\ell\).</p>
+    <p class="lead-question">Why can Q not be another point of the circle?</p>
+    <div class="question-card">
+      <label for="hole6">Use right triangle OPQ.</label>
+      <div class="answer-line"><select id="hole6" class="hole" aria-describedby="hint6">
+        <option value="">Choose your finding…</option>
+        <option value="outside_circle">OQ² = OP² + PQ² = R² + PQ² &gt; R², so OQ &gt; R and Q is outside the circle.</option>
+        <option value="on_circle">OQ = R for every Q on the line.</option>
+        <option value="inside_circle">OQ is always less than R.</option>
+      </select><span id="feedback6" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint6" class="detective-hint" hidden><strong>Detective hint:</strong> Because \(Q\ne P\), what can you say about \(PQ^2\)?</div>
+    </div>
+    <div class="math-block">\[
+      OQ^2=OP^2+PQ^2=R^2+PQ^2&gt;R^2.
+    \]</div>
+    <p>Thus every other point of \(\ell\) is outside the circle. Only P lies on both the line and circle, so \(\ell\) is tangent at P.</p>
+
+    <p class="lead-question">Have we also shown that the tangent at P is unique?</p>
+    <div class="question-card">
+      <label for="hole7">Why can there be only one?</label>
+      <div class="answer-line"><select id="hole7" class="hole" aria-describedby="hint7">
+        <option value="">Choose your finding…</option>
+        <option value="unique_perpendicular">OP is nonzero, and through P there is exactly one line perpendicular to the direction OP.</option>
+        <option value="many_perpendiculars">Infinitely many different lines through P are perpendicular to OP.</option>
+        <option value="radius_zero">Uniqueness follows because OP = 0.</option>
+      </select><span id="feedback7" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint7" class="detective-hint" hidden><strong>Detective hint:</strong> Recall what \(R&gt;0\) told us about OP.</div>
+    </div>
+    <div class="evidence success-evidence"><div class="math-block">\[
+      \boxed{
+      \ell\text{ is tangent at }P
+      \iff
+      P\in\ell\text{ and }\ell\perp OP.}
+    \]</div></div>
+
+    <div class="graph-card">
+      <div class="graph-head"><span class="mini-label">Visual lab 2 · pivot a line through P</span>The candidate line always passes through P. Only its direction changes.</div>
+      <div class="case-buttons" aria-label="Choose the candidate line">
+        <button type="button" data-pivot="tangent" aria-pressed="true">Make it perpendicular</button>
+        <button type="button" data-pivot="positive" aria-pressed="false">Tilt by +25°</button>
+        <button type="button" data-pivot="negative" aria-pressed="false">Tilt by −25°</button>
+      </div>
+      <div class="lab-controls">
+        <div class="control-row"><label for="point-angle-slider">Move P around circle: <output id="point-angle-value">35°</output></label><input id="point-angle-slider" type="range" min="0" max="360" step="1" value="35"></div>
+        <div class="control-row"><label for="tilt-slider">Tilt from perpendicular: <output id="tilt-value">0°</output></label><input id="tilt-slider" type="range" min="-45" max="45" step="1" value="0"></div>
+        <div class="control-row"><button id="reset-pivot" type="button">Reset pivot lab</button></div>
+      </div>
+      <div id="pivot-formula" class="formula-live"></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:#4f46e5"></span>Radius OP</span>
+        <span><span class="swatch" style="background:#16a34a"></span>True tangent</span>
+        <span><span class="swatch" style="background:#ea580c"></span>Tilted candidate</span>
+        <span><span class="swatch" style="background:#2563eb"></span>Second point Q</span>
+      </div>
+      <figure>
+        <svg viewBox="0 0 760 560" role="img" aria-labelledby="pivot-title pivot-desc">
+          <title id="pivot-title">A line pivoting through a point P on a circle</title>
+          <desc id="pivot-desc">When the line is perpendicular to radius OP, it has only the point P on the circle. Tilting it creates a second point Q.</desc>
+          <g aria-hidden="true">
+            <path d="M50 60 H710 M50 115 H710 M50 170 H710 M50 225 H710 M50 280 H710 M50 335 H710 M50 390 H710 M50 445 H710 M50 500 H710" class="grid-line"/>
+            <path d="M105 30 V530 M160 30 V530 M215 30 V530 M270 30 V530 M325 30 V530 M380 30 V530 M435 30 V530 M490 30 V530 M545 30 V530 M600 30 V530 M655 30 V530" class="grid-line"/>
+            <path d="M50 280 H710 M380 30 V530" class="axis"/>
+          </g>
+          <circle cx="380" cy="280" r="165" class="circle-main"/>
+          <path id="pivot-true-tangent" class="true-tangent"/>
+          <path id="pivot-line" class="line-tangent"/>
+          <path id="pivot-radius" class="radius-line"/>
+          <path id="pivot-right" class="right-angle"/>
+          <circle cx="380" cy="280" r="6" class="point-center"/>
+          <circle id="pivot-p" r="7" class="point-test"/>
+          <circle id="pivot-q" r="7" class="point-second"/>
+          <text x="391" y="301" class="plot-label">O</text>
+          <text id="pivot-p-label" class="plot-label">P</text>
+          <text id="pivot-q-label" class="plot-label">Q</text>
+        </svg>
+        <figcaption>A nonperpendicular line through P cuts the circle again at Q. In the perpendicular position, Q merges with P and there is only one intersection.</figcaption>
+      </figure>
+      <div class="output-grid">
+        <div class="output-cell">Point P<strong id="read-p">—</strong></div>
+        <div class="output-cell">Direction dot radius<strong id="read-dot">—</strong></div>
+        <div class="output-cell">Second parameter<strong id="read-second">—</strong></div>
+        <div class="output-cell">Intersections<strong id="read-pivot-count">—</strong></div>
+      </div>
+      <div id="pivot-message" class="lab-message" aria-live="polite"></div>
+    </div>
+    <div class="notes-box"><label for="notes2">Field notes: What changes when the line through P is tilted away from the perpendicular position?</label><textarea id="notes2" class="field-notes" placeholder="At 0° tilt … After tilting … The second point Q … Therefore the tangent is unique because …"></textarea></div>
+  </section>
+
+  <section class="act white" aria-labelledby="act6">
+    <h2 id="act6">Act 6: Discover the Tangent Equation</h2>
+    <p>Choose coordinates with \(O=(0,0)\). The circle is</p>
+    <div class="math-block">\[
+      x^2+y^2=R^2.
+    \]</div>
+    <p>Let \(P=(x_0,y_0)\) be the point of contact. We may write</p>
+    <div class="math-block">\[
+      x_0^2+y_0^2=R^2.
+    \]</div>
+    <p class="lead-question">Why is this equation true?</p>
+    <p>Because P lies on the circle, its coordinates must satisfy the circle equation. This is exactly the meaning of “P is on the circle.”</p>
+
+<!-- ADDED-INQUIRY-START -->
+<div class="added-clue" id="extra-3">
+<fieldset><legend>Extra clue 3 · We know the tangent passes through P and is perpendicular to OP. What can turn these two facts into an equation?</legend>
+<label class="added-choice"><input type="radio" name="extra-3" value="0"><span>A. Write the circle equation again for every point of the tangent.</span></label>
+<label class="added-choice"><input type="radio" name="extra-3" value="1"><span>B. Set the dot product of OX and OP to zero.</span></label>
+<label class="added-choice"><input type="radio" name="extra-3" value="2"><span>C. Use PX as the line direction and set its dot product with OP to zero.</span></label>
+</fieldset>
+<button type="button" class="print-button" id="extra-3-check">Check this clue</button>
+<p id="extra-3-feedback" class="added-feedback" role="status" aria-live="polite"></p>
+<p id="extra-3-hint" class="detective-hint" hidden><strong>Hint:</strong> The vector must start at P to describe the line through P. A vector from O would describe a different perpendicular line.</p>
+<details><summary>Open the reasoning</summary><p>Use \(\overrightarrow{PX}=(x-x_0,y-y_0)\) and \(\overrightarrow{OP}=(x_0,y_0)\). For \(X\ne P\), a zero dot product expresses perpendicularity. The point \(X=P\) also satisfies the resulting equation, since PX is then zero.</p></details>
+</div>
+<!-- ADDED-INQUIRY-END -->
+    <p>For a point \(X=(x,y)\) on the tangent, the vector from P to X is \((x-x_0,y-y_0)\). The radius vector is \((x_0,y_0)\).</p>
+    <p class="lead-question">Before using a dot product, what does it tell us?</p>
+    <div class="math-block">\[
+      \mathbf u\cdot\mathbf v
+      =u_1v_1+u_2v_2
+      =|\mathbf u|\,|\mathbf v|\cos\theta.
+    \]</div>
+    <p>The coordinate form lets us calculate. The angle form tells us that two nonzero vectors are perpendicular exactly when their dot product is zero.</p>
+    <p>Since the tangent direction is perpendicular to the radius,</p>
+    <div class="math-block">\[
+      (x-x_0,y-y_0)\cdot(x_0,y_0)=0.
+    \]</div>
+
+    <p class="lead-question">What equation appears when we expand this dot product?</p>
+    <div class="question-card">
+      <label for="hole8">Use \(x_0^2+y_0^2=R^2\).</label>
+      <div class="answer-line"><select id="hole8" class="hole" aria-describedby="hint8">
+        <option value="">Choose your finding…</option>
+        <option value="tangent_equation">xx₀ + yy₀ = R².</option>
+        <option value="circle_again">x² + y² = R² for every point of the tangent.</option>
+        <option value="through_center">xx₀ + yy₀ = 0.</option>
+      </select><span id="feedback8" class="feedback-icon" aria-hidden="true"></span></div>
+      <div id="hint8" class="detective-hint" hidden><strong>Detective hint:</strong> Expand first, then move \(x_0^2+y_0^2\) to the other side.</div>
+    </div>
+    <div class="math-block">\[
+      \begin{aligned}
+      (x-x_0)x_0+(y-y_0)y_0&=0,\\
+      xx_0+yy_0&=x_0^2+y_0^2,\\
+      \boxed{xx_0+yy_0=R^2.}
+      \end{aligned}
+    \]</div>
+    <p>The equation is not a fact to memorize without meaning. Its normal vector is \((x_0,y_0)\), the radius direction.</p>
+
+    <h3>If the center is \((h,k)\)</h3>
+    <p>The same vector idea gives</p>
+    <div class="math-block">\[
+      \boxed{(x_0-h)(x-h)+(y_0-k)(y-k)=R^2.}
+    \]</div>
+    <p>Here the radius direction is \((x_0-h,y_0-k)\).</p>
+  </section>
+
+  <section class="act" aria-labelledby="act7">
+    <h2 id="act7">Act 7: Stress-Test the Idea</h2>
+    <div class="table-wrap"><table aria-label="Assumptions and limits of the tangent theorem">
+      <thead><tr><th>Question</th><th>What happens?</th></tr></thead>
+      <tbody>
+        <tr><td>Why must P lie on the circle?</td><td>Otherwise \(OP\ne R\) in general. The perpendicular through P may cut the circle twice or miss it.</td></tr>
+        <tr><td>Why require \(R&gt;0\)?</td><td>When \(R=0\), OP is the zero vector. It gives no direction and does not select one perpendicular line.</td></tr>
+        <tr><td>Does one intersection always mean tangent for every curve?</td><td>No. For \(p&gt;0\), the line \(y=0\) meets \(y^2=4px\) only at its vertex, but the tangent there is \(x=0\). Our one-point test works for circles because we proved the distance classification.</td></tr>
+        <tr><td>Does an ellipse’s normal usually point to its center?</td><td>No. At \((x_0,y_0)\) on \(\frac{x^2}{a^2}+\frac{y^2}{b^2}=1\), a normal direction is \((\frac{x_0}{a^2},\frac{y_0}{b^2})\), usually different from \((x_0,y_0)\).</td></tr>
+      </tbody>
+    </table></div>
+    <div class="evidence warning-evidence"><p><strong>What is special about a circle?</strong> Every boundary point is the same distance R from one center O. That single fixed distance lets the nearest-point argument control every tangent.</p></div>
+  </section>
+
+  <section class="report" aria-labelledby="report-title">
+    <h2 id="report-title">Final Report: What Is Really Happening?</h2>
+    <div class="math-block">\[
+      \boxed{
+      \ell\text{ is tangent at }P
+      \iff
+      P\in\ell\text{ and }\ell\perp OP.}
+    \]</div>
+    <div class="table-wrap"><table aria-label="Complete tangent-radius reasoning">
+      <thead><tr><th>Clue</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Perpendicular foot H</td><td>H is the unique point of the line closest to O because \(OX^2=OH^2+HX^2\).</td></tr>
+        <tr><td>Compare d and R</td><td>The equation \(HX^2=R^2-d^2\) gives two, one, or zero intersections.</td></tr>
+        <tr><td>Tangent \(\Rightarrow\) perpendicular</td><td>In the one-point case \(d=R\), the contact point is the foot H, so the radius is perpendicular.</td></tr>
+        <tr><td>Perpendicular \(\Rightarrow\) tangent</td><td>For every other Q on the line, \(OQ^2=R^2+PQ^2&gt;R^2\), so Q is outside.</td></tr>
+        <tr><td>Uniqueness</td><td>Through P there is only one line perpendicular to the nonzero direction OP.</td></tr>
+        <tr><td>Coordinate equation</td><td>\(xx_0+yy_0=R^2\) says the line through P has radius vector \((x_0,y_0)\) as its normal.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="notes-box"><label for="notes3">Your final explanation: Start with H as the closest point, classify the line using d and R, and then prove both directions of the boxed theorem.</label><textarea id="notes3" class="field-notes" placeholder="For any X on the line … Therefore d compared with R … If the line is tangent … Conversely … The tangent is unique …"></textarea></div>
+  </section>
+
+  <footer>
+    <div id="overall-feedback" role="status" aria-live="polite">Awaiting your findings: 8 clues to check. Written notes are for discussion, not an automatic score.</div>
+    <button id="submit-findings" type="button" class="primary-button">Submit Findings</button>
+    <button id="print-case" type="button" class="print-button">Print Case File</button>
+  </footer>
+<!-- ADDED-INQUIRY-START -->
+<script>
+(function(){
+ const keys=[1,0,2];
+ function check(i){
+  const id='extra-'+(i+1),card=document.getElementById(id);
+  const chosen=card.querySelector('input[type="radio"]:checked');
+  const ok=!!chosen&&Number(chosen.value)===keys[i];
+  const feedback=document.getElementById(id+"-feedback");
+  feedback.textContent=!chosen?"Choose an answer first.":ok?"✓ Correct. Open the reasoning and explain why.":"Not yet. Use the hint and try again.";
+  feedback.style.color=ok?"#15803d":"#9a3412";
+  document.getElementById(id+"-hint").hidden=!chosen||ok;
+  card.dataset.checked="true";
+ }
+ keys.forEach(function(key,i){
+  const id='extra-'+(i+1),card=document.getElementById(id);
+  document.getElementById(id+"-check").addEventListener("click",function(){check(i);});
+  card.querySelectorAll('input[type="radio"]').forEach(function(input){
+   input.addEventListener("change",function(){if(card.dataset.checked)check(i);});
+  });
+ });
+ document.getElementById("submit-findings").addEventListener("click",function(){keys.forEach(function(_,i){check(i);});});
+ let saved=[];
+ window.addEventListener("beforeprint",function(){saved=Array.from(document.querySelectorAll(".added-clue details")).map(function(d){return [d,d.open];});saved.forEach(function(pair){pair[0].open=true;});});
+ window.addEventListener("afterprint",function(){saved.forEach(function(pair){pair[0].open=pair[1];});});
+})();
+</script>
+<!-- ADDED-INQUIRY-END -->
+</main>
+<script>
+  const proofSchema={
+    hole1:{validAnswer:'nonzero_radius_point'},
+    hole2:{validAnswer:'center_distance'},
+    hole3:{validAnswer:'pythagoras_closest'},
+    hole4:{validAnswer:'three_cases'},
+    hole5:{validAnswer:'same_contact'},
+    hole6:{validAnswer:'outside_circle'},
+    hole7:{validAnswer:'unique_perpendicular'},
+    hole8:{validAnswer:'tangent_equation'}
+  };
+  let findingsChecked=false;
+
+  function evaluateProof(){
+    let correct=0,unanswered=0;
+    Object.entries(proofSchema).forEach(function(entry){
+      const id=entry[0],n=id.replace('hole',''),field=document.getElementById(id);
+      const empty=field.value==='',right=field.value===entry[1].validAnswer;
+      field.classList.toggle('correct',right);
+      field.classList.toggle('incorrect',!empty&&!right);
+      field.setAttribute('aria-invalid',String(!empty&&!right));
+      document.getElementById('feedback'+n).textContent=empty?'':(right?'✓':'✗');
+      document.getElementById('hint'+n).hidden=empty||right;
+      if(right)correct++;
+      if(empty)unanswered++;
+    });
+    const notes=Array.from(document.querySelectorAll('.field-notes'));
+    const filled=notes.filter(function(n){return n.value.trim().length>0;}).length;
+    let message=correct+' of 8 clues correct.';
+    if(correct===8)message+=' Case closed! Your proof should explain why d = R forces the contact point to be H.';
+    else if(unanswered)message+=' '+unanswered+' still unanswered. Try those and use the hints beside wrong answers.';
+    else message+=' Read the hints and try the marked clues again.';
+    message+=' Written notes: '+filled+' of 3 spaces filled. These are for discussion, not an automatic score.';
+    textAt('overall-feedback',message);
+    findingsChecked=true;
+  }
+
+  function put(id,attrs){
+    const node=document.getElementById(id);
+    Object.keys(attrs).forEach(function(k){node.setAttribute(k,attrs[k]);});
+  }
+  function textAt(id,value){document.getElementById(id).textContent=value;}
+  function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+  function formatNumber(v){
+    const rounded=Math.abs(v)<0.0000005?0:Number(v.toFixed(4));
+    return String(rounded).replace('-','−');
+  }
+  function equationText(A,B,C){
+    const terms=[];
+    function add(value,symbol){
+      if(Math.abs(value)<1e-10)return;
+      const sign=value<0?'−':'+',magnitude=Math.abs(value);
+      const coefficient=symbol&&Math.abs(magnitude-1)<1e-10?'':formatNumber(magnitude);
+      terms.push({sign:sign,text:coefficient+symbol});
+    }
+    add(A,'x');add(B,'y');add(C,'');
+    if(!terms.length)return '0 = 0';
+    return terms.map(function(term,i){
+      if(i===0)return (term.sign==='−'?'−':'')+term.text;
+      return ' '+term.sign+' '+term.text;
+    }).join('')+' = 0';
+  }
+  function clipLine(A,B,C,bounds){
+    const points=[],eps=1e-9;
+    function add(x,y){
+      if(x<bounds.xmin-eps||x>bounds.xmax+eps||y<bounds.ymin-eps||y>bounds.ymax+eps)return;
+      if(!points.some(function(p){return Math.hypot(p.x-x,p.y-y)<1e-7;}))points.push({x:x,y:y});
+    }
+    if(Math.abs(B)>eps){
+      add(bounds.xmin,(-A*bounds.xmin-C)/B);
+      add(bounds.xmax,(-A*bounds.xmax-C)/B);
+    }
+    if(Math.abs(A)>eps){
+      add((-B*bounds.ymin-C)/A,bounds.ymin);
+      add((-B*bounds.ymax-C)/A,bounds.ymax);
+    }
+    if(points.length<2)throw new Error('Line does not cross the graph window.');
+    let pair=[points[0],points[1]],best=-1;
+    for(let i=0;i<points.length;i++)for(let j=i+1;j<points.length;j++){
+      const distance=Math.hypot(points[i].x-points[j].x,points[i].y-points[j].y);
+      if(distance>best){best=distance;pair=[points[i],points[j]];}
+    }
+    return pair;
+  }
+  function pathBetween(pair,mapX,mapY){
+    return 'M'+mapX(pair[0].x)+' '+mapY(pair[0].y)+' L'+mapX(pair[1].x)+' '+mapY(pair[1].y);
+  }
+  function segment(a,b,mapX,mapY){
+    return 'M'+mapX(a.x)+' '+mapY(a.y)+' L'+mapX(b.x)+' '+mapY(b.y);
+  }
+  function polygonPath(points,mapX,mapY){
+    return points.map(function(p,i){return (i?'L':'M')+mapX(p.x)+' '+mapY(p.y);}).join(' ')+' Z';
+  }
+  function rightAnglePath(vertex,a,b,size,mapX,mapY){
+    const ax=a.x-vertex.x,ay=a.y-vertex.y,bx=b.x-vertex.x,by=b.y-vertex.y;
+    const al=Math.hypot(ax,ay),bl=Math.hypot(bx,by);
+    if(al<1e-8||bl<1e-8)return '';
+    const u={x:ax/al,y:ay/al},v={x:bx/bl,y:by/bl};
+    const p1={x:vertex.x+size*u.x,y:vertex.y+size*u.y};
+    const p2={x:p1.x+size*v.x,y:p1.y+size*v.y};
+    const p3={x:vertex.x+size*v.x,y:vertex.y+size*v.y};
+    return 'M'+mapX(p1.x)+' '+mapY(p1.y)+' L'+mapX(p2.x)+' '+mapY(p2.y)+' L'+mapX(p3.x)+' '+mapY(p3.y);
+  }
+
+  function classificationData(R,d,angleDegrees,along){
+    const theta=angleDegrees*Math.PI/180;
+    const normal={x:Math.cos(theta),y:Math.sin(theta)};
+    const direction={x:-normal.y,y:normal.x};
+    const O={x:0,y:0};
+    const H={x:d*normal.x,y:d*normal.y};
+    const X={x:H.x+along*direction.x,y:H.y+along*direction.y};
+    const difference=R*R-d*d,tol=1e-8;
+    let count=0,hit1=null,hit2=null,halfChord=null;
+    if(difference>tol){
+      count=2;halfChord=Math.sqrt(difference);
+      hit1={x:H.x+halfChord*direction.x,y:H.y+halfChord*direction.y};
+      hit2={x:H.x-halfChord*direction.x,y:H.y-halfChord*direction.y};
+    }else if(Math.abs(difference)<=tol){
+      count=1;halfChord=0;hit1={x:H.x,y:H.y};
+    }
+    return {
+      R:R,d:d,angleDegrees:angleDegrees,along:along,theta:theta,normal:normal,direction:direction,
+      O:O,H:H,X:X,difference:difference,count:count,hit1:hit1,hit2:hit2,halfChord:halfChord,
+      OX:Math.hypot(X.x,X.y),HX:Math.abs(along)
+    };
+  }
+  function currentClassification(){
+    const R=clamp(Number(document.getElementById('radius-slider').value),1,3.5);
+    const d=clamp(Number(document.getElementById('distance-slider').value),0,4.5);
+    const angle=clamp(Number(document.getElementById('line-angle-slider').value),0,180);
+    const along=clamp(Number(document.getElementById('along-slider').value),-4,4);
+    return classificationData(R,d,angle,along);
+  }
+  function updateMeetingButtons(count){
+    const active=count===2?'secant':count===1?'tangent':'outside';
+    document.querySelectorAll('[data-meeting]').forEach(function(button){
+      button.setAttribute('aria-pressed',String(button.dataset.meeting===active));
+    });
+  }
+  function updateClassification(){
+    const d=currentClassification();
+    const mapX=function(x){return 380+55*x;};
+    const mapY=function(y){return 300-55*y;};
+    const bounds={xmin:-6,xmax:6,ymin:-4.72,ymax:4.72};
+    const linePair=clipLine(d.normal.x,d.normal.y,-d.d,bounds);
+
+    put('class-circle',{cx:mapX(0),cy:mapY(0),r:55*d.R});
+    put('class-line',{d:pathBetween(linePair,mapX,mapY),class:d.count===1?'line-tangent':'line-main'});
+    put('class-oh',{d:segment(d.O,d.H,mapX,mapY)});
+    put('class-hx',{d:segment(d.H,d.X,mapX,mapY)});
+    put('class-ox',{d:segment(d.O,d.X,mapX,mapY)});
+    put('class-triangle',{d:polygonPath([d.O,d.H,d.X],mapX,mapY)});
+    put('class-right',{d:rightAnglePath(d.H,d.O,{x:d.H.x+d.direction.x,y:d.H.y+d.direction.y},.25,mapX,mapY)});
+    put('class-o',{cx:mapX(0),cy:mapY(0)});
+    put('class-h',{cx:mapX(d.H.x),cy:mapY(d.H.y)});
+    put('class-x',{cx:mapX(d.X.x),cy:mapY(d.X.y)});
+    put('class-o-label',{x:mapX(0)+10,y:mapY(0)+21});
+    put('class-h-label',{x:mapX(d.H.x)+9,y:mapY(d.H.y)+20});
+    put('class-x-label',{x:mapX(d.X.x)+10,y:mapY(d.X.y)-11});
+    const lineLabel=linePair[1];
+    put('class-line-label',{x:mapX(lineLabel.x)-22,y:mapY(lineLabel.y)+22});
+
+    const merged=d.count===1&&d.HX<1e-8;
+    const onHit1=d.count===2&&Math.abs(d.along-d.halfChord)<1e-7;
+    const onHit2=d.count===2&&Math.abs(d.along+d.halfChord)<1e-7;
+    if(d.hit1){
+      put('class-hit1',{cx:mapX(d.hit1.x),cy:mapY(d.hit1.y),opacity:merged||onHit1?0:1});
+      put('class-hit1-label',{x:mapX(d.hit1.x)+10,y:mapY(d.hit1.y)-11});
+    }else{
+      put('class-hit1',{opacity:0});
+    }
+    if(d.hit2){
+      put('class-hit2',{cx:mapX(d.hit2.x),cy:mapY(d.hit2.y),opacity:onHit2?0:1});
+      put('class-hit2-label',{x:mapX(d.hit2.x)+10,y:mapY(d.hit2.y)-11});
+    }else{
+      put('class-hit2',{opacity:0});
+    }
+    if(d.count===2){
+      textAt('class-hit1-label',onHit1?'':'A');textAt('class-hit2-label',onHit2?'':'B');
+      textAt('class-h-label','H');textAt('class-x-label',onHit1?'X = A':onHit2?'X = B':'X');
+    }else if(d.count===1){
+      textAt('class-hit1-label',merged?'':'P = H');
+      textAt('class-hit2-label','');
+      textAt('class-h-label','');
+      textAt('class-x-label',merged?'X = P = H':'X');
+    }else{
+      textAt('class-hit1-label','');textAt('class-hit2-label','');
+      textAt('class-h-label','H');textAt('class-x-label','X');
+    }
+
+    textAt('radius-value',formatNumber(d.R));
+    textAt('distance-value',formatNumber(d.d));
+    textAt('line-angle-value',formatNumber(d.angleDegrees)+'°');
+    textAt('along-value',formatNumber(d.along));
+    textAt('read-radius',formatNumber(d.R));
+    textAt('read-distance',formatNumber(d.d));
+    textAt('read-difference',formatNumber(d.difference));
+    textAt('read-count',String(d.count));
+    textAt('classification-formula','OX² = d² + HX²: '+formatNumber(d.OX*d.OX)+' = '+formatNumber(d.d*d.d)+' + '+formatNumber(d.HX*d.HX));
+
+    let message;
+    if(d.count===2){
+      message='d < R, so R² − d² is positive. Two points lie on opposite sides of H, each '+formatNumber(d.halfChord)+' units from H. These are A and B.';
+    }else if(d.count===1){
+      message='d = R. Only HX = 0 reaches the circle, so H is the one contact point and the line is tangent.';
+    }else{
+      message='d > R, so R² − d² is negative. No real value of HX reaches the circle, and the line misses it.';
+    }
+    if(Math.abs(d.OX-d.R)<1e-6)message+=' The movable point X is on the circle.';
+    else if(d.OX<d.R)message+=' The movable point X is inside the circle.';
+    else message+=' The movable point X is outside the circle.';
+    textAt('classification-message',message);
+    textAt('classification-desc','The circle has radius '+formatNumber(d.R)+'. The line is '+formatNumber(d.d)+' units from O and has '+d.count+' circle intersection'+(d.count===1?'':'s')+'.');
+    updateMeetingButtons(d.count);
+    return d;
+  }
+  function showMeeting(kind){
+    const R=clamp(Number(document.getElementById('radius-slider').value),1,3.5);
+    if(kind==='secant'){
+      const distance=.62*R;
+      document.getElementById('distance-slider').value=String(distance);
+      document.getElementById('along-slider').value=String(.25*R);
+    }else if(kind==='tangent'){
+      document.getElementById('distance-slider').value=String(R);
+      document.getElementById('along-slider').value='0';
+    }else{
+      document.getElementById('distance-slider').value=String(Math.min(4.5,R+.8));
+      document.getElementById('along-slider').value='0';
+    }
+    return updateClassification();
+  }
+
+  function pivotData(pointAngleDegrees,tiltDegrees){
+    const R=3,phi=pointAngleDegrees*Math.PI/180,delta=tiltDegrees*Math.PI/180;
+    const P={x:R*Math.cos(phi),y:R*Math.sin(phi)};
+    const tangent={x:-Math.sin(phi),y:Math.cos(phi)};
+    const direction={
+      x:Math.cos(delta)*tangent.x-Math.sin(delta)*tangent.y,
+      y:Math.sin(delta)*tangent.x+Math.cos(delta)*tangent.y
+    };
+    const dot=P.x*direction.x+P.y*direction.y;
+    const secondParameter=-2*dot;
+    const Q={x:P.x+secondParameter*direction.x,y:P.y+secondParameter*direction.y};
+    const normal={x:-direction.y,y:direction.x};
+    const candidate={A:normal.x,B:normal.y,C:-(normal.x*P.x+normal.y*P.y)};
+    const radiusNormal={x:P.x/R,y:P.y/R};
+    const trueTangent={A:radiusNormal.x,B:radiusNormal.y,C:-R};
+    const tangentCase=Math.abs(dot)<1e-8;
+    return {
+      R:R,pointAngleDegrees:pointAngleDegrees,tiltDegrees:tiltDegrees,P:P,tangent:tangent,
+      direction:direction,dot:dot,secondParameter:secondParameter,Q:Q,candidate:candidate,
+      trueTangent:trueTangent,tangentCase:tangentCase
+    };
+  }
+  function currentPivot(){
+    const pointAngle=clamp(Number(document.getElementById('point-angle-slider').value),0,360);
+    const tilt=clamp(Number(document.getElementById('tilt-slider').value),-45,45);
+    return pivotData(pointAngle,tilt);
+  }
+  function updatePivotButtons(tilt){
+    const active=Math.abs(tilt)<1e-8?'tangent':Math.abs(tilt-25)<1e-8?'positive':Math.abs(tilt+25)<1e-8?'negative':'';
+    document.querySelectorAll('[data-pivot]').forEach(function(button){
+      button.setAttribute('aria-pressed',String(button.dataset.pivot===active));
+    });
+  }
+  function updatePivot(){
+    const d=currentPivot();
+    const mapX=function(x){return 380+55*x;};
+    const mapY=function(y){return 280-55*y;};
+    const bounds={xmin:-6,xmax:6,ymin:-4.54,ymax:4.54};
+    const truePair=clipLine(d.trueTangent.A,d.trueTangent.B,d.trueTangent.C,bounds);
+    const candidatePair=clipLine(d.candidate.A,d.candidate.B,d.candidate.C,bounds);
+
+    put('pivot-true-tangent',{d:pathBetween(truePair,mapX,mapY),opacity:d.tangentCase?0:1});
+    put('pivot-line',{d:pathBetween(candidatePair,mapX,mapY),class:d.tangentCase?'line-tangent':'line-main'});
+    put('pivot-radius',{d:segment({x:0,y:0},d.P,mapX,mapY)});
+    put('pivot-right',{d:d.tangentCase?rightAnglePath(d.P,{x:0,y:0},{x:d.P.x+d.direction.x,y:d.P.y+d.direction.y},.27,mapX,mapY):''});
+    put('pivot-p',{cx:mapX(d.P.x),cy:mapY(d.P.y)});
+    put('pivot-p-label',{x:mapX(d.P.x)+10,y:mapY(d.P.y)-12});
+    put('pivot-q',{cx:mapX(d.Q.x),cy:mapY(d.Q.y),opacity:d.tangentCase?0:1});
+    put('pivot-q-label',{x:mapX(d.Q.x)+10,y:mapY(d.Q.y)-12});
+    textAt('pivot-p-label',d.tangentCase?'P (only point)':'P');
+    textAt('pivot-q-label',d.tangentCase?'':'Q');
+
+    textAt('point-angle-value',formatNumber(d.pointAngleDegrees)+'°');
+    textAt('tilt-value',formatNumber(d.tiltDegrees)+'°');
+    textAt('read-p','('+formatNumber(d.P.x)+', '+formatNumber(d.P.y)+')');
+    textAt('read-dot',formatNumber(d.dot));
+    textAt('read-second',formatNumber(d.secondParameter));
+    textAt('read-pivot-count',d.tangentCase?'1':'2');
+    textAt('pivot-formula','True tangent at P: '+equationText(d.P.x,d.P.y,-d.R*d.R)+'     Candidate tilt: '+formatNumber(d.tiltDegrees)+'°');
+    if(d.tangentCase){
+      textAt('pivot-message','The line direction has dot product 0 with OP, so it is perpendicular. The second intersection parameter is 0: Q has merged with P, leaving one circle point.');
+    }else{
+      textAt('pivot-message','The dot product is not 0, so the line is not perpendicular to OP. A different second point Q appears at ('+formatNumber(d.Q.x)+', '+formatNumber(d.Q.y)+'). The dashed green line shows the true tangent.');
+    }
+    textAt('pivot-desc',d.tangentCase?'The line through P is perpendicular to OP and meets the circle only at P.':'The tilted line through P meets the circle again at Q.');
+    updatePivotButtons(d.tiltDegrees);
+    return d;
+  }
+  function showPivot(kind){
+    document.getElementById('tilt-slider').value=kind==='positive'?'25':kind==='negative'?'-25':'0';
+    return updatePivot();
+  }
+
+  document.getElementById('radius-slider').addEventListener('input',updateClassification);
+  document.getElementById('distance-slider').addEventListener('input',updateClassification);
+  document.getElementById('line-angle-slider').addEventListener('input',updateClassification);
+  document.getElementById('along-slider').addEventListener('input',updateClassification);
+  document.getElementById('x-at-h').addEventListener('click',function(){
+    document.getElementById('along-slider').value='0';updateClassification();
+  });
+  document.getElementById('x-on-circle').addEventListener('click',function(){
+    const d=currentClassification();
+    if(d.difference>=-1e-8){
+      document.getElementById('along-slider').value=String(Math.sqrt(Math.max(0,d.difference)));
+      updateClassification();
+    }
+  });
+  document.getElementById('reset-classification').addEventListener('click',function(){
+    document.getElementById('radius-slider').value='2.5';
+    document.getElementById('distance-slider').value='2.5';
+    document.getElementById('line-angle-slider').value='35';
+    document.getElementById('along-slider').value='1.4';
+    updateClassification();
+  });
+  document.querySelectorAll('[data-meeting]').forEach(function(button){
+    button.addEventListener('click',function(){showMeeting(button.dataset.meeting);});
+  });
+  document.getElementById('point-angle-slider').addEventListener('input',updatePivot);
+  document.getElementById('tilt-slider').addEventListener('input',updatePivot);
+  document.getElementById('reset-pivot').addEventListener('click',function(){
+    document.getElementById('point-angle-slider').value='35';
+    document.getElementById('tilt-slider').value='0';
+    updatePivot();
+  });
+  document.querySelectorAll('[data-pivot]').forEach(function(button){
+    button.addEventListener('click',function(){showPivot(button.dataset.pivot);});
+  });
+  Object.keys(proofSchema).forEach(function(id){
+    document.getElementById(id).addEventListener('change',function(){if(findingsChecked)evaluateProof();});
+  });
+  document.querySelectorAll('.field-notes').forEach(function(note){
+    note.addEventListener('input',function(){if(findingsChecked)evaluateProof();});
+  });
+  document.getElementById('submit-findings').addEventListener('click',evaluateProof);
+  document.getElementById('print-case').addEventListener('click',function(){window.print();});
+  updateClassification();
+  updatePivot();
+</script>
+</body>
+</html>
